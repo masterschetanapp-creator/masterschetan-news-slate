@@ -1,16 +1,9 @@
 /**
- * masterschetan Financial News Slate — 42+ Article Multi-Category Curation Pipeline
+ * masterschetan Financial News Slate — Strict Category Matching Curation Pipeline
  * 
- * Curates 42+ comprehensive articles across all 7 verticals:
- * 1. PMS & AIF
- * 2. Equities & SIF
- * 3. Mutual Funds
- * 4. Bonds & FDs
- * 5. Life & Term Insurance
- * 6. Health & Motor Insurance
- * 7. Wealth Strategy
- * 
- * Every article contains 4 detailed, actionable wealth takeaway points.
+ * Enforces strict, zero-misclassification rules for every vertical.
+ * Articles are ONLY published under a category if they strictly pertain to that category.
+ * If no relevant articles exist for a vertical today, no false fillers are added.
  * 
  * USAGE:
  *   node scripts/curate-news.cjs
@@ -170,28 +163,50 @@ async function getRecentArticles(token) {
   }
 }
 
-function categorizeByRule(title, desc) {
+/**
+ * Strict Category Classifier
+ * Returns null if the article does NOT strictly pertain to any category!
+ */
+function classifyStrictCategory(title, desc) {
   const text = (title + ' ' + desc).toLowerCase();
-  
-  if (text.includes('pms') || text.includes('aif') || text.includes('portfolio management') || text.includes('alternative investment') || text.includes('sebi circular') || text.includes('recovery certificate')) {
-    return 'PMS & AIF';
-  }
-  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav') || text.includes('tracking error')) {
-    return 'Mutual Funds';
-  }
-  if (text.includes('fd') || text.includes('bond') || text.includes('repo rate') || text.includes('yield') || text.includes('g-sec') || text.includes('fixed deposit') || text.includes('rbi') || text.includes('nre')) {
-    return 'Bonds & FDs';
-  }
-  if (text.includes('term insurance') || text.includes('life insurance') || text.includes('lic') || text.includes('surrender value') || text.includes('irdai') || text.includes('policy')) {
-    return 'Life & Term Insurance';
-  }
-  if (text.includes('health insurance') || text.includes('motor insurance') || text.includes('third-party') || text.includes('wellness rider') || text.includes('bima') || text.includes('claim')) {
+
+  // 1. Health & Motor Insurance (STRICT)
+  if (text.includes('health insurance') || text.includes('motor insurance') || text.includes('car insurance') || text.includes('bike insurance') || text.includes('third party insurance') || text.includes('third-party premium') || text.includes('cashless hospital') || text.includes('wellness rider') || text.includes('mediclaim')) {
     return 'Health & Motor Insurance';
   }
-  if (text.includes('tax') || text.includes('capital gains') || text.includes('wealth') || text.includes('budget') || text.includes('nps') || text.includes('nri') || text.includes('demat') || text.includes('itr') || text.includes('pay commission')) {
+
+  // 2. Life & Term Insurance (STRICT)
+  if (text.includes('term insurance') || text.includes('life insurance') || text.includes('lic policy') || text.includes('surrender value') || text.includes('sum assured') || text.includes('claim settlement ratio') || text.includes('home loan insurance')) {
+    return 'Life & Term Insurance';
+  }
+
+  // 3. PMS & AIF (STRICT)
+  if (text.includes('pms') || text.includes('aif') || text.includes('portfolio management service') || text.includes('alternative investment fund') || text.includes('sebi pms') || text.includes('sebi circular on pms') || text.includes('pms bazaar') || text.includes('aif category')) {
+    return 'PMS & AIF';
+  }
+
+  // 4. Mutual Funds (STRICT)
+  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav') || text.includes('tracking error') || text.includes('elss') || text.includes('flexicap') || text.includes('smallcap fund') || text.includes('midcap fund')) {
+    return 'Mutual Funds';
+  }
+
+  // 5. Bonds & FDs (STRICT)
+  if (text.includes('fixed deposit') || text.includes('fd rate') || text.includes('nre fd') || text.includes('bond yield') || text.includes('g-sec') || text.includes('treasury bill') || text.includes('repo rate') || text.includes('rbi mpc') || text.includes('corporate bond') || text.includes('sovereign gold bond') || text.includes('sgb')) {
+    return 'Bonds & FDs';
+  }
+
+  // 6. Wealth Strategy (STRICT)
+  if (text.includes('tax') || text.includes('capital gains') || text.includes('itr filing') || text.includes('income tax return') || text.includes('nps') || text.includes('national pension') || text.includes('digital rupee') || text.includes('nri tax') || text.includes('wealth management') || text.includes('8th pay commission')) {
     return 'Wealth Strategy';
   }
-  return 'Equities & SIF';
+
+  // 7. Equities & SIF (STRICT)
+  if (text.includes('nifty') || text.includes('sensex') || text.includes('share price') || text.includes('stock market') || text.includes('ipo') || text.includes('sif') || text.includes('specialised investment fund') || text.includes('demat') || text.includes('fii') || text.includes('bse') || text.includes('nse') || text.includes('q1 result') || text.includes('q2 result') || text.includes('q3 result') || text.includes('q4 result') || text.includes('gainers') || text.includes('loosers')) {
+    return 'Equities & SIF';
+  }
+
+  // Discard generic banking/corporate items if they don't strictly match any financial vertical
+  return null;
 }
 
 function generate4FallbackBullets(title, desc, sourceName, category) {
@@ -205,53 +220,33 @@ function generate4FallbackBullets(title, desc, sourceName, category) {
 
   const p1 = `Key Development: ${cleanTitle}`;
   const p2 = sentences.length > 0 ? sentences[0] : `Core details reported by ${sourceName} covering recent updates in ${category}.`;
-  const p3 = sentences.length > 1 ? sentences[1] : `Portfolio Implications: High-net-worth and retail investors should review position sizing and sector exposure.`;
-  const p4 = `Actionable Trigger: Track official regulatory circulars and consult your advisor to optimize asset allocation.`;
+  const p3 = sentences.length > 1 ? sentences[1] : `Portfolio Implications: Investors should review position sizing and risk exposure for ${category}.`;
+  const p4 = `Actionable Trigger: Track official regulatory circulars and consult your advisor to align your financial plan.`;
 
   return [p1, p2, p3, p4];
 }
 
-function select42BalancedArticles(items) {
-  const categories = [
-    'PMS & AIF',
-    'Equities & SIF',
-    'Mutual Funds',
-    'Bonds & FDs',
-    'Life & Term Insurance',
-    'Health & Motor Insurance',
-    'Wealth Strategy'
-  ];
-
-  const grouped = {};
-  for (const c of categories) grouped[c] = [];
+function filterStrictArticles(items) {
+  const result = [];
+  const categoryCounts = {};
 
   for (const item of items) {
-    const cat = categorizeByRule(item.title, item.description);
-    item.category = cat;
-    grouped[cat].push(item);
-  }
+    const strictCategory = classifyStrictCategory(item.title, item.description);
+    if (!strictCategory) {
+      // Discard item if it doesn't strictly match any of the 7 verticals!
+      continue;
+    }
 
-  const result = [];
-  // Select up to 6 articles per category (7 x 6 = 42 total!)
-  for (const c of categories) {
-    const pool = grouped[c];
-    const targetCount = Math.min(6, pool.length);
-    for (let i = 0; i < targetCount; i++) {
-      result.push(pool[i]);
+    categoryCounts[strictCategory] = categoryCounts[strictCategory] || 0;
+    // Cap at maximum 6 articles per category
+    if (categoryCounts[strictCategory] < 6) {
+      item.category = strictCategory;
+      result.push(item);
+      categoryCounts[strictCategory]++;
     }
   }
 
-  // Fill up to 42 if any category has fewer than 6
-  if (result.length < 42) {
-    for (const item of items) {
-      if (result.length >= 42) break;
-      if (!result.some(r => r.link === item.link)) {
-        result.push(item);
-      }
-    }
-  }
-
-  return result;
+  return { articles: result, counts: categoryCounts };
 }
 
 async function summarizeAndCategorizeInBatches(rawArticles) {
@@ -262,7 +257,6 @@ async function summarizeAndCategorizeInBatches(rawArticles) {
 
   for (let b = 0; b < rawArticles.length; b += batchSize) {
     const batch = rawArticles.slice(b, b + batchSize);
-    console.log(`  🧠 Processing AI batch ${Math.floor(b/batchSize)+1}/${Math.ceil(rawArticles.length/batchSize)} (${batch.length} items)...`);
 
     if (!GEMINI_API_KEY) {
       const fallbackBatch = batch.map(a => ({
@@ -270,7 +264,7 @@ async function summarizeAndCategorizeInBatches(rawArticles) {
         summary: generate4FallbackBullets(a.title, a.description, a.source_name, a.category),
         source_name: a.source_name,
         source_url: a.link,
-        category: a.category || categorizeByRule(a.title, a.description),
+        category: a.category,
         impact: a.title.toLowerCase().includes('sebi') || a.title.toLowerCase().includes('rbi') || a.title.toLowerCase().includes('surge') ? 'High' : 'Standard',
         tags: ['WealthAnalysis', 'IndianMarkets'],
         published_at: new Date().toISOString(),
@@ -286,17 +280,21 @@ async function summarizeAndCategorizeInBatches(rawArticles) {
       description: stripHtmlAndUnescape(a.description),
       source: a.source_name,
       link: a.link,
-      suggested_category: a.category
+      strict_category: a.category
     }));
 
-    const prompt = `You are an expert wealth analyst for Indian high-net-worth and retail investors. Analyze these ${articlesInput.length} news items:
+    const prompt = `You are an expert wealth analyst for Indian investors. Analyze these ${articlesInput.length} news items:
 ${JSON.stringify(articlesInput, null, 2)}
 
-For EACH news item, generate EXACTLY 4 comprehensive, insightful bullet points. Return a JSON array containing objects with:
+For EACH news item:
+1. Retain the "strict_category" assigned: 'PMS & AIF', 'Equities & SIF', 'Mutual Funds', 'Bonds & FDs', 'Life & Term Insurance', 'Health & Motor Insurance', 'Wealth Strategy'.
+2. Generate EXACTLY 4 comprehensive, insightful bullet points.
+
+Return a JSON array containing objects with:
 [
   {
     "id": original_id_number,
-    "category": "Pick EXACTLY ONE of: 'PMS & AIF', 'Equities & SIF', 'Mutual Funds', 'Bonds & FDs', 'Life & Term Insurance', 'Health & Motor Insurance', 'Wealth Strategy'",
+    "category": "MUST match strict_category",
     "summary": [
       "1. Core News & Figures: Precise summary of what happened, key financial figures, valuations or regulatory numbers.",
       "2. Sector / Industry Impact: Analysis of broader industry trends, compliance changes, or market movement.",
@@ -309,9 +307,9 @@ For EACH news item, generate EXACTLY 4 comprehensive, insightful bullet points. 
 ]
 
 CRITICAL RULES:
+- "category" MUST strictly match "strict_category". Do NOT change or misclassify the category.
 - "summary" MUST be an array of EXACTLY 4 detailed, insightful bullet points.
-- NO raw HTML tags, NO placeholder text like "Direct coverage".
-- Focus strictly on practical value for Indian investors.
+- NO raw HTML tags, NO generic placeholder text.
 - Only return the JSON array.`;
 
     const body = {
@@ -340,8 +338,7 @@ CRITICAL RULES:
 
             let bullets = p.summary || [];
             if (!Array.isArray(bullets) || bullets.length < 3) {
-              const cat = p.category || original.category || categorizeByRule(original.title, original.description);
-              bullets = generate4FallbackBullets(original.title, original.description, original.source_name, cat);
+              bullets = generate4FallbackBullets(original.title, original.description, original.source_name, original.category);
             }
 
             return {
@@ -349,7 +346,7 @@ CRITICAL RULES:
               summary: bullets.map(stripHtmlAndUnescape),
               source_name: original.source_name,
               source_url: original.link,
-              category: p.category || original.category || categorizeByRule(original.title, original.description),
+              category: original.category, // Enforce strict category
               impact: p.impact || (original.title.toLowerCase().includes('sebi') || original.title.toLowerCase().includes('rbi') ? 'High' : 'Standard'),
               tags: p.tags || ['WealthAnalysis', 'IndianMarkets'],
               published_at: new Date().toISOString(),
@@ -362,16 +359,15 @@ CRITICAL RULES:
         }
       }
     } catch (e) {
-      console.warn('  ⚠️ Batch AI fallback to 4-bullet engine:', e.message);
+      console.warn('  ⚠️ Batch AI fallback to strict engine:', e.message);
     }
 
-    // Fallback for this batch
     const fallbackBatch = batch.map(a => ({
       title: stripHtmlAndUnescape(a.title),
       summary: generate4FallbackBullets(a.title, a.description, a.source_name, a.category),
       source_name: a.source_name,
       source_url: a.link,
-      category: a.category || categorizeByRule(a.title, a.description),
+      category: a.category,
       impact: a.title.toLowerCase().includes('sebi') || a.title.toLowerCase().includes('rbi') || a.title.toLowerCase().includes('surge') ? 'High' : 'Standard',
       tags: ['Regulatory', 'IndianFinance'],
       published_at: new Date().toISOString(),
@@ -429,7 +425,7 @@ async function saveArticle(article, token) {
 async function curate() {
   const startTime = Date.now();
   console.log('\n' + '═'.repeat(60));
-  console.log('  🗞️  masterschetan Financial News Slate — 42-Article Multi-Vertical Curation');
+  console.log('  🗞️  masterschetan Financial News Slate — Strict Category Curation');
   console.log('  📅  ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
   console.log('═'.repeat(60) + '\n');
 
@@ -441,7 +437,7 @@ async function curate() {
   const existingTitles = await getRecentArticles(token);
   console.log(`  Found ${existingTitles.length} existing articles in Firestore.\n`);
 
-  console.log('📡 Fetching live RSS feeds across official & institutional portals...');
+  console.log('📡 Fetching live RSS feeds...');
   let rawArticles = [];
   for (const feed of RSS_FEEDS) {
     const items = await fetchRssFeed(feed);
@@ -456,10 +452,14 @@ async function curate() {
     }
   }
 
-  const selected42 = select42BalancedArticles(uniqueRaw);
-  console.log(`🧠 Selected ${selected42.length} articles balanced across all 7 verticals (PMS & AIF, Equities, MF, Bonds, Life Ins, Health Ins, Wealth Strategy)...`);
+  const { articles: strictArticles, counts } = filterStrictArticles(uniqueRaw);
+  console.log('📊 Strict Category Matching Counts:');
+  for (const [cat, cnt] of Object.entries(counts)) {
+    console.log(`  • ${cat}: ${cnt} genuine articles`);
+  }
+  console.log(`\n🧠 Processing ${strictArticles.length} strictly matched articles via Gemini AI...`);
 
-  const curatedArticles = await summarizeAndCategorizeInBatches(selected42);
+  const curatedArticles = await summarizeAndCategorizeInBatches(strictArticles);
   console.log(`  ✅ Prepared ${curatedArticles.length} news items with 4 detailed insights.\n`);
 
   let totalNew = 0;
@@ -476,8 +476,8 @@ async function curate() {
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('\n' + '═'.repeat(60));
-  console.log(`  📊 42-Article Curation complete in ${elapsed}s`);
-  console.log(`  ✅ Total live articles saved to Firestore: ${totalNew}`);
+  console.log(`  📊 Strict Curation complete in ${elapsed}s`);
+  console.log(`  ✅ Total genuine articles saved to Firestore: ${totalNew}`);
   console.log('═'.repeat(60) + '\n');
 }
 
