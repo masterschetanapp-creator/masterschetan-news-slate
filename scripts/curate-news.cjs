@@ -1,10 +1,9 @@
 /**
  * masterschetan Financial News Slate — Strict Category Matching & CDATA Stripper Pipeline
  * 
- * Fixes:
- * 1. Strips all `<![CDATA[` and `]]>` RSS artifacts completely.
- * 2. Removed loose "policy" matching in Life Insurance so EPF/EPFO/Mutual Funds articles are NEVER misclassified into Insurance!
- * 3. EPF vs Mutual Funds maps strictly to Mutual Funds or Wealth Strategy.
+ * Category Priority Fix:
+ * EPF, EPFO, Pension & EPF vs Mutual Funds evaluation is placed FIRST to prevent 
+ * RSS descriptions containing "insurance cover under EDLI" from misclassifying EPF into Life Insurance!
  * 
  * USAGE:
  *   node scripts/curate-news.cjs
@@ -171,42 +170,51 @@ async function getRecentArticleMap(token) {
 }
 
 /**
- * Strict Category Classifier (Zero Misclassification, No loose "policy" matching)
+ * Strict Category Classifier with Priority Hierarchy
  */
 function classifyStrictCategory(title, desc) {
   const text = (title + ' ' + desc).toLowerCase();
 
-  // 1. Health & Motor Insurance (STRICT)
+  // 1. EPF & Mutual Fund Overrides (Checked FIRST so EDLI insurance mentions never misclassify EPF articles!)
+  if (text.includes('epf vs mutual fund') || text.includes('epf or mutual fund') || (text.includes('epf') && text.includes('mutual fund'))) {
+    return 'Mutual Funds';
+  }
+
+  if (text.includes('epf') || text.includes('epfo') || text.includes('pension') || text.includes('retirement benefit')) {
+    return 'Wealth Strategy';
+  }
+
+  // 2. Health & Motor Insurance (STRICT)
   if (text.includes('health insurance') || text.includes('motor insurance') || text.includes('car insurance') || text.includes('bike insurance') || text.includes('third party insurance') || text.includes('third-party premium') || text.includes('cashless hospital') || text.includes('wellness rider') || text.includes('mediclaim') || text.includes('health policy')) {
     return 'Health & Motor Insurance';
   }
 
-  // 2. Life & Term Insurance (STRICT - NO loose "policy" string)
+  // 3. Life & Term Insurance (STRICT - NO loose "policy" string)
   if (text.includes('term insurance') || text.includes('life insurance') || text.includes('lic term') || text.includes('lic life') || text.includes('surrender value') || text.includes('sum assured') || text.includes('claim settlement ratio') || text.includes('gift city term') || text.includes('dollar term') || text.includes('home loan insurance') || text.includes('term plan')) {
     return 'Life & Term Insurance';
   }
 
-  // 3. PMS & AIF (STRICT)
+  // 4. PMS & AIF (STRICT)
   if (text.includes('pms') || text.includes('aif') || text.includes('portfolio management service') || text.includes('alternative investment fund') || text.includes('sebi pms') || text.includes('sebi circular on pms') || text.includes('offshore fund') || text.includes('gift city aif')) {
     return 'PMS & AIF';
   }
 
-  // 4. Mutual Funds (STRICT - includes EPF vs Mutual Funds)
-  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav') || text.includes('tracking error') || text.includes('elss') || text.includes('flexicap') || text.includes('smallcap fund') || text.includes('midcap fund') || text.includes('arbitrage fund') || text.includes('epf vs mutual fund') || text.includes('epf or mutual fund')) {
+  // 5. Mutual Funds (STRICT)
+  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav') || text.includes('tracking error') || text.includes('elss') || text.includes('flexicap') || text.includes('smallcap fund') || text.includes('midcap fund') || text.includes('arbitrage fund')) {
     return 'Mutual Funds';
   }
 
-  // 5. Bonds & FDs (STRICT)
+  // 6. Bonds & FDs (STRICT)
   if (text.includes('fixed deposit') || text.includes('fd rate') || text.includes('nre fd') || text.includes('fcnr') || text.includes('bond yield') || text.includes('g-sec') || text.includes('treasury bill') || text.includes('repo rate') || text.includes('rbi mpc') || text.includes('us fed') || text.includes('federal reserve') || text.includes('corporate bond') || text.includes('sovereign gold bond') || text.includes('sgb')) {
     return 'Bonds & FDs';
   }
 
-  // 6. Wealth Strategy & Tax (STRICT - includes EPF, EPFO, Pension, Retirement)
-  if (text.includes('tax') || text.includes('capital gains') || text.includes('itr filing') || text.includes('income tax return') || text.includes('nps') || text.includes('national pension') || text.includes('epf') || text.includes('epfo') || text.includes('pension') || text.includes('digital rupee') || text.includes('nri tax') || text.includes('usd/inr') || text.includes('remittance') || text.includes('wealth management') || text.includes('8th pay commission')) {
+  // 7. Wealth Strategy & Tax (STRICT)
+  if (text.includes('tax') || text.includes('capital gains') || text.includes('itr filing') || text.includes('income tax return') || text.includes('nps') || text.includes('national pension') || text.includes('digital rupee') || text.includes('nri tax') || text.includes('usd/inr') || text.includes('remittance') || text.includes('wealth management') || text.includes('8th pay commission')) {
     return 'Wealth Strategy';
   }
 
-  // 7. Equities & SIF (STRICT)
+  // 8. Equities & SIF (STRICT)
   if (text.includes('nifty') || text.includes('sensex') || text.includes('share price') || text.includes('stock market') || text.includes('ipo') || text.includes('sif') || text.includes('specialised investment fund') || text.includes('demat') || text.includes('fii') || text.includes('wall street') || text.includes('nasdaq') || text.includes('us stocks') || text.includes('global market') || text.includes('crude oil') || text.includes('q1 result') || text.includes('q2 result') || text.includes('gainers') || text.includes('loosers')) {
     return 'Equities & SIF';
   }
@@ -493,7 +501,7 @@ async function saveArticle(article, token) {
 async function curate() {
   const startTime = Date.now();
   console.log('\n' + '═'.repeat(60));
-  console.log('  🗞️  masterschetan Financial News Slate — Strict CDATA & Category Curation');
+  console.log('  🗞️  masterschetan Financial News Slate — Priority Hierarchy Curation');
   console.log('  📅  ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
   console.log('═'.repeat(60) + '\n');
 
@@ -538,7 +546,7 @@ async function curate() {
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('\n' + '═'.repeat(60));
-  console.log(`  📊 Strict Curation complete in ${elapsed}s`);
+  console.log(`  📊 Priority Hierarchy Curation complete in ${elapsed}s`);
   console.log(`  ✅ Total new unique articles saved to Firestore: ${totalNew}`);
   console.log('═'.repeat(60) + '\n');
 }
