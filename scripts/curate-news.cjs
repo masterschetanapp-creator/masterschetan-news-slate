@@ -1,13 +1,10 @@
 /**
- * masterschetan Financial News Slate — Global & Domestic Quality-Quantity Balanced Curation Pipeline
+ * masterschetan Financial News Slate — Strict Category Matching & CDATA Stripper Pipeline
  * 
- * Balances Quality (4 detailed wealth insights, direct deep links, impact tags) with Quantity (28-35+ active articles).
- * Incorporates Global Market & Reinsurance Monitoring:
- * - US Fed Rates & Inflation -> Equities & Debt impact
- * - Global Crude Oil & Commodities -> Inflation & Profit Margins
- * - US Tech / Wall Street Earnings -> Indian IT & FII flows
- * - Global Reinsurance & Catastrophe Trends -> Indian Life & Health Insurers
- * - USD/INR & GIFT City -> NRI & Wealth Strategy
+ * Fixes:
+ * 1. Strips all `<![CDATA[` and `]]>` RSS artifacts completely.
+ * 2. Removed loose "policy" matching in Life Insurance so EPF/EPFO/Mutual Funds articles are NEVER misclassified into Insurance!
+ * 3. EPF vs Mutual Funds maps strictly to Mutual Funds or Wealth Strategy.
  * 
  * USAGE:
  *   node scripts/curate-news.cjs
@@ -75,6 +72,8 @@ function getAccessToken() {
 function stripHtmlAndUnescape(str) {
   if (!str) return '';
   return str
+    .replace(/<!\[CDATA\[/gi, '')
+    .replace(/\]\]>/gi, '')
     .replace(/&lt;/gi, '<')
     .replace(/&gt;/gi, '>')
     .replace(/&amp;/gi, '&')
@@ -172,43 +171,43 @@ async function getRecentArticleMap(token) {
 }
 
 /**
- * Strict Category Classifier with Global Market & Reinsurance Awareness
+ * Strict Category Classifier (Zero Misclassification, No loose "policy" matching)
  */
 function classifyStrictCategory(title, desc) {
   const text = (title + ' ' + desc).toLowerCase();
 
-  // 1. Health & Motor Insurance (including Global Reinsurance impact on Indian Insurers)
-  if (text.includes('health insurance') || text.includes('motor insurance') || text.includes('car insurance') || text.includes('bike insurance') || text.includes('third party insurance') || text.includes('third-party premium') || text.includes('cashless hospital') || text.includes('wellness rider') || text.includes('mediclaim') || text.includes('reinsurance') || text.includes('catastrophe insurance') || text.includes('claims ratio')) {
+  // 1. Health & Motor Insurance (STRICT)
+  if (text.includes('health insurance') || text.includes('motor insurance') || text.includes('car insurance') || text.includes('bike insurance') || text.includes('third party insurance') || text.includes('third-party premium') || text.includes('cashless hospital') || text.includes('wellness rider') || text.includes('mediclaim') || text.includes('health policy')) {
     return 'Health & Motor Insurance';
   }
 
-  // 2. Life & Term Insurance (including USD Term & Global NRI Coverage)
-  if (text.includes('term insurance') || text.includes('life insurance') || text.includes('lic policy') || text.includes('surrender value') || text.includes('sum assured') || text.includes('claim settlement ratio') || text.includes('gift city term') || text.includes('dollar term') || text.includes('home loan insurance')) {
+  // 2. Life & Term Insurance (STRICT - NO loose "policy" string)
+  if (text.includes('term insurance') || text.includes('life insurance') || text.includes('lic term') || text.includes('lic life') || text.includes('surrender value') || text.includes('sum assured') || text.includes('claim settlement ratio') || text.includes('gift city term') || text.includes('dollar term') || text.includes('home loan insurance') || text.includes('term plan')) {
     return 'Life & Term Insurance';
   }
 
-  // 3. PMS & AIF (including Offshore / Global AIF Inflows)
+  // 3. PMS & AIF (STRICT)
   if (text.includes('pms') || text.includes('aif') || text.includes('portfolio management service') || text.includes('alternative investment fund') || text.includes('sebi pms') || text.includes('sebi circular on pms') || text.includes('offshore fund') || text.includes('gift city aif')) {
     return 'PMS & AIF';
   }
 
-  // 4. Mutual Funds (including Global / US Equity Mutual Funds)
-  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav') || text.includes('tracking error') || text.includes('elss') || text.includes('flexicap') || text.includes('smallcap fund') || text.includes('midcap fund') || text.includes('arbitrage fund') || text.includes('international fund')) {
+  // 4. Mutual Funds (STRICT - includes EPF vs Mutual Funds)
+  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav') || text.includes('tracking error') || text.includes('elss') || text.includes('flexicap') || text.includes('smallcap fund') || text.includes('midcap fund') || text.includes('arbitrage fund') || text.includes('epf vs mutual fund') || text.includes('epf or mutual fund')) {
     return 'Mutual Funds';
   }
 
-  // 5. Bonds & FDs (including US Fed Rates, Global Yields & NRE FDs)
-  if (text.includes('fixed deposit') || text.includes('fd rate') || text.includes('nre fd') || text.includes('fcnr') || text.includes('bond yield') || text.includes('g-sec') || text.includes('treasury bill') || text.includes('repo rate') || text.includes('rbi mpc') || text.includes('us fed') || text.includes('federal reserve') || text.includes('global yields') || text.includes('corporate bond') || text.includes('sovereign gold bond') || text.includes('sgb')) {
+  // 5. Bonds & FDs (STRICT)
+  if (text.includes('fixed deposit') || text.includes('fd rate') || text.includes('nre fd') || text.includes('fcnr') || text.includes('bond yield') || text.includes('g-sec') || text.includes('treasury bill') || text.includes('repo rate') || text.includes('rbi mpc') || text.includes('us fed') || text.includes('federal reserve') || text.includes('corporate bond') || text.includes('sovereign gold bond') || text.includes('sgb')) {
     return 'Bonds & FDs';
   }
 
-  // 6. Wealth Strategy & Tax (including NRI Taxation, USD/INR, Global Remittance)
-  if (text.includes('tax') || text.includes('capital gains') || text.includes('itr filing') || text.includes('income tax return') || text.includes('nps') || text.includes('national pension') || text.includes('digital rupee') || text.includes('nri tax') || text.includes('usd/inr') || text.includes('remittance') || text.includes('wealth management') || text.includes('8th pay commission')) {
+  // 6. Wealth Strategy & Tax (STRICT - includes EPF, EPFO, Pension, Retirement)
+  if (text.includes('tax') || text.includes('capital gains') || text.includes('itr filing') || text.includes('income tax return') || text.includes('nps') || text.includes('national pension') || text.includes('epf') || text.includes('epfo') || text.includes('pension') || text.includes('digital rupee') || text.includes('nri tax') || text.includes('usd/inr') || text.includes('remittance') || text.includes('wealth management') || text.includes('8th pay commission')) {
     return 'Wealth Strategy';
   }
 
-  // 7. Equities & SIF (including Global Wall Street, Nasdaq, US Tech Earnings, FII Flows)
-  if (text.includes('nifty') || text.includes('sensex') || text.includes('share price') || text.includes('stock market') || text.includes('ipo') || text.includes('sif') || text.includes('specialised investment fund') || text.includes('demat') || text.includes('fii') || text.includes('wall street') || text.includes('nasdaq') || text.includes('us stocks') || text.includes('global market') || text.includes('crude oil') || text.includes('q1 result') || text.includes('q2 result') || text.includes('q3 result') || text.includes('gainers') || text.includes('loosers')) {
+  // 7. Equities & SIF (STRICT)
+  if (text.includes('nifty') || text.includes('sensex') || text.includes('share price') || text.includes('stock market') || text.includes('ipo') || text.includes('sif') || text.includes('specialised investment fund') || text.includes('demat') || text.includes('fii') || text.includes('wall street') || text.includes('nasdaq') || text.includes('us stocks') || text.includes('global market') || text.includes('crude oil') || text.includes('q1 result') || text.includes('q2 result') || text.includes('gainers') || text.includes('loosers')) {
     return 'Equities & SIF';
   }
 
@@ -216,12 +215,11 @@ function classifyStrictCategory(title, desc) {
 }
 
 /**
- * Deterministic Impact Weightage Classifier (Global & Domestic)
+ * Deterministic Impact Weightage Classifier
  */
 function classifyImpactWeightage(title, desc) {
   const text = (title + ' ' + desc).toLowerCase();
 
-  // HIGH IMPACT (🔴): US Fed rate, Global Market crashes/rallies, SEBI/RBI/IRDAI circulars, Tax law, Crude Oil spikes
   if (
     text.includes('us fed') ||
     text.includes('federal reserve') ||
@@ -244,7 +242,6 @@ function classifyImpactWeightage(title, desc) {
     return 'High';
   }
 
-  // MEDIUM IMPACT (🟡): FD rates, NRE FDs, Mutual Fund SIPs, Block deals, Q1 Earnings
   if (
     text.includes('fd rate') || 
     text.includes('interest rate') || 
@@ -298,9 +295,9 @@ function generate4FallbackBullets(title, desc, sourceName, category) {
     .filter(s => s.length > 15 && !s.toLowerCase().includes('click here') && !s.toLowerCase().includes('subscribe'));
 
   const p1 = `Key Development: ${cleanTitle}`;
-  const p2 = sentences.length > 0 ? sentences[0] : `Core insights reported by ${sourceName} on developments affecting ${category}.`;
-  const p3 = sentences.length > 1 ? sentences[1] : `Portfolio / Policy Implications: Investors and policyholders should evaluate exposure and risk metrics.`;
-  const p4 = `Actionable Trigger: Track global & domestic market indicators and consult your financial advisor to optimize asset allocation.`;
+  const p2 = sentences.length > 0 ? sentences[0] : `Core details reported by ${sourceName} covering recent updates in ${category}.`;
+  const p3 = sentences.length > 1 ? sentences[1] : `Portfolio Implications: Investors and policyholders should evaluate position sizing and risk exposure for ${category}.`;
+  const p4 = `Actionable Trigger: Track official regulatory circulars and consult your advisor to align your financial plan.`;
 
   return [p1, p2, p3, p4];
 }
@@ -317,7 +314,6 @@ function filterBalancedQualityArticles(items, existingMap) {
     if (isDuplicate(item, currentBatchMap)) continue;
 
     categoryCounts[strictCategory] = categoryCounts[strictCategory] || 0;
-    // Keep a healthy balance: up to 5-6 quality articles per category
     if (categoryCounts[strictCategory] < 6) {
       item.category = strictCategory;
       item.impact = classifyImpactWeightage(item.title, item.description);
@@ -348,7 +344,7 @@ async function summarizeAndCategorizeInBatches(rawArticles) {
         source_url: a.link,
         category: a.category,
         impact: a.impact || classifyImpactWeightage(a.title, a.description),
-        tags: ['GlobalMarket', 'IndianWealth'],
+        tags: ['WealthAnalysis', 'IndianMarkets'],
         published_at: new Date().toISOString(),
         created_at: new Date().toISOString(),
       }));
@@ -366,12 +362,12 @@ async function summarizeAndCategorizeInBatches(rawArticles) {
       assigned_impact: a.impact
     }));
 
-    const prompt = `You are an expert global & Indian wealth analyst. Analyze these ${articlesInput.length} news items:
+    const prompt = `You are an expert financial analyst. Analyze these ${articlesInput.length} news items:
 ${JSON.stringify(articlesInput, null, 2)}
 
 For EACH news item:
 1. Retain the "strict_category" assigned.
-2. Retain or refine "assigned_impact": 'High', 'Medium', or 'Standard' (Mark 'High' if it involves US Fed, global markets, crude oil, reinsurance, or SEBI/RBI policy).
+2. Retain or refine "assigned_impact": 'High', 'Medium', or 'Standard'.
 3. Generate EXACTLY 4 comprehensive, insightful bullet points.
 
 Return a JSON array containing objects with:
@@ -381,10 +377,10 @@ Return a JSON array containing objects with:
     "category": "MUST match strict_category",
     "impact": "High or Medium or Standard",
     "summary": [
-      "1. Core News & Figures: Concise summary of key figures, valuations, global macro data or regulatory updates.",
-      "2. Sector & Global Impact: Analysis of broader global or Indian sector trends, reinsurance rates, or market moves.",
-      "3. Investor & Portfolio Takeaway: Practical impact on Indian investor portfolios, SIPs, yields, or policyholders.",
-      "4. Key Monitoring Trigger: Upcoming catalyst, Fed/RBI meeting dates, or risk indicators to watch."
+      "1. Core News & Figures: Precise summary of key figures, valuations, or regulatory updates. NO CDATA tags, NO HTML.",
+      "2. Sector / Industry Impact: Analysis of broader industry trends, compliance changes, or market movement. NO CDATA tags, NO HTML.",
+      "3. Portfolio Implications: Direct advice on how this affects investor portfolios, SIPs, yields, or tax liabilities. NO CDATA tags, NO HTML.",
+      "4. Key Catalyst to Watch: Upcoming dates, SEBI/RBI timelines, or monitoring triggers for smart investors. NO CDATA tags, NO HTML."
     ],
     "tags": ["tag1", "tag2", "tag3"]
   }
@@ -393,7 +389,7 @@ Return a JSON array containing objects with:
 CRITICAL RULES:
 - "category" MUST strictly match "strict_category".
 - "summary" MUST be an array of EXACTLY 4 detailed, insightful bullet points.
-- NO raw HTML tags, NO generic placeholder text.
+- NO raw HTML tags, NO CDATA tags like ']]>'.
 - Only return the JSON array.`;
 
     const body = {
@@ -432,7 +428,7 @@ CRITICAL RULES:
               source_url: original.link,
               category: original.category,
               impact: p.impact || original.impact || classifyImpactWeightage(original.title, original.description),
-              tags: p.tags || ['GlobalMarket', 'IndianWealth'],
+              tags: p.tags || ['WealthAnalysis', 'IndianMarkets'],
               published_at: new Date().toISOString(),
               created_at: new Date().toISOString(),
             };
@@ -453,7 +449,7 @@ CRITICAL RULES:
       source_url: a.link,
       category: a.category,
       impact: a.impact || classifyImpactWeightage(a.title, a.description),
-      tags: ['GlobalMarket', 'IndianWealth'],
+      tags: ['Regulatory', 'IndianFinance'],
       published_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
     }));
@@ -497,7 +493,7 @@ async function saveArticle(article, token) {
 async function curate() {
   const startTime = Date.now();
   console.log('\n' + '═'.repeat(60));
-  console.log('  🗞️  masterschetan Financial News Slate — Global & Domestic Balanced Curation');
+  console.log('  🗞️  masterschetan Financial News Slate — Strict CDATA & Category Curation');
   console.log('  📅  ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
   console.log('═'.repeat(60) + '\n');
 
@@ -509,7 +505,7 @@ async function curate() {
   const existingMap = await getRecentArticleMap(token);
   console.log(`  Found ${existingMap.length} existing articles in Firestore.\n`);
 
-  console.log('📡 Fetching live RSS feeds (Global & Domestic)...');
+  console.log('📡 Fetching live RSS feeds...');
   let rawArticles = [];
   for (const feed of RSS_FEEDS) {
     const items = await fetchRssFeed(feed);
@@ -542,7 +538,7 @@ async function curate() {
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('\n' + '═'.repeat(60));
-  console.log(`  📊 Global & Domestic Curation complete in ${elapsed}s`);
+  console.log(`  📊 Strict Curation complete in ${elapsed}s`);
   console.log(`  ✅ Total new unique articles saved to Firestore: ${totalNew}`);
   console.log('═'.repeat(60) + '\n');
 }
