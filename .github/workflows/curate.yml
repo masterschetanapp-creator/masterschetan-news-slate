@@ -1,0 +1,30 @@
+name: Daily AI Financial News Curation
+
+on:
+  schedule:
+    # Run 1: 9:03 AM IST (03:33 UTC) - Morning market open briefing
+    - cron: '33 3 * * *'
+    # Run 2: 5:33 PM IST (12:03 UTC) - Evening post-market & regulatory circulars
+    - cron: '3 12 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI anytime
+
+jobs:
+  curate-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Gemini AI Curation Pipeline
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/curate-news.cjs
