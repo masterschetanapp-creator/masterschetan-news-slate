@@ -1,8 +1,16 @@
 /**
- * masterschetan Financial News Slate — Multi-Source Curation Pipeline
+ * masterschetan Financial News Slate — 42+ Article Multi-Category Curation Pipeline
  * 
- * Generates 4 detailed, actionable wealth takeaways for every news article
- * across official regulatory sources, insurance, mutual funds, equities, debt, and wealth strategy.
+ * Curates 42+ comprehensive articles across all 7 verticals:
+ * 1. PMS & AIF
+ * 2. Equities & SIF
+ * 3. Mutual Funds
+ * 4. Bonds & FDs
+ * 5. Life & Term Insurance
+ * 6. Health & Motor Insurance
+ * 7. Wealth Strategy
+ * 
+ * Every article contains 4 detailed, actionable wealth takeaway points.
  * 
  * USAGE:
  *   node scripts/curate-news.cjs
@@ -23,7 +31,7 @@ const RSS_FEEDS = [
   { source: 'Livemint Markets', url: 'https://www.livemint.com/rss/markets' },
   { source: 'Business Standard Finance', url: 'https://www.business-standard.com/rss/finance-103.rss' },
   { source: 'Business Standard Markets', url: 'https://www.business-standard.com/rss/markets-106.rss' },
-  { source: 'Moneycontrol', url: 'https://www.moneycontrol.com/rss/MCtopnews.xml' },
+  { source: 'Moneycontrol Top News', url: 'https://www.moneycontrol.com/rss/MCtopnews.xml' },
 ];
 
 function getAccessToken() {
@@ -135,7 +143,7 @@ async function getRecentArticles(token) {
           value: { stringValue: sevenDaysAgo.toISOString() }
         }
       },
-      limit: 200
+      limit: 300
     }
   };
 
@@ -165,22 +173,22 @@ async function getRecentArticles(token) {
 function categorizeByRule(title, desc) {
   const text = (title + ' ' + desc).toLowerCase();
   
-  if (text.includes('pms') || text.includes('aif') || text.includes('portfolio management') || text.includes('alternative investment') || text.includes('sebi circular')) {
+  if (text.includes('pms') || text.includes('aif') || text.includes('portfolio management') || text.includes('alternative investment') || text.includes('sebi circular') || text.includes('recovery certificate')) {
     return 'PMS & AIF';
   }
-  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav')) {
+  if (text.includes('mutual fund') || text.includes('sip') || text.includes('nfo') || text.includes('amfi') || text.includes('nav') || text.includes('tracking error')) {
     return 'Mutual Funds';
   }
-  if (text.includes('fd') || text.includes('bond') || text.includes('repo rate') || text.includes('yield') || text.includes('g-sec') || text.includes('fixed deposit') || text.includes('rbi')) {
+  if (text.includes('fd') || text.includes('bond') || text.includes('repo rate') || text.includes('yield') || text.includes('g-sec') || text.includes('fixed deposit') || text.includes('rbi') || text.includes('nre')) {
     return 'Bonds & FDs';
   }
-  if (text.includes('term insurance') || text.includes('life insurance') || text.includes('lic') || text.includes('surrender value') || text.includes('irdai')) {
+  if (text.includes('term insurance') || text.includes('life insurance') || text.includes('lic') || text.includes('surrender value') || text.includes('irdai') || text.includes('policy')) {
     return 'Life & Term Insurance';
   }
-  if (text.includes('health insurance') || text.includes('motor insurance') || text.includes('third-party') || text.includes('wellness rider') || text.includes('bima')) {
+  if (text.includes('health insurance') || text.includes('motor insurance') || text.includes('third-party') || text.includes('wellness rider') || text.includes('bima') || text.includes('claim')) {
     return 'Health & Motor Insurance';
   }
-  if (text.includes('tax') || text.includes('capital gains') || text.includes('wealth') || text.includes('budget') || text.includes('nps') || text.includes('nri') || text.includes('demat')) {
+  if (text.includes('tax') || text.includes('capital gains') || text.includes('wealth') || text.includes('budget') || text.includes('nps') || text.includes('nri') || text.includes('demat') || text.includes('itr') || text.includes('pay commission')) {
     return 'Wealth Strategy';
   }
   return 'Equities & SIF';
@@ -193,67 +201,95 @@ function generate4FallbackBullets(title, desc, sourceName, category) {
   const sentences = cleanDesc
     .split(/(?<=[.!?])\s+/)
     .map(s => s.trim())
-    .filter(s => s.length > 20 && !s.toLowerCase().includes('click here') && !s.toLowerCase().includes('subscribe'));
+    .filter(s => s.length > 15 && !s.toLowerCase().includes('click here') && !s.toLowerCase().includes('subscribe'));
 
-  const p1 = `Core Announcement: ${cleanTitle}`;
-  const p2 = sentences.length > 0 ? sentences[0] : `Key updates reported by ${sourceName} covering recent developments in the ${category} space.`;
-  const p3 = sentences.length > 1 ? sentences[1] : `Portfolio Implications: Investors should evaluate sector weightages and risk exposure in response to this notice.`;
-  const p4 = `Actionable Trigger: Monitor official regulatory disclosures and align portfolio duration/equity mix accordingly.`;
+  const p1 = `Key Development: ${cleanTitle}`;
+  const p2 = sentences.length > 0 ? sentences[0] : `Core details reported by ${sourceName} covering recent updates in ${category}.`;
+  const p3 = sentences.length > 1 ? sentences[1] : `Portfolio Implications: High-net-worth and retail investors should review position sizing and sector exposure.`;
+  const p4 = `Actionable Trigger: Track official regulatory circulars and consult your advisor to optimize asset allocation.`;
 
   return [p1, p2, p3, p4];
 }
 
-function balanceArticlesBySource(items, maxTotal = 14) {
+function select42BalancedArticles(items) {
+  const categories = [
+    'PMS & AIF',
+    'Equities & SIF',
+    'Mutual Funds',
+    'Bonds & FDs',
+    'Life & Term Insurance',
+    'Health & Motor Insurance',
+    'Wealth Strategy'
+  ];
+
   const grouped = {};
+  for (const c of categories) grouped[c] = [];
+
   for (const item of items) {
-    grouped[item.source_name] = grouped[item.source_name] || [];
-    grouped[item.source_name].push(item);
+    const cat = categorizeByRule(item.title, item.description);
+    item.category = cat;
+    grouped[cat].push(item);
   }
 
-  const sources = Object.keys(grouped);
   const result = [];
-  let index = 0;
+  // Select up to 6 articles per category (7 x 6 = 42 total!)
+  for (const c of categories) {
+    const pool = grouped[c];
+    const targetCount = Math.min(6, pool.length);
+    for (let i = 0; i < targetCount; i++) {
+      result.push(pool[i]);
+    }
+  }
 
-  while (result.length < maxTotal && sources.some(s => grouped[s].length > index)) {
-    for (const source of sources) {
-      if (grouped[source][index] && result.length < maxTotal) {
-        result.push(grouped[source][index]);
+  // Fill up to 42 if any category has fewer than 6
+  if (result.length < 42) {
+    for (const item of items) {
+      if (result.length >= 42) break;
+      if (!result.some(r => r.link === item.link)) {
+        result.push(item);
       }
     }
-    index++;
   }
+
   return result;
 }
 
-async function summarizeAndCategorize(rawArticles) {
+async function summarizeAndCategorizeInBatches(rawArticles) {
   if (!rawArticles || rawArticles.length === 0) return [];
 
-  if (!GEMINI_API_KEY) {
-    return rawArticles.map(a => {
-      const cat = categorizeByRule(a.title, a.description);
-      return {
+  const batchSize = 10;
+  let allCurated = [];
+
+  for (let b = 0; b < rawArticles.length; b += batchSize) {
+    const batch = rawArticles.slice(b, b + batchSize);
+    console.log(`  🧠 Processing AI batch ${Math.floor(b/batchSize)+1}/${Math.ceil(rawArticles.length/batchSize)} (${batch.length} items)...`);
+
+    if (!GEMINI_API_KEY) {
+      const fallbackBatch = batch.map(a => ({
         title: stripHtmlAndUnescape(a.title),
-        summary: generate4FallbackBullets(a.title, a.description, a.source_name, cat),
+        summary: generate4FallbackBullets(a.title, a.description, a.source_name, a.category),
         source_name: a.source_name,
         source_url: a.link,
-        category: cat,
+        category: a.category || categorizeByRule(a.title, a.description),
         impact: a.title.toLowerCase().includes('sebi') || a.title.toLowerCase().includes('rbi') || a.title.toLowerCase().includes('surge') ? 'High' : 'Standard',
-        tags: ['Regulatory', 'IndianFinance'],
+        tags: ['WealthAnalysis', 'IndianMarkets'],
         published_at: new Date().toISOString(),
         created_at: new Date().toISOString(),
-      };
-    });
-  }
+      }));
+      allCurated = allCurated.concat(fallbackBatch);
+      continue;
+    }
 
-  const articlesInput = rawArticles.map((a, i) => ({
-    id: i,
-    title: stripHtmlAndUnescape(a.title),
-    description: stripHtmlAndUnescape(a.description),
-    source: a.source_name,
-    link: a.link,
-  }));
+    const articlesInput = batch.map((a, i) => ({
+      id: i,
+      title: stripHtmlAndUnescape(a.title),
+      description: stripHtmlAndUnescape(a.description),
+      source: a.source_name,
+      link: a.link,
+      suggested_category: a.category
+    }));
 
-  const prompt = `You are an expert wealth analyst for Indian high-net-worth and retail investors. Analyze these ${articlesInput.length} news items:
+    const prompt = `You are an expert wealth analyst for Indian high-net-worth and retail investors. Analyze these ${articlesInput.length} news items:
 ${JSON.stringify(articlesInput, null, 2)}
 
 For EACH news item, generate EXACTLY 4 comprehensive, insightful bullet points. Return a JSON array containing objects with:
@@ -278,68 +314,73 @@ CRITICAL RULES:
 - Focus strictly on practical value for Indian investors.
 - Only return the JSON array.`;
 
-  const body = {
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.1, maxOutputTokens: 4096 }
-  };
+    const body = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.1, maxOutputTokens: 4096 }
+    };
 
-  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-  try {
-    const response = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    try {
+      const response = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      const jsonMatch = text.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        return parsed.map(p => {
-          const original = rawArticles[p.id];
-          if (!original) return null;
-          
-          let bullets = p.summary || [];
-          if (!Array.isArray(bullets) || bullets.length < 3) {
-            const cat = p.category || categorizeByRule(original.title, original.description);
-            bullets = generate4FallbackBullets(original.title, original.description, original.source_name, cat);
-          }
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          const batchCurated = parsed.map(p => {
+            const original = batch[p.id];
+            if (!original) return null;
 
-          return {
-            title: stripHtmlAndUnescape(original.title),
-            summary: bullets.map(stripHtmlAndUnescape),
-            source_name: original.source_name,
-            source_url: original.link,
-            category: p.category || categorizeByRule(original.title, original.description),
-            impact: p.impact || (original.title.toLowerCase().includes('sebi') || original.title.toLowerCase().includes('rbi') ? 'High' : 'Standard'),
-            tags: p.tags || ['WealthAnalysis', 'IndianMarkets'],
-            published_at: new Date().toISOString(),
-            created_at: new Date().toISOString(),
-          };
-        }).filter(Boolean);
+            let bullets = p.summary || [];
+            if (!Array.isArray(bullets) || bullets.length < 3) {
+              const cat = p.category || original.category || categorizeByRule(original.title, original.description);
+              bullets = generate4FallbackBullets(original.title, original.description, original.source_name, cat);
+            }
+
+            return {
+              title: stripHtmlAndUnescape(original.title),
+              summary: bullets.map(stripHtmlAndUnescape),
+              source_name: original.source_name,
+              source_url: original.link,
+              category: p.category || original.category || categorizeByRule(original.title, original.description),
+              impact: p.impact || (original.title.toLowerCase().includes('sebi') || original.title.toLowerCase().includes('rbi') ? 'High' : 'Standard'),
+              tags: p.tags || ['WealthAnalysis', 'IndianMarkets'],
+              published_at: new Date().toISOString(),
+              created_at: new Date().toISOString(),
+            };
+          }).filter(Boolean);
+
+          allCurated = allCurated.concat(batchCurated);
+          continue;
+        }
       }
+    } catch (e) {
+      console.warn('  ⚠️ Batch AI fallback to 4-bullet engine:', e.message);
     }
-  } catch (e) {
-    console.warn('  ⚠️ Gemini API fallback to 4-bullet engine:', e.message);
-  }
 
-  return rawArticles.map(a => {
-    const cat = categorizeByRule(a.title, a.description);
-    return {
+    // Fallback for this batch
+    const fallbackBatch = batch.map(a => ({
       title: stripHtmlAndUnescape(a.title),
-      summary: generate4FallbackBullets(a.title, a.description, a.source_name, cat),
+      summary: generate4FallbackBullets(a.title, a.description, a.source_name, a.category),
       source_name: a.source_name,
       source_url: a.link,
-      category: cat,
+      category: a.category || categorizeByRule(a.title, a.description),
       impact: a.title.toLowerCase().includes('sebi') || a.title.toLowerCase().includes('rbi') || a.title.toLowerCase().includes('surge') ? 'High' : 'Standard',
       tags: ['Regulatory', 'IndianFinance'],
       published_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
-    };
-  });
+    }));
+    allCurated = allCurated.concat(fallbackBatch);
+  }
+
+  return allCurated;
 }
 
 function isDuplicate(title, existingTitles) {
@@ -388,7 +429,7 @@ async function saveArticle(article, token) {
 async function curate() {
   const startTime = Date.now();
   console.log('\n' + '═'.repeat(60));
-  console.log('  🗞️  masterschetan Financial News Slate — 4-Bullet Insight Curation');
+  console.log('  🗞️  masterschetan Financial News Slate — 42-Article Multi-Vertical Curation');
   console.log('  📅  ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
   console.log('═'.repeat(60) + '\n');
 
@@ -400,7 +441,7 @@ async function curate() {
   const existingTitles = await getRecentArticles(token);
   console.log(`  Found ${existingTitles.length} existing articles in Firestore.\n`);
 
-  console.log('📡 Fetching live RSS feeds (SEBI Official, ET Insurance, ET Wealth, Livemint, Business Standard, Moneycontrol)...');
+  console.log('📡 Fetching live RSS feeds across official & institutional portals...');
   let rawArticles = [];
   for (const feed of RSS_FEEDS) {
     const items = await fetchRssFeed(feed);
@@ -415,10 +456,10 @@ async function curate() {
     }
   }
 
-  const balancedCandidates = balanceArticlesBySource(uniqueRaw, 14);
-  console.log(`🧠 Generating 4 detailed wealth insights for ${balancedCandidates.length} articles via Gemini AI...`);
+  const selected42 = select42BalancedArticles(uniqueRaw);
+  console.log(`🧠 Selected ${selected42.length} articles balanced across all 7 verticals (PMS & AIF, Equities, MF, Bonds, Life Ins, Health Ins, Wealth Strategy)...`);
 
-  const curatedArticles = await summarizeAndCategorize(balancedCandidates);
+  const curatedArticles = await summarizeAndCategorizeInBatches(selected42);
   console.log(`  ✅ Prepared ${curatedArticles.length} news items with 4 detailed insights.\n`);
 
   let totalNew = 0;
@@ -426,7 +467,7 @@ async function curate() {
     try {
       await saveArticle(article, token);
       existingTitles.push(article.title.toLowerCase());
-      console.log(`  ✅ Saved: [${article.source_name}] "${article.title.substring(0, 35)}..." (${article.summary.length} insights) -> ${article.source_url}`);
+      console.log(`  ✅ Saved: [${article.category}] "${article.title.substring(0, 35)}..." (${article.summary.length} insights) -> ${article.source_url}`);
       totalNew++;
     } catch (e) {
       console.error(`  ❌ Save failed: ${e.message}`);
@@ -435,8 +476,8 @@ async function curate() {
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('\n' + '═'.repeat(60));
-  console.log(`  📊 4-Bullet Insight Curation complete in ${elapsed}s`);
-  console.log(`  ✅ New live articles saved to Firestore: ${totalNew}`);
+  console.log(`  📊 42-Article Curation complete in ${elapsed}s`);
+  console.log(`  ✅ Total live articles saved to Firestore: ${totalNew}`);
   console.log('═'.repeat(60) + '\n');
 }
 
