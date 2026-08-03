@@ -11,6 +11,7 @@ const IMPACT_STYLES = {
     border: 'border-red-200',
     dot: 'bg-red-600',
     pulse: true,
+    symbol: '▲',
   },
   'Medium': {
     bg: 'bg-amber-50',
@@ -18,6 +19,7 @@ const IMPACT_STYLES = {
     border: 'border-amber-200',
     dot: 'bg-amber-600',
     pulse: false,
+    symbol: '⚡',
   },
   'Standard': {
     bg: 'bg-slate-100',
@@ -25,6 +27,7 @@ const IMPACT_STYLES = {
     border: 'border-slate-200',
     dot: 'bg-slate-500',
     pulse: false,
+    symbol: '●',
   }
 };
 
@@ -55,6 +58,7 @@ const NewsCard = ({ article, index, onClick, isSaved, onToggleSave }) => {
               {article.category}
             </span>
             <span className={`flex items-center space-x-1.5 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md border ${impact.bg} ${impact.text} ${impact.border}`}>
+              <span className="text-[9px] font-black">{impact.symbol}</span>
               <span className="relative flex h-1.5 w-1.5">
                 {impact.pulse && <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${impact.dot} opacity-75`}></span>}
                 <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${impact.dot}`}></span>
@@ -110,7 +114,7 @@ const NewsCard = ({ article, index, onClick, isSaved, onToggleSave }) => {
           <div className="flex items-center space-x-2.5 text-xs text-slate-500 font-medium">
             <span className="font-extrabold text-slate-800">{article.source_name}</span>
             <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-            <span className="flex items-center text-slate-500">
+            <span className="flex items-center text-slate-500 tabular-nums">
               <Clock className="w-3 h-3 mr-1" />
               {article.published_at ? format(parseISO(article.published_at), 'MMM d') : ''}
             </span>

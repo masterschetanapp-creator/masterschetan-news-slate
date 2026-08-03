@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Volume2, VolumeX, Bookmark, Share2, ExternalLink, Type, Clock, Check, Sparkles } from 'lucide-react';
+import { X, Volume2, VolumeX, Bookmark, Share2, ExternalLink, Type, Clock, Check, Sparkles, ShieldCheck } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { CATEGORY_COLORS } from './CategoryFilter';
 
@@ -22,6 +22,7 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
   if (!article) return null;
 
   const catColor = CATEGORY_COLORS[article.category] || '#2563eb';
+  const shareableUrl = `${window.location.origin}/?article=${article.id}`;
 
   const handleToggleSpeech = () => {
     if (!('speechSynthesis' in window)) {
@@ -45,13 +46,13 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
   };
 
   const handleWhatsAppShare = () => {
-    const text = `*${article.title}*\n\n${article.summary.map(s => `• ${s}`).join('\n')}\n\nRead more on masterschetan Financial News Slate: ${window.location.href}`;
+    const text = `*${article.title}*\n\n${article.summary.map(s => `• ${s}`).join('\n')}\n\nRead full story on masterSchetan News Slate:\n${shareableUrl}`;
     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(article.source_url || window.location.href);
+    navigator.clipboard.writeText(shareableUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -213,6 +214,14 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
                 ))}
               </div>
             )}
+
+            {/* Regulatory Disclaimer Pill inside Modal */}
+            <div className="flex items-start space-x-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-500">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <span>
+                <strong className="text-slate-700">Educational Summary:</strong> Curated for informational awareness. masterSchetan is an AMFI-Registered Mutual Fund Distributor. Mutual fund investments are subject to market risks.
+              </span>
+            </div>
           </div>
 
           {/* Footer Actions */}
@@ -231,7 +240,7 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
                 className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 text-xs font-bold transition-all shadow-sm"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Type className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Link Copied!' : 'Copy Link'}</span>
+                <span>{copied ? 'Link Copied!' : 'Copy Direct Link'}</span>
               </button>
             </div>
 

@@ -4,6 +4,7 @@ import { Newspaper, TrendingUp, Flame, BarChart3, Bookmark } from 'lucide-react'
 import Header from './components/Header';
 import Highlights from './components/Highlights';
 import CategoryFilter from './components/CategoryFilter';
+import ImpactFilter from './components/ImpactFilter';
 import SearchBar from './components/SearchBar';
 import NewsList from './components/NewsList';
 import ArticleModal from './components/ArticleModal';
@@ -13,12 +14,13 @@ import { getAllArticles, searchArticles } from './services/firestore';
 function App() {
   const [articles, setArticles] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [activeImpact, setActiveImpact] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Interactive Reader State
+  // Interactive Reader State & Deep Link Handler
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [savedIds, setSavedIds] = useState(() => {
@@ -41,6 +43,33 @@ function App() {
   useEffect(() => {
     fetchArticles();
   }, []);
+
+  // Handle URL deep-linking (?article=ID)
+  useEffect(() => {
+    if (articles.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const articleId = params.get('article');
+      if (articleId) {
+        const found = articles.find(a => a.id === articleId);
+        if (found) {
+          setSelectedArticle(found);
+        }
+      }
+    }
+  }, [articles]);
+
+  const handleSelectArticle = (art) => {
+    setSelectedArticle(art);
+    if (art) {
+      const newUrl = `${window.location.pathname}?article=${art.id}`;
+      window.history.pushState({ path: newUrl }, '', newUrl);
+    }
+  };
+
+  const handleCloseArticle = () => {
+    setSelectedArticle(null);
+    window.history.pushState({ path: window.location.pathname }, '', window.location.pathname);
+  };
 
   const fetchArticles = async () => {
     setIsLoading(true);
@@ -76,6 +105,16 @@ function App() {
     return counts;
   }, [articles]);
 
+  // Impact counts
+  const impactCounts = useMemo(() => {
+    const counts = { 'All': articles.length, 'High': 0, 'Medium': 0, 'Standard': 0 };
+    articles.forEach(a => {
+      const imp = a.impact || 'Standard';
+      counts[imp] = (counts[imp] || 0) + 1;
+    });
+    return counts;
+  }, [articles]);
+
   // Stats
   const stats = useMemo(() => {
     const highCount = articles.filter(a => a.impact === 'High').length;
@@ -96,6 +135,10 @@ function App() {
       filtered = filtered.filter(a => a.category === activeCategory);
     }
 
+    if (activeImpact && activeImpact !== 'All') {
+      filtered = filtered.filter(a => (a.impact || 'Standard') === activeImpact);
+    }
+
     if (selectedDate) {
       filtered = filtered.filter(a => {
         if (!a.published_at) return false;
@@ -108,12 +151,13 @@ function App() {
     }
 
     return filtered;
-  }, [articles, activeCategory, searchTerm, selectedDate, showSavedOnly, savedIds]);
+  }, [articles, activeCategory, activeImpact, searchTerm, selectedDate, showSavedOnly, savedIds]);
 
   const handleClear = () => {
     setSearchTerm('');
     setSelectedDate('');
     setActiveCategory('All');
+    setActiveImpact('All');
     setShowSavedOnly(false);
   };
 
@@ -163,7 +207,7 @@ function App() {
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: stat.color }} />
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-black text-slate-900">{stat.value}</p>
+                  <p className="text-xl sm:text-2xl font-black text-slate-900 tabular-nums">{stat.value}</p>
                   <p className="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">{stat.label}</p>
                 </div>
               </div>
@@ -175,7 +219,7 @@ function App() {
         {!error && !showSavedOnly && (
           <Highlights
             articles={highlights}
-            onArticleClick={(art) => setSelectedArticle(art)}
+            onArticleClick={handleSelectArticle}
           />
         )}
 
@@ -207,6 +251,13 @@ function App() {
           categoryCounts={categoryCounts}
         />
 
+        {/* Impact Filter */}
+        <ImpactFilter
+          activeImpact={activeImpact}
+          onImpactChange={setActiveImpact}
+          impactCounts={impactCounts}
+        />
+
         {/* Search Bar */}
         <SearchBar
           searchTerm={searchTerm}
@@ -220,9 +271,12 @@ function App() {
         {!isLoading && !error && (
           <div className="flex items-center justify-between mb-5">
             <p className="text-xs sm:text-sm text-slate-600 font-medium">
-              Showing <span className="text-slate-900 font-black">{filteredArticles.length}</span> article{filteredArticles.length !== 1 ? 's' : ''}
+              Showing <span className="text-slate-900 font-black tabular-nums">{filteredArticles.length}</span> article{filteredArticles.length !== 1 ? 's' : ''}
               {activeCategory !== 'All' && (
                 <span className="text-slate-500"> in <span className="text-red-600 font-bold">{activeCategory}</span></span>
+              )}
+              {activeImpact !== 'All' && (
+                <span className="text-slate-500"> with <span className="text-red-600 font-bold">{activeImpact} Impact</span></span>
               )}
             </p>
           </div>
@@ -233,7 +287,7 @@ function App() {
           <NewsList
             articles={filteredArticles}
             isLoading={isLoading}
-            onArticleClick={(art) => setSelectedArticle(art)}
+            onArticleClick={handleSelectArticle}
             savedIds={savedIds}
             onToggleSave={handleToggleSave}
           />
@@ -246,7 +300,7 @@ function App() {
       {selectedArticle && (
         <ArticleModal
           article={selectedArticle}
-          onClose={() => setSelectedArticle(null)}
+          onClose={handleCloseArticle}
           isSaved={savedIds.includes(selectedArticle.id)}
           onToggleSave={handleToggleSave}
         />
