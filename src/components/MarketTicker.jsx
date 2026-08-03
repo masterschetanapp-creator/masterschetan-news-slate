@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Pause, Play, Activity } from 'lucide-react';
 
-const MARKET_DATA = [
-  { symbol: 'NIFTY 50', val: '24,850.25', change: '+112.40', pct: '+0.45%', isUp: true },
-  { symbol: 'SENSEX', val: '81,420.10', change: '+310.15', pct: '+0.38%', isUp: true },
-  { symbol: 'BANK NIFTY', val: '52,140.80', change: '-65.20', pct: '-0.12%', isUp: false },
-  { symbol: 'NIFTY MIDCAP', val: '58,310.45', change: '+245.80', pct: '+0.42%', isUp: true },
-  { symbol: 'GOLD (24K)', val: '₹74,250', change: '+₹220', pct: '+0.30%', isUp: true },
-  { symbol: 'USD / INR', val: '83.72', change: '0.00', pct: '0.00%', isUp: null },
-  { symbol: 'CRUDE BRENT', val: '$79.45', change: '-$0.85', pct: '-1.06%', isUp: false },
-  { symbol: '10Y G-SEC YIELD', val: '6.92%', change: '0.00', pct: '0.00%', isUp: null },
+const FALLBACK_MARKET_DATA = [
+  { symbol: 'NIFTY 50', val: '24,774.30', change: '+390.70', pct: '+1.60%', isUp: true },
+  { symbol: 'SENSEX', val: '78,639.03', change: '+544.39', pct: '+0.70%', isUp: true },
+  { symbol: 'BANK NIFTY', val: '58,247.95', change: '+983.10', pct: '+1.72%', isUp: true },
+  { symbol: 'GOLD (24K/10g)', val: '₹74,250', change: '+₹220', pct: '+0.30%', isUp: true },
+  { symbol: 'USD / INR', val: '₹83.72', change: '0.00', pct: '0.00%', isUp: null },
+  { symbol: 'CRUDE BRENT', val: '$82.99', change: '-$4.94', pct: '-5.62%', isUp: false },
 ];
 
 export default function MarketTicker() {
   const [isPaused, setIsPaused] = useState(false);
+  const [marketData, setMarketData] = useState(FALLBACK_MARKET_DATA);
+
+  useEffect(() => {
+    fetch('/market-data.json')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setMarketData(data);
+        }
+      })
+      .catch(err => {
+        console.warn('Using fallback ticker data:', err);
+      });
+  }, []);
 
   return (
     <div className="bg-slate-900 text-white border-b border-slate-800 text-[11px] font-bold py-1.5 px-3 relative overflow-hidden z-50">
@@ -22,7 +34,7 @@ export default function MarketTicker() {
         {/* Left Label */}
         <div className="flex items-center space-x-1.5 shrink-0 bg-red-600 px-2 py-0.5 rounded text-[10px] uppercase font-black tracking-wider shadow-2xs">
           <Activity className="w-3 h-3 text-white animate-pulse" />
-          <span>MARKETS</span>
+          <span>LIVE MARKETS</span>
         </div>
 
         {/* Scrolling Ticker Strip */}
@@ -32,11 +44,11 @@ export default function MarketTicker() {
           onMouseLeave={() => setIsPaused(false)}
         >
           <div className={`flex items-center space-x-6 sm:space-x-8 whitespace-nowrap ${isPaused ? '' : 'ticker-scroll'}`}>
-            {[...MARKET_DATA, ...MARKET_DATA].map((item, idx) => (
+            {[...marketData, ...marketData].map((item, idx) => (
               <div key={idx} className="inline-flex items-center space-x-1.5">
                 <span className="text-slate-400 font-extrabold">{item.symbol}</span>
                 <span className="font-black text-white tabular-nums">{item.val}</span>
-                <span className={`inline-flex items-center font-bold text-[10px] px-1 py-0.2 rounded tabular-nums ${
+                <span className={`inline-flex items-center font-bold text-[10px] px-1.5 py-0.2 rounded tabular-nums ${
                   item.isUp === true
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                     : item.isUp === false
