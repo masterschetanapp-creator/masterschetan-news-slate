@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, Bookmark, ShieldCheck, Award, Sparkles, Mail, Check } from 'lucide-react';
+import MarketTicker from './MarketTicker';
 
 const FacebookIcon = () => (
   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -47,201 +48,206 @@ const Header = ({ savedCount = 0, showSavedOnly = false, onToggleSaved }) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/98 backdrop-blur-md border-b border-slate-200 shadow-sm">
-      {/* Main Header Container */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24 sm:h-28 md:h-32 gap-3 sm:gap-4 py-2">
-          
-          {/* Left: Logo & Brand Identity */}
-          <a href="https://masterSchetan.com" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2.5 sm:space-x-3.5 group shrink-0">
-            {/* Real logo.jpeg Image */}
-            <div className="relative p-1 bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm flex-shrink-0 overflow-hidden flex items-center justify-center">
-              <img 
-                src="/logo.jpeg" 
-                alt="masterSchetan Logo" 
-                className="w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 object-contain rounded-lg"
-              />
+    <>
+      {/* Top Live Market Indices Ticker */}
+      <MarketTicker />
+
+      <header className="sticky top-0 z-40 bg-white/98 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        {/* Main Header Container */}
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-24 sm:h-28 md:h-32 gap-3 sm:gap-4 py-2">
+            
+            {/* Left: Logo & Brand Identity */}
+            <a href="https://masterSchetan.com" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2.5 sm:space-x-3.5 group shrink-0">
+              {/* Real logo.jpeg Image */}
+              <div className="relative p-1 bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm flex-shrink-0 overflow-hidden flex items-center justify-center">
+                <img 
+                  src="/logo.jpeg" 
+                  alt="masterSchetan Logo" 
+                  className="w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 object-contain rounded-lg"
+                />
+              </div>
+
+              {/* Brand Titles */}
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-baseline">
+                  <span className="text-[11px] sm:text-xs md:text-sm font-black tracking-wider uppercase text-slate-800 truncate">CHETAN SHAH</span>
+                </div>
+                <h1 className="text-lg sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 leading-none">
+                  master<span className="text-[#e02020] font-black">S</span>chetan
+                </h1>
+                <div className="mt-1 flex items-center space-x-1.5">
+                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-red-700 bg-red-50 px-2 py-0.5 rounded-md border border-red-200 flex-shrink-0 shadow-2xs">
+                    News Slate
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wide hidden xs:block truncate">
+                    Penny to Pound
+                  </span>
+                </div>
+              </div>
+            </a>
+
+            {/* Middle: BIG & PROMINENT Header Marketing Card */}
+            <div className="hidden lg:flex flex-col items-center justify-center text-center px-5 py-2 mx-2 bg-gradient-to-r from-red-50 via-white to-emerald-50 rounded-2xl border border-slate-300/80 shadow-xs flex-1 max-w-2xl">
+              {/* Top Pill */}
+              <div className="inline-flex items-center space-x-2 bg-[#e02020] text-white text-xs font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-xs">
+                <Award className="w-3.5 h-3.5 text-white" />
+                <span>30+ Years of Trust & Wealth Advisory</span>
+              </div>
+
+              {/* Serving Counter */}
+              <p className="text-sm sm:text-base font-black text-slate-900 tracking-tight mt-1 leading-snug">
+                Serving <span className="text-[#e02020] font-black underline decoration-red-300">1,300+ Families</span> & <span className="text-emerald-700 font-black underline decoration-emerald-300">5,000+ Clients</span> Across India & NRIs
+              </p>
+
+              {/* Services */}
+              <p className="text-xs font-bold text-slate-700 tracking-wide mt-0.5">
+                PMS <span className="text-red-500 font-bold">·</span> AIF <span className="text-red-500 font-bold">·</span> Mutual Funds <span className="text-red-500 font-bold">·</span> Equities <span className="text-red-500 font-bold">·</span> Bonds & FDs <span className="text-red-500 font-bold">·</span> Insurance
+              </p>
+
+              {/* Tagline */}
+              <div className="inline-flex items-center space-x-2 text-xs font-black text-slate-800 mt-1">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>Goal-Based Financial Planning</span>
+                <span className="text-slate-400 font-bold">|</span>
+                <Sparkles className="w-3.5 h-3.5 text-[#e02020]" />
+                <span className="text-[#e02020] font-black italic">Penny to Pound</span>
+              </div>
             </div>
 
-            {/* Brand Titles */}
-            <div className="flex flex-col min-w-0">
-              <div className="flex items-baseline">
-                <span className="text-[11px] sm:text-xs md:text-sm font-black tracking-wider uppercase text-slate-800 truncate">CHETAN SHAH</span>
+            {/* Right: Controls + Social Media Icons */}
+            <div className="flex flex-col items-end justify-center space-y-1.5 shrink-0 relative">
+              {/* Top Row: Bookmarks & WhatsApp Call Button */}
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                {/* Bookmarks Button */}
+                <button
+                  onClick={onToggleSaved}
+                  className={`flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border ${
+                    showSavedOnly
+                      ? 'bg-amber-500 text-white border-amber-600 shadow-sm'
+                      : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+                  }`}
+                  title="Saved Articles"
+                >
+                  <Bookmark className={`w-4 h-4 ${showSavedOnly ? 'fill-white' : ''}`} />
+                  <span className="hidden sm:inline">Bookmarks</span>
+                  {savedCount > 0 && (
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${showSavedOnly ? 'bg-white text-amber-600 font-black' : 'bg-slate-200 text-slate-800 font-bold'}`}>
+                      {savedCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Direct WhatsApp Call Button */}
+                <a
+                  href="https://wa.me/919324273030?text=Hello%20Chetan%20Shah,%20I%20would%20like%20wealth%20advisory%20consultation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center space-x-2 bg-[#16a34a] hover:bg-[#15803d] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all"
+                >
+                  <Phone className="w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform" />
+                  <div className="hidden md:flex flex-col text-left leading-tight">
+                    <span className="text-[10px] text-emerald-100 font-medium">Consult Chetan Shah</span>
+                    <span className="text-xs font-black tracking-wide">93242 73030</span>
+                  </div>
+                  <span className="md:hidden text-xs font-bold">Call</span>
+                </a>
               </div>
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 leading-none">
-                master<span className="text-[#e02020] font-black">S</span>chetan
-              </h1>
-              <div className="mt-1 flex items-center space-x-1.5">
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-red-700 bg-red-50 px-2 py-0.5 rounded-md border border-red-200 flex-shrink-0 shadow-2xs">
-                  News Slate
+
+              {/* Bottom Row: Official Social Media Icons */}
+              <div className="flex items-center space-x-1.5 pt-0.5 relative">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 hidden sm:inline mr-1">
+                  Follow Us:
                 </span>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wide hidden xs:block truncate">
-                  Penny to Pound
-                </span>
+
+                {/* Facebook */}
+                <a
+                  href="https://www.facebook.com/p/Chetan-Shah-100063942194665/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#1877f2] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
+                  title="Facebook — Chetan Shah (masterSchetan)"
+                >
+                  <FacebookIcon />
+                </a>
+
+                {/* LinkedIn */}
+                <a
+                  href="https://www.linkedin.com/company/masterschetan/?originalSubdomain=in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#0a66c2] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
+                  title="LinkedIn — masterSchetan Official Company"
+                >
+                  <LinkedinIcon />
+                </a>
+
+                {/* Instagram */}
+                <a
+                  href="https://www.instagram.com/masterschetan/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#e4405f] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
+                  title="Instagram — @masterschetan"
+                >
+                  <InstagramIcon />
+                </a>
+
+                {/* Google My Business & Maps Listing */}
+                <a
+                  href="https://www.google.com/search?rlz=1C1RXQR_enIN1104IN1104&sca_esv=361416631b2a74db&cs=1&output=search&q=CHETAN+SHAH+INVESTMENT+AND+FINANCIAL+CONSULTANT&ludocid=6242484208392529719&lsig=AB86z5WSNvI3MrQmzQdiJg2tARHf&kgs=8021bdcb76fdbc24&shndl=-1&shem=lsp,ssim&source=sh/x/kp/local/m1/1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#ea4335] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
+                  title="Google Business & Reviews — CHETAN SHAH INVESTMENT AND FINANCIAL CONSULTANT"
+                >
+                  <GoogleIcon />
+                </a>
+
+                {/* Email Support */}
+                <button
+                  onClick={handleEmailClick}
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#e02020] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs cursor-pointer relative"
+                  title="Click to copy support@masterschetan.com & compose email"
+                >
+                  {emailCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Mail className="w-3.5 h-3.5" />}
+                </button>
+
+                {/* Tooltip confirmation */}
+                {emailCopied && (
+                  <div className="absolute right-0 -bottom-8 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md z-50 whitespace-nowrap">
+                    Copied support@masterschetan.com!
+                  </div>
+                )}
               </div>
             </div>
-          </a>
 
-          {/* Middle: BIG & PROMINENT Header Marketing Card */}
-          <div className="hidden lg:flex flex-col items-center justify-center text-center px-5 py-2 mx-2 bg-gradient-to-r from-red-50 via-white to-emerald-50 rounded-2xl border border-slate-300/80 shadow-xs flex-1 max-w-2xl">
-            {/* Top Pill */}
-            <div className="inline-flex items-center space-x-2 bg-[#e02020] text-white text-xs font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-xs">
-              <Award className="w-3.5 h-3.5 text-white" />
+          </div>
+        </div>
+        
+        {/* Mobile-Only Prominent Responsive Banner */}
+        <div className="lg:hidden bg-gradient-to-r from-red-50 via-white to-emerald-50 border-t border-b border-slate-200 py-2.5 px-3 text-center">
+          <div className="flex flex-col items-center justify-center space-y-1">
+            <div className="inline-flex items-center space-x-1.5 bg-[#e02020] text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-2xs">
+              <Award className="w-3 h-3 text-white" />
               <span>30+ Years of Trust & Wealth Advisory</span>
             </div>
-
-            {/* Serving Counter */}
-            <p className="text-sm sm:text-base font-black text-slate-900 tracking-tight mt-1 leading-snug">
-              Serving <span className="text-[#e02020] font-black underline decoration-red-300">1,300+ Families</span> & <span className="text-emerald-700 font-black underline decoration-emerald-300">5,000+ Clients</span> Across India & NRIs
+            <p className="text-xs sm:text-sm font-black text-slate-900">
+              Serving <span className="text-[#e02020]">1,300+ Families</span> & <span className="text-emerald-700">5,000+ Clients</span> Across India & NRIs
             </p>
-
-            {/* Services */}
-            <p className="text-xs font-bold text-slate-700 tracking-wide mt-0.5">
-              PMS <span className="text-red-500 font-bold">·</span> AIF <span className="text-red-500 font-bold">·</span> Mutual Funds <span className="text-red-500 font-bold">·</span> Equities <span className="text-red-500 font-bold">·</span> Bonds & FDs <span className="text-red-500 font-bold">·</span> Insurance
+            <p className="text-[10px] sm:text-xs font-bold text-slate-700">
+              PMS · AIF · Mutual Funds · Equities · Bonds & FDs · Insurance
             </p>
-
-            {/* Tagline */}
-            <div className="inline-flex items-center space-x-2 text-xs font-black text-slate-800 mt-1">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Goal-Based Financial Planning</span>
-              <span className="text-slate-400 font-bold">|</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#e02020]" />
-              <span className="text-[#e02020] font-black italic">Penny to Pound</span>
-            </div>
+            <p className="text-[10px] sm:text-xs font-black text-slate-800">
+              Goal-Based Financial Planning <span className="text-slate-400">|</span> <span className="text-[#e02020] font-black italic">Penny to Pound</span>
+            </p>
           </div>
-
-          {/* Right: Controls + Social Media Icons */}
-          <div className="flex flex-col items-end justify-center space-y-1.5 shrink-0 relative">
-            {/* Top Row: Bookmarks & WhatsApp Call Button */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              {/* Bookmarks Button */}
-              <button
-                onClick={onToggleSaved}
-                className={`flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border ${
-                  showSavedOnly
-                    ? 'bg-amber-500 text-white border-amber-600 shadow-sm'
-                    : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
-                }`}
-                title="Saved Articles"
-              >
-                <Bookmark className={`w-4 h-4 ${showSavedOnly ? 'fill-white' : ''}`} />
-                <span className="hidden sm:inline">Bookmarks</span>
-                {savedCount > 0 && (
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${showSavedOnly ? 'bg-white text-amber-600 font-black' : 'bg-slate-200 text-slate-800 font-bold'}`}>
-                    {savedCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Direct WhatsApp Call Button */}
-              <a
-                href="https://wa.me/919324273030?text=Hello%20Chetan%20Shah,%20I%20would%20like%20wealth%20advisory%20consultation"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center space-x-2 bg-[#16a34a] hover:bg-[#15803d] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all"
-              >
-                <Phone className="w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform" />
-                <div className="hidden md:flex flex-col text-left leading-tight">
-                  <span className="text-[10px] text-emerald-100 font-medium">Consult Chetan Shah</span>
-                  <span className="text-xs font-black tracking-wide">93242 73030</span>
-                </div>
-                <span className="md:hidden text-xs font-bold">Call</span>
-              </a>
-            </div>
-
-            {/* Bottom Row: Official Social Media Icons */}
-            <div className="flex items-center space-x-1.5 pt-0.5 relative">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 hidden sm:inline mr-1">
-                Follow Us:
-              </span>
-
-              {/* Facebook */}
-              <a
-                href="https://www.facebook.com/p/Chetan-Shah-100063942194665/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#1877f2] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
-                title="Facebook — Chetan Shah (masterSchetan)"
-              >
-                <FacebookIcon />
-              </a>
-
-              {/* LinkedIn */}
-              <a
-                href="https://www.linkedin.com/company/masterschetan/?originalSubdomain=in"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#0a66c2] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
-                title="LinkedIn — masterSchetan Official Company"
-              >
-                <LinkedinIcon />
-              </a>
-
-              {/* Instagram */}
-              <a
-                href="https://www.instagram.com/masterschetan/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#e4405f] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
-                title="Instagram — @masterschetan"
-              >
-                <InstagramIcon />
-              </a>
-
-              {/* Google My Business & Maps Listing */}
-              <a
-                href="https://www.google.com/search?rlz=1C1RXQR_enIN1104IN1104&sca_esv=361416631b2a74db&cs=1&output=search&q=CHETAN+SHAH+INVESTMENT+AND+FINANCIAL+CONSULTANT&ludocid=6242484208392529719&lsig=AB86z5WSNvI3MrQmzQdiJg2tARHf&kgs=8021bdcb76fdbc24&shndl=-1&shem=lsp,ssim&source=sh/x/kp/local/m1/1"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#ea4335] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs"
-                title="Google Business & Reviews — CHETAN SHAH INVESTMENT AND FINANCIAL CONSULTANT"
-              >
-                <GoogleIcon />
-              </a>
-
-              {/* Email Support */}
-              <button
-                onClick={handleEmailClick}
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-[#e02020] hover:text-white text-slate-600 transition-all border border-slate-200 shadow-2xs cursor-pointer relative"
-                title="Click to copy support@masterschetan.com & compose email"
-              >
-                {emailCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Mail className="w-3.5 h-3.5" />}
-              </button>
-
-              {/* Tooltip confirmation */}
-              {emailCopied && (
-                <div className="absolute right-0 -bottom-8 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md z-50 whitespace-nowrap">
-                  Copied support@masterschetan.com!
-                </div>
-              )}
-            </div>
-          </div>
-
         </div>
-      </div>
-      
-      {/* Mobile-Only Prominent Responsive Banner */}
-      <div className="lg:hidden bg-gradient-to-r from-red-50 via-white to-emerald-50 border-t border-b border-slate-200 py-2.5 px-3 text-center">
-        <div className="flex flex-col items-center justify-center space-y-1">
-          <div className="inline-flex items-center space-x-1.5 bg-[#e02020] text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-2xs">
-            <Award className="w-3 h-3 text-white" />
-            <span>30+ Years of Trust & Wealth Advisory</span>
-          </div>
-          <p className="text-xs sm:text-sm font-black text-slate-900">
-            Serving <span className="text-[#e02020]">1,300+ Families</span> & <span className="text-emerald-700">5,000+ Clients</span> Across India & NRIs
-          </p>
-          <p className="text-[10px] sm:text-xs font-bold text-slate-700">
-            PMS · AIF · Mutual Funds · Equities · Bonds & FDs · Insurance
-          </p>
-          <p className="text-[10px] sm:text-xs font-black text-slate-800">
-            Goal-Based Financial Planning <span className="text-slate-400">|</span> <span className="text-[#e02020] font-black italic">Penny to Pound</span>
-          </p>
-        </div>
-      </div>
 
-      {/* Red & Green Accent Line */}
-      <div className="h-[2.5px] bg-gradient-to-r from-red-500 via-emerald-500 to-red-500"></div>
-    </header>
+        {/* Red & Green Accent Line */}
+        <div className="h-[2.5px] bg-gradient-to-r from-red-500 via-emerald-500 to-red-500"></div>
+      </header>
+    </>
   );
 };
 

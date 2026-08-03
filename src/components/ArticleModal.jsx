@@ -1,13 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Volume2, VolumeX, Bookmark, Share2, ExternalLink, Type, Clock, Check, Sparkles, ShieldCheck } from 'lucide-react';
+import { X, Volume2, VolumeX, Bookmark, Share2, ExternalLink, Type, Clock, Check, Sparkles, ShieldCheck, HelpCircle, PhoneCall } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { CATEGORY_COLORS } from './CategoryFilter';
+import { findGlossaryTerm, GLOSSARY_TERMS } from '../utils/glossary';
+
+const CATEGORY_FUNNEL_CTAS = {
+  'PMS & AIF': {
+    label: 'Consult Chetan Shah for PMS & AIF Strategies (Min ₹50L/₹1Cr)',
+    message: 'Hello Chetan Shah, I read an update on PMS & AIF on masterSchetan News Slate and would like to discuss high-yielding portfolio management strategies.'
+  },
+  'Mutual Funds': {
+    label: 'Start Goal-Based Mutual Fund & SIP Planning',
+    message: 'Hello Chetan Shah, I read a Mutual Funds update on masterSchetan News Slate and would like goal-aligned SIP advisory.'
+  },
+  'Equities & SIF': {
+    label: 'Consult Chetan Shah on Equity & Demat Portfolio Strategy',
+    message: 'Hello Chetan Shah, I read an Equities update on masterSchetan News Slate and would like direct equity portfolio guidance.'
+  },
+  'Bonds & FDs': {
+    label: 'Lock-in High Yield Corporate Bonds & Fixed Deposits',
+    message: 'Hello Chetan Shah, I read a Bonds & FDs update on masterSchetan News Slate and would like fixed-income investment guidance.'
+  },
+  'Life & Term Insurance': {
+    label: 'Review Life & Term Insurance Protection Plan',
+    message: 'Hello Chetan Shah, I read an Insurance update on masterSchetan News Slate and would like a comprehensive insurance review.'
+  },
+  'Health & Motor Insurance': {
+    label: 'Get Family Health Cover & Claims Assistance',
+    message: 'Hello Chetan Shah, I read a Health Insurance update on masterSchetan News Slate and would like guidance on family health coverage.'
+  },
+  'Wealth Strategy': {
+    label: 'Schedule 1-on-1 Comprehensive Wealth Planning',
+    message: 'Hello Chetan Shah, I read a Wealth Strategy briefing on masterSchetan News Slate and would like a personalized 360° financial plan.'
+  }
+};
+
+const DEFAULT_CTA = {
+  label: 'Schedule Wealth Advisory Call with Chetan Shah (93242 73030)',
+  message: 'Hello Chetan Shah, I read a market update on masterSchetan News Slate and would like advisory consultation.'
+};
 
 const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
   const [fontSize, setFontSize] = useState('md');
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [activeTooltip, setActiveTooltip] = useState(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -23,6 +61,7 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
 
   const catColor = CATEGORY_COLORS[article.category] || '#2563eb';
   const shareableUrl = `${window.location.origin}/?article=${article.id}`;
+  const funnelCta = CATEGORY_FUNNEL_CTAS[article.category] || DEFAULT_CTA;
 
   const handleToggleSpeech = () => {
     if (!('speechSynthesis' in window)) {
@@ -51,6 +90,12 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
     window.open(url, '_blank');
   };
 
+  const handleConsultClick = () => {
+    const text = `${funnelCta.message}\n\nArticle: "${article.title}" (${shareableUrl})`;
+    const url = `https://wa.me/919324273030?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareableUrl);
     setCopied(true);
@@ -61,6 +106,41 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
     sm: 'text-sm leading-relaxed',
     md: 'text-base leading-relaxed',
     lg: 'text-lg leading-loose',
+  };
+
+  // Helper to render text with clickable glossary tooltips
+  const renderInteractiveText = (text) => {
+    const glossaryMatch = findGlossaryTerm(text);
+    if (!glossaryMatch) return text;
+
+    const { term, definition } = glossaryMatch;
+    const parts = text.split(new RegExp(`(${term})`, 'gi'));
+
+    return parts.map((part, idx) => {
+      if (part.toUpperCase() === term) {
+        return (
+          <span key={idx} className="relative inline-block group">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveTooltip(activeTooltip === term ? null : term);
+              }}
+              className="font-extrabold text-red-700 bg-red-50 border-b border-dashed border-red-400 px-1 rounded cursor-pointer hover:bg-red-100 transition-colors"
+            >
+              {part}
+              <HelpCircle className="w-3 h-3 inline-block ml-0.5 -mt-0.5 text-red-600" />
+            </button>
+
+            {/* Floating Tooltip */}
+            <span className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2.5 bg-slate-900 text-white text-xs rounded-xl shadow-xl z-50 pointer-events-none leading-normal">
+              <strong className="text-red-400 block font-bold mb-0.5">{term} Glossary Definition:</strong>
+              {definition}
+            </span>
+          </span>
+        );
+      }
+      return part;
+    });
   };
 
   return (
@@ -172,7 +252,7 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
               <div className="flex items-center space-x-3">
                 <span className="font-extrabold text-[#e02020]">{article.source_name}</span>
                 <span>·</span>
-                <span className="flex items-center text-slate-500">
+                <span className="flex items-center text-slate-500 tabular-nums">
                   <Clock className="w-3.5 h-3.5 mr-1" />
                   {article.published_at ? format(parseISO(article.published_at), 'MMMM d, yyyy') : ''}
                 </span>
@@ -186,7 +266,7 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
               )}
             </div>
 
-            {/* Key Wealth Takeaways Box */}
+            {/* Key Wealth Takeaways Box with Glossary Tooltips */}
             <div className="rounded-2xl p-6 bg-slate-50 border border-slate-200/80 relative">
               <div className="flex items-center space-x-2 text-slate-900 font-black text-xs uppercase tracking-wider mb-3">
                 <Sparkles className="w-4 h-4 text-[#e02020]" />
@@ -197,10 +277,33 @@ const ArticleModal = ({ article, onClose, isSaved, onToggleSave }) => {
                 {article.summary && article.summary.map((bullet, idx) => (
                   <div key={idx} className="flex items-start">
                     <span className="w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0" style={{ backgroundColor: catColor }} />
-                    <p>{bullet}</p>
+                    <p>{renderInteractiveText(bullet)}</p>
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Contextual Action Funnel CTA Card */}
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-red-50 via-white to-emerald-50 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-[#e02020] text-white rounded-xl shadow-xs">
+                  <PhoneCall className="w-5 h-5 animate-pulse" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-red-700 bg-red-100 px-2 py-0.5 rounded border border-red-200">
+                    Actionable Wealth Trigger
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-black text-slate-900 mt-1">
+                    {funnelCta.label}
+                  </h4>
+                </div>
+              </div>
+              <button
+                onClick={handleConsultClick}
+                className="w-full sm:w-auto px-4 py-2.5 bg-[#16a34a] hover:bg-[#15803d] text-white text-xs font-black rounded-xl shadow-sm transition-all whitespace-nowrap shrink-0 flex items-center justify-center space-x-2"
+              >
+                <span>Talk to Chetan Shah</span>
+              </button>
             </div>
 
             {/* Tags */}
