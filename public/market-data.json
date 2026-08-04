@@ -1,56 +1,56 @@
 [
   {
     "symbol": "NIFTY 50",
-    "val": "24,598.65",
-    "rawPrice": 24598.65,
-    "change": "-175.65",
-    "pct": "-0.71%",
+    "val": "24,581.3",
+    "rawPrice": 24581.3,
+    "change": "-193.00",
+    "pct": "-0.78%",
     "isUp": false,
-    "updatedAt": "2026-08-04T04:02:14.687Z"
+    "updatedAt": "2026-08-04T05:06:39.673Z"
   },
   {
     "symbol": "SENSEX",
-    "val": "78,772.94",
-    "rawPrice": 78772.94,
-    "change": "+133.91",
-    "pct": "+0.17%",
+    "val": "78,749.19",
+    "rawPrice": 78749.19,
+    "change": "+110.16",
+    "pct": "+0.14%",
     "isUp": true,
-    "updatedAt": "2026-08-04T04:02:14.823Z"
+    "updatedAt": "2026-08-04T05:06:39.945Z"
   },
   {
     "symbol": "BANK NIFTY",
-    "val": "57,781.3",
-    "rawPrice": 57781.3,
-    "change": "-466.65",
-    "pct": "-0.80%",
+    "val": "57,745.05",
+    "rawPrice": 57745.05,
+    "change": "-502.90",
+    "pct": "-0.86%",
     "isUp": false,
-    "updatedAt": "2026-08-04T04:02:15.099Z"
+    "updatedAt": "2026-08-04T05:06:40.046Z"
   },
   {
     "symbol": "GOLD (24K)",
-    "val": "₹3,43,177",
-    "rawPrice": 4109.9,
-    "change": "+19.40",
-    "pct": "+0.47%",
+    "val": "₹3,44,012",
+    "rawPrice": 4119.9,
+    "change": "+29.40",
+    "pct": "+0.72%",
     "isUp": true,
-    "updatedAt": "2026-08-04T04:02:15.134Z"
+    "updatedAt": "2026-08-04T05:06:40.152Z"
   },
   {
     "symbol": "USD / INR",
-    "val": "₹95.31",
-    "rawPrice": 95.315,
-    "change": "-0.01",
-    "pct": "-0.01%",
+    "val": "₹95.28",
+    "rawPrice": 95.2825,
+    "change": "-0.04",
+    "pct": "-0.05%",
     "isUp": false,
-    "updatedAt": "2026-08-04T04:02:15.270Z"
+    "updatedAt": "2026-08-04T05:06:40.268Z"
   },
   {
     "symbol": "CRUDE BRENT",
-    "val": "$84.87",
-    "rawPrice": 84.87,
-    "change": "+1.10",
-    "pct": "+1.31%",
+    "val": "$85.05",
+    "rawPrice": 85.05,
+    "change": "+1.28",
+    "pct": "+1.53%",
     "isUp": true,
-    "updatedAt": "2026-08-04T04:02:15.369Z"
+    "updatedAt": "2026-08-04T05:06:40.375Z"
   }
 ]

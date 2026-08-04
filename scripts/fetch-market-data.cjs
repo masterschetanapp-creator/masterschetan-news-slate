@@ -15,35 +15,44 @@ async function fetchLiveMarketData() {
   const results = [];
 
   for (const s of SYMBOLS) {
-    try {
-      const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(s.id)}?range=1d&interval=1m`);
-      const json = await res.json();
-      const meta = json?.chart?.result?.[0]?.meta;
-      if (meta) {
-        const price = meta.regularMarketPrice;
-        const prev = meta.chartPreviousClose || meta.previousClose || price;
-        const diff = price - prev;
-        const pct = prev > 0 ? (diff / prev) * 100 : 0;
-        
-        results.push({
-          symbol: s.name,
-          val: s.format(price),
-          rawPrice: price,
-          change: (diff >= 0 ? '+' : '') + diff.toFixed(2),
-          pct: (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%',
-          isUp: diff > 0 ? true : diff < 0 ? false : null,
-          updatedAt: new Date().toISOString()
-        });
+    let meta = null;
+    
+    // Try query1 then query2
+    for (const host of ['query1.finance.yahoo.com', 'query2.finance.yahoo.com']) {
+      try {
+        const res = await fetch(`https://${host}/v8/finance/chart/${encodeURIComponent(s.id)}?range=1d&interval=1m&includePrePost=true&t=${Date.now()}`);
+        if (res.ok) {
+          const json = await res.json();
+          meta = json?.chart?.result?.[0]?.meta;
+          if (meta && typeof meta.regularMarketPrice === 'number') break;
+        }
+      } catch (e) {
+        // try next
       }
-    } catch (e) {
-      console.warn(`Failed to fetch ${s.name}:`, e.message);
+    }
+
+    if (meta) {
+      const price = meta.regularMarketPrice;
+      const prev = meta.chartPreviousClose || meta.previousClose || price;
+      const diff = price - prev;
+      const pct = prev > 0 ? (diff / prev) * 100 : 0;
+      
+      results.push({
+        symbol: s.name,
+        val: s.format(price),
+        rawPrice: price,
+        change: (diff >= 0 ? '+' : '') + diff.toFixed(2),
+        pct: (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%',
+        isUp: diff > 0 ? true : diff < 0 ? false : null,
+        updatedAt: new Date().toISOString()
+      });
     }
   }
 
   if (results.length > 0) {
     const outputPath = path.join(__dirname, '../public/market-data.json');
     fs.writeFileSync(outputPath, JSON.stringify(results, null, 2));
-    console.log(`Saved ${results.length} market ticker entries to public/market-data.json`);
+    console.log(`Saved ${results.length} live market ticker entries to public/market-data.json`);
   }
 }
 

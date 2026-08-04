@@ -11,12 +11,12 @@ const SYMBOL_CONFIG = [
 ];
 
 const FALLBACK_MARKET_DATA = [
-  { symbol: 'NIFTY 50', val: '24,630.95', change: '-143.35', pct: '-0.58%', isUp: false },
-  { symbol: 'SENSEX', val: '78,708.99', change: '+69.96', pct: '+0.09%', isUp: true },
-  { symbol: 'BANK NIFTY', val: '58,247.95', change: '-396.90', pct: '-0.68%', isUp: false },
-  { symbol: 'GOLD (24K)', val: '₹3,43,177', change: '+18.60', pct: '+0.45%', isUp: true },
-  { symbol: 'USD / INR', val: '₹95.30', change: '-0.03', pct: '-0.03%', isUp: false },
-  { symbol: 'CRUDE BRENT', val: '$84.98', change: '+1.21', pct: '+1.44%', isUp: true },
+  { symbol: 'NIFTY 50', val: '24,581.30', change: '-193.00', pct: '-0.78%', isUp: false },
+  { symbol: 'SENSEX', val: '78,749.19', change: '+110.16', pct: '+0.14%', isUp: true },
+  { symbol: 'BANK NIFTY', val: '57,745.05', change: '-502.90', pct: '-0.86%', isUp: false },
+  { symbol: 'GOLD (24K)', val: '₹3,44,012', change: '+29.40', pct: '+0.72%', isUp: true },
+  { symbol: 'USD / INR', val: '₹95.28', change: '-0.04', pct: '-0.05%', isUp: false },
+  { symbol: 'CRUDE BRENT', val: '$85.05', change: '+1.28', pct: '+1.53%', isUp: true },
 ];
 
 export default function MarketTicker() {
@@ -31,33 +31,34 @@ export default function MarketTicker() {
     setIsFetching(true);
     let updatedData = [];
 
-    // 1. Try query2.finance.yahoo.com (CORS friendly)
+    // 1. Try direct live API query (query2 endpoint allows browser CORS)
     try {
       const livePromises = SYMBOL_CONFIG.map(async (cfg) => {
-        try {
-          // query2 endpoint allows browser CORS
-          const url = `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(cfg.id)}?range=1d&interval=1m&t=${Date.now()}`;
-          const res = await fetch(url);
-          if (res.ok) {
-            const json = await res.json();
-            const meta = json?.chart?.result?.[0]?.meta;
-            if (meta && typeof meta.regularMarketPrice === 'number') {
-              const price = meta.regularMarketPrice;
-              const prev = meta.chartPreviousClose || meta.previousClose || price;
-              const diff = price - prev;
-              const pct = prev > 0 ? (diff / prev) * 100 : 0;
+        for (const host of ['query2.finance.yahoo.com', 'query1.finance.yahoo.com']) {
+          try {
+            const url = `https://${host}/v8/finance/chart/${encodeURIComponent(cfg.id)}?range=1d&interval=1m&includePrePost=true&t=${Date.now()}`;
+            const res = await fetch(url);
+            if (res.ok) {
+              const json = await res.json();
+              const meta = json?.chart?.result?.[0]?.meta;
+              if (meta && typeof meta.regularMarketPrice === 'number') {
+                const price = meta.regularMarketPrice;
+                const prev = meta.chartPreviousClose || meta.previousClose || price;
+                const diff = price - prev;
+                const pct = prev > 0 ? (diff / prev) * 100 : 0;
 
-              return {
-                symbol: cfg.symbol,
-                val: cfg.format(price),
-                change: (diff >= 0 ? '+' : '') + diff.toFixed(2),
-                pct: (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%',
-                isUp: diff > 0 ? true : diff < 0 ? false : null,
-              };
+                return {
+                  symbol: cfg.symbol,
+                  val: cfg.format(price),
+                  change: (diff >= 0 ? '+' : '') + diff.toFixed(2),
+                  pct: (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%',
+                  isUp: diff > 0 ? true : diff < 0 ? false : null,
+                };
+              }
             }
+          } catch (err) {
+            // try next
           }
-        } catch (err) {
-          return null;
         }
         return null;
       });
@@ -72,10 +73,10 @@ export default function MarketTicker() {
       console.warn('Live API tick info:', err.message);
     }
 
-    // 2. Fallback to static CDN JSON if query2 is unavailable
+    // 2. Fallback to static CDN JSON with cache buster if direct fetch is blocked
     if (updatedData.length === 0) {
       try {
-        const staticRes = await fetch(`/market-data.json?t=${Date.now()}`);
+        const staticRes = await fetch(`/market-data.json?nocache=${Date.now()}`);
         if (staticRes.ok) {
           const staticJson = await staticRes.json();
           if (Array.isArray(staticJson) && staticJson.length > 0) {
