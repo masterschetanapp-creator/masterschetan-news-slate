@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pause, Play, Activity, RefreshCw } from 'lucide-react';
+import { Pause, Play, RefreshCw } from 'lucide-react';
 
 const SYMBOL_CONFIG = [
   { id: '^NSEI', symbol: 'NIFTY 50', format: (v) => v.toLocaleString('en-IN', { maximumFractionDigits: 2 }) },
@@ -11,12 +11,12 @@ const SYMBOL_CONFIG = [
 ];
 
 const FALLBACK_MARKET_DATA = [
-  { symbol: 'NIFTY 50', val: '24,774.30', change: '+390.70', pct: '+1.60%', isUp: true },
-  { symbol: 'SENSEX', val: '78,639.03', change: '+544.39', pct: '+0.70%', isUp: true },
-  { symbol: 'BANK NIFTY', val: '58,247.95', change: '+983.10', pct: '+1.72%', isUp: true },
-  { symbol: 'GOLD (24K)', val: '₹74,250', change: '+₹220', pct: '+0.30%', isUp: true },
-  { symbol: 'USD / INR', val: '₹83.72', change: '0.00', pct: '0.00%', isUp: null },
-  { symbol: 'CRUDE BRENT', val: '$82.99', change: '-$4.94', pct: '-5.62%', isUp: false },
+  { symbol: 'NIFTY 50', val: '24,598.65', change: '-175.65', pct: '-0.71%', isUp: false },
+  { symbol: 'SENSEX', val: '78,772.94', change: '+133.91', pct: '+0.17%', isUp: true },
+  { symbol: 'BANK NIFTY', val: '57,781.30', change: '-466.65', pct: '-0.80%', isUp: false },
+  { symbol: 'GOLD (24K)', val: '₹3,43,177', change: '+19.40', pct: '+0.47%', isUp: true },
+  { symbol: 'USD / INR', val: '₹95.31', change: '-0.01', pct: '-0.01%', isUp: false },
+  { symbol: 'CRUDE BRENT', val: '$84.87', change: '+1.10', pct: '+1.31%', isUp: true },
 ];
 
 export default function MarketTicker() {
@@ -68,7 +68,6 @@ export default function MarketTicker() {
             }
           }
         } catch (err) {
-          // CORS or network fallback
           return null;
         }
         return null;
@@ -89,7 +88,7 @@ export default function MarketTicker() {
     }
 
     const now = new Date();
-    setLastUpdated(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    setLastUpdated(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }));
     setIsFetching(false);
   };
 
@@ -108,13 +107,20 @@ export default function MarketTicker() {
     <div className="bg-slate-900 text-white border-b border-slate-800 text-[11px] font-bold py-1.5 px-3 relative overflow-hidden z-50 select-none">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
         
-        {/* Left Live Indicator Badge */}
-        <div className="flex items-center space-x-1.5 shrink-0 bg-red-600 px-2 py-0.5 rounded text-[10px] uppercase font-black tracking-wider shadow-2xs">
-          <Activity className={`w-3 h-3 text-white ${isFetching ? 'animate-spin' : 'animate-pulse'}`} />
+        {/* Left Live Indicator Badge + Pulsing Dot + Timestamp */}
+        <div className="flex items-center space-x-1.5 shrink-0 bg-red-600 px-2.5 py-1 rounded-md text-[10px] uppercase font-black tracking-wider shadow-2xs">
+          {/* Pulsing Status Dot */}
+          <span className="relative flex h-2 w-2 mr-0.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+          </span>
+          
           <span>LIVE MARKETS</span>
+
+          {/* Timestamp */}
           {lastUpdated && (
-            <span className="hidden md:inline-inline text-[9px] text-red-100 font-mono font-normal ml-1">
-              • {lastUpdated}
+            <span className="inline-block text-[9px] text-red-100 font-mono font-bold border-l border-red-400/50 pl-1.5 ml-1">
+              {lastUpdated} IST
             </span>
           )}
         </div>
@@ -146,17 +152,20 @@ export default function MarketTicker() {
           </div>
         </div>
 
-        {/* Manual Refresh & Pause/Play Toggle */}
-        <div className="flex items-center space-x-1 shrink-0">
+        {/* Manual Refresh & Pause/Play Controls */}
+        <div className="flex items-center space-x-1.5 shrink-0">
+          {/* Refresh Button */}
           <button
             onClick={fetchLiveQuotes}
             disabled={isFetching}
-            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors border border-slate-700 disabled:opacity-50"
-            title="Refresh Live Quotes Now"
+            className="flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors border border-slate-700 disabled:opacity-50 text-[10px] font-bold"
+            title="Click to Refresh Live Quotes Now"
           >
-            <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin text-red-400' : ''}`} />
+            <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin text-red-400' : 'text-slate-400'}`} />
+            <span className="hidden sm:inline">Refresh</span>
           </button>
           
+          {/* Pause / Play Toggle */}
           <button
             onClick={() => setIsPaused(prev => !prev)}
             className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors border border-slate-700"
