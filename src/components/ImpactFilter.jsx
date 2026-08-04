@@ -16,19 +16,21 @@ export default function ImpactFilter({
   articles = [],
   impactCounts = {}
 }) {
-  // Support both onImpactChange and setActiveImpact handler props
   const handleImpactClick = (lvlId) => {
     if (onImpactChange) onImpactChange(lvlId);
     else if (setActiveImpact) setActiveImpact(lvlId);
   };
 
-  // Calculate counts dynamically from articles array if not provided explicitly
+  // Calculate counts dynamically supporting impact / impactLevel / impact_level schema fields
   const counts = { ...impactCounts };
   if (articles && articles.length > 0) {
     counts['All'] = articles.length;
     IMPACT_LEVELS.forEach(lvl => {
       if (lvl.id !== 'All') {
-        counts[lvl.id] = articles.filter(a => a.impactLevel === lvl.id).length;
+        counts[lvl.id] = articles.filter(a => {
+          const itemImpact = a.impactLevel || a.impact || a.impact_level || 'Standard';
+          return itemImpact.toLowerCase() === lvl.id.toLowerCase();
+        }).length;
       }
     });
   }
@@ -44,7 +46,7 @@ export default function ImpactFilter({
 
       <div className="flex flex-wrap items-center gap-2">
         {IMPACT_LEVELS.map((level) => {
-          const isActive = activeImpact === level.id;
+          const isActive = activeImpact?.toLowerCase() === level.id.toLowerCase();
           const count = counts[level.id] !== undefined ? counts[level.id] : 0;
           const Icon = level.icon;
 

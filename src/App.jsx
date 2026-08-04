@@ -85,7 +85,10 @@ function App() {
 
   // Highlights: Top 3 high-impact or recent articles
   const highlights = useMemo(() => {
-    const highImpact = articles.filter(a => a.impactLevel === 'High');
+    const highImpact = articles.filter(a => {
+      const imp = a.impactLevel || a.impact || a.impact_level || 'Standard';
+      return imp.toLowerCase() === 'high';
+    });
     return (highImpact.length >= 3 ? highImpact : articles).slice(0, 3);
   }, [articles]);
 
@@ -98,8 +101,9 @@ function App() {
       if (activeCategory !== 'All' && article.category !== activeCategory) {
         return false;
       }
-      if (activeImpact !== 'All' && article.impactLevel !== activeImpact) {
-        return false;
+      if (activeImpact !== 'All') {
+        const itemImpact = article.impactLevel || article.impact || article.impact_level || 'Standard';
+        if (itemImpact.toLowerCase() !== activeImpact.toLowerCase()) return false;
       }
       if (searchTerm) {
         const term = searchTerm.toLowerCase();
@@ -120,7 +124,10 @@ function App() {
   const stats = useMemo(() => {
     const categories = new Set(articles.map(a => a.category));
     const sources = new Set(articles.map(a => a.source));
-    const high = articles.filter(a => a.impactLevel === 'High').length;
+    const high = articles.filter(a => {
+      const imp = a.impactLevel || a.impact || a.impact_level || 'Standard';
+      return imp.toLowerCase() === 'high';
+    }).length;
     return {
       total: articles.length,
       categories: categories.size,
