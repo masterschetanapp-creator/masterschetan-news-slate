@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Landmark, TrendingUp, TrendingDown, HelpCircle, ShieldCheck } from 'lucide-react';
+import { Landmark, HelpCircle, ShieldCheck, Clock } from 'lucide-react';
 
 export default function InstitutionalFlows() {
-  const [fiiFlow] = useState({ net: '+1,845.20', isBuy: true });
-  const [diiFlow] = useState({ net: '+1,210.50', isBuy: true });
+  const [fiiFlow] = useState({ net: '1,845.20', isBuy: true });
+  const [diiFlow] = useState({ net: '1,210.50', isBuy: true });
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const combinedTotal = '+3,055.70';
+  // Dynamic Date Stamp
+  const currentDateStr = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+
+  const combinedTotal = '3,055.70';
 
   return (
     <div className="mb-10 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
@@ -17,7 +24,7 @@ export default function InstitutionalFlows() {
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         {/* Left Info */}
         <div className="space-y-2">
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <span className="p-2 bg-red-500/20 rounded-xl text-red-400 border border-red-500/30">
               <Landmark className="w-5 h-5" />
             </span>
@@ -33,6 +40,12 @@ export default function InstitutionalFlows() {
                 <HelpCircle className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Date & Timestamp Badge */}
+            <span className="inline-flex items-center space-x-1 text-[10px] font-mono font-bold bg-slate-800 text-emerald-400 px-2.5 py-1 rounded-md border border-slate-700">
+              <Clock className="w-3 h-3 text-emerald-400" />
+              <span>DAILY PROVISIONAL • {currentDateStr}</span>
+            </span>
           </div>
 
           <p className="text-xs text-slate-400 font-medium max-w-xl leading-relaxed">
@@ -61,7 +74,7 @@ export default function InstitutionalFlows() {
             </span>
             <div className="flex items-center justify-between">
               <span className="text-lg font-black text-emerald-400 tabular-nums">
-                ₹{fiiFlow.net} Cr
+                +₹{fiiFlow.net} Cr
               </span>
               <span className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-bold">
                 BUY
@@ -76,7 +89,7 @@ export default function InstitutionalFlows() {
             </span>
             <div className="flex items-center justify-between">
               <span className="text-lg font-black text-emerald-400 tabular-nums">
-                ₹{diiFlow.net} Cr
+                +₹{diiFlow.net} Cr
               </span>
               <span className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-bold">
                 BUY
