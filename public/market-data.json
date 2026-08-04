@@ -1,56 +1,56 @@
 [
   {
-    "symbol": "NIFTY 50",
-    "val": "24,526.65",
-    "rawPrice": 24526.65,
-    "change": "-247.65",
-    "pct": "-1.00%",
+    "symbol": "SENSEX",
+    "val": "78,428.95",
+    "rawPrice": 78428.95,
+    "change": "-210.08",
+    "pct": "-0.27%",
     "isUp": false,
-    "updatedAt": "2026-08-04T06:27:54.551Z"
+    "updatedAt": "2026-08-04T10:32:51.548Z"
   },
   {
-    "symbol": "SENSEX",
-    "val": "78,588.82",
-    "rawPrice": 78588.82,
-    "change": "-50.21",
-    "pct": "-0.06%",
+    "symbol": "NIFTY 50",
+    "val": "24,614.90",
+    "rawPrice": 24614.9,
+    "change": "-159.40",
+    "pct": "-0.64%",
     "isUp": false,
-    "updatedAt": "2026-08-04T06:27:54.976Z"
+    "updatedAt": "2026-08-04T10:32:52.108Z"
   },
   {
     "symbol": "BANK NIFTY",
-    "val": "57,548.35",
-    "rawPrice": 57548.35,
-    "change": "-699.60",
-    "pct": "-1.20%",
+    "val": "57,907.20",
+    "rawPrice": 57907.2,
+    "change": "-340.75",
+    "pct": "-0.58%",
     "isUp": false,
-    "updatedAt": "2026-08-04T06:27:55.081Z"
+    "updatedAt": "2026-08-04T10:32:52.621Z"
   },
   {
     "symbol": "GOLD (24K)",
-    "val": "₹3,43,911",
-    "rawPrice": 4118.7,
-    "change": "+28.20",
-    "pct": "+0.69%",
+    "val": "₹3,42,701",
+    "rawPrice": 4104.2,
+    "change": "+13.70",
+    "pct": "+0.33%",
     "isUp": true,
-    "updatedAt": "2026-08-04T06:27:55.188Z"
+    "updatedAt": "2026-08-04T10:32:53.004Z"
   },
   {
     "symbol": "USD / INR",
-    "val": "₹95.34",
-    "rawPrice": 95.34,
-    "change": "+0.01",
-    "pct": "+0.01%",
+    "val": "₹95.36",
+    "rawPrice": 95.3637,
+    "change": "+0.0318",
+    "pct": "+0.03%",
     "isUp": true,
-    "updatedAt": "2026-08-04T06:27:55.337Z"
+    "updatedAt": "2026-08-04T10:32:53.483Z"
   },
   {
     "symbol": "CRUDE BRENT",
-    "val": "$84.80",
-    "rawPrice": 84.8,
-    "change": "+1.03",
-    "pct": "+1.23%",
+    "val": "$85.67",
+    "rawPrice": 85.67,
+    "change": "+1.90",
+    "pct": "+2.27%",
     "isUp": true,
-    "updatedAt": "2026-08-04T06:27:55.562Z"
+    "updatedAt": "2026-08-04T10:32:53.601Z"
   }
 ]

@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Pause, Play, Activity, RefreshCw } from 'lucide-react';
 
 const FALLBACK_MARKET_DATA = [
-  { symbol: 'NIFTY 50', val: '24,581.30', change: '-193.00', pct: '-0.78%', isUp: false },
-  { symbol: 'SENSEX', val: '78,749.19', change: '+110.16', pct: '+0.14%', isUp: true },
-  { symbol: 'BANK NIFTY', val: '57,745.05', change: '-502.90', pct: '-0.86%', isUp: false },
-  { symbol: 'GOLD (24K)', val: '₹3,44,012', change: '+29.40', pct: '+0.72%', isUp: true },
-  { symbol: 'USD / INR', val: '₹95.28', change: '-0.04', pct: '-0.05%', isUp: false },
-  { symbol: 'CRUDE BRENT', val: '$85.05', change: '+1.28', pct: '+1.53%', isUp: true },
+  { symbol: 'SENSEX', val: '78,428.95', change: '-210.08', pct: '-0.27%', isUp: false },
+  { symbol: 'NIFTY 50', val: '24,614.90', change: '-159.40', pct: '-0.64%', isUp: false },
+  { symbol: 'BANK NIFTY', val: '57,907.20', change: '-340.75', pct: '-0.58%', isUp: false },
+  { symbol: 'GOLD (24K)', val: '₹3,42,701', change: '+1,120', pct: '+0.33%', isUp: true },
+  { symbol: 'USD / INR', val: '₹95.36', change: '+0.03', pct: '+0.03%', isUp: true },
+  { symbol: 'CRUDE BRENT', val: '$85.67', change: '+$1.90', pct: '+2.27%', isUp: true },
 ];
 
 export default function MarketTicker() {
@@ -24,8 +24,8 @@ export default function MarketTicker() {
     let dataTimestamp = '';
 
     try {
-      // Fetch latest market data JSON with cache buster
-      const res = await fetch(`/market-data.json?v=${Date.now()}`);
+      // Cache-busted fetch to bypass browser and CDN disk cache
+      const res = await fetch(`/market-data.json?cache_buster=${Date.now()}_${Math.random()}`);
       if (res.ok) {
         const json = await res.json();
         if (Array.isArray(json) && json.length > 0) {
@@ -48,7 +48,7 @@ export default function MarketTicker() {
     setLastUpdated(dataTimestamp || nowStr);
     setIsFetching(false);
 
-    // Visual pulse confirmation
+    // Visual pulse confirmation on refresh click
     setJustRefreshed(true);
     setTimeout(() => setJustRefreshed(false), 2500);
   }, []);
