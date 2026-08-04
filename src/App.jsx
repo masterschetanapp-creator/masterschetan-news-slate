@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { Newspaper, TrendingUp, Flame, BarChart3, Bookmark } from 'lucide-react';
 import Header from './components/Header';
 import Highlights from './components/Highlights';
+import SectorHeatmap from './components/SectorHeatmap';
+import InstitutionalFlows from './components/InstitutionalFlows';
+import EventCalendar from './components/EventCalendar';
 import CategoryFilter from './components/CategoryFilter';
 import ImpactFilter from './components/ImpactFilter';
 import SearchBar from './components/SearchBar';
@@ -58,17 +61,12 @@ function App() {
     }
   }, [articles]);
 
-  const handleSelectArticle = (art) => {
-    setSelectedArticle(art);
-    if (art) {
-      const newUrl = `${window.location.pathname}?article=${art.id}`;
-      window.history.pushState({ path: newUrl }, '', newUrl);
-    }
-  };
-
-  const handleCloseArticle = () => {
-    setSelectedArticle(null);
-    window.history.pushState({ path: window.location.pathname }, '', window.location.pathname);
+  const toggleSaveArticle = (articleId) => {
+    setSavedIds(prev =>
+      prev.includes(articleId)
+        ? prev.filter(id => id !== articleId)
+        : [...prev, articleId]
+    );
   };
 
   const fetchArticles = async () => {
@@ -78,98 +76,77 @@ function App() {
       const data = await getAllArticles();
       setArticles(data);
     } catch (err) {
-      console.error('Failed to fetch articles:', err);
-      setError('Unable to load news articles. Please check your connection and try again.');
+      console.error('Error fetching articles:', err);
+      setError('Unable to load news updates. Please check your network connection.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleToggleSave = (id) => {
-    setSavedIds(prev => 
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    );
-  };
-
-  // Highlights
+  // Highlights: Top 3 high-impact or recent articles
   const highlights = useMemo(() => {
-    return articles.filter(a => a.impact === 'High').slice(0, 3);
+    const highImpact = articles.filter(a => a.impactLevel === 'High');
+    return (highImpact.length >= 3 ? highImpact : articles).slice(0, 3);
   }, [articles]);
 
-  // Category counts
-  const categoryCounts = useMemo(() => {
-    const counts = { 'All': articles.length };
-    articles.forEach(a => {
-      counts[a.category] = (counts[a.category] || 0) + 1;
-    });
-    return counts;
-  }, [articles]);
-
-  // Impact counts
-  const impactCounts = useMemo(() => {
-    const counts = { 'All': articles.length, 'High': 0, 'Medium': 0, 'Standard': 0 };
-    articles.forEach(a => {
-      const imp = a.impact || 'Standard';
-      counts[imp] = (counts[imp] || 0) + 1;
-    });
-    return counts;
-  }, [articles]);
-
-  // Stats
-  const stats = useMemo(() => {
-    const highCount = articles.filter(a => a.impact === 'High').length;
-    const categories = new Set(articles.map(a => a.category)).size;
-    const sources = new Set(articles.map(a => a.source_name)).size;
-    return { total: articles.length, high: highCount, categories, sources };
-  }, [articles]);
-
-  // Filtered articles
+  // Client-side filtering logic
   const filteredArticles = useMemo(() => {
-    let filtered = [...articles];
-
-    if (showSavedOnly) {
-      filtered = filtered.filter(a => savedIds.includes(a.id));
-    }
-
-    if (activeCategory && activeCategory !== 'All') {
-      filtered = filtered.filter(a => a.category === activeCategory);
-    }
-
-    if (activeImpact && activeImpact !== 'All') {
-      filtered = filtered.filter(a => (a.impact || 'Standard') === activeImpact);
-    }
-
-    if (selectedDate) {
-      filtered = filtered.filter(a => {
-        if (!a.published_at) return false;
-        return a.published_at.substring(0, 10) === selectedDate;
-      });
-    }
-
-    if (searchTerm) {
-      filtered = searchArticles(filtered, searchTerm);
-    }
-
-    return filtered;
+    return articles.filter(article => {
+      if (showSavedOnly && !savedIds.includes(article.id)) {
+        return false;
+      }
+      if (activeCategory !== 'All' && article.category !== activeCategory) {
+        return false;
+      }
+      if (activeImpact !== 'All' && article.impactLevel !== activeImpact) {
+        return false;
+      }
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        const titleMatch = article.title?.toLowerCase().includes(term);
+        const summaryMatch = article.summary?.some(s => s.toLowerCase().includes(term));
+        const tagMatch = article.tags?.some(t => t.toLowerCase().includes(term));
+        const sourceMatch = article.source?.toLowerCase().includes(term);
+        if (!titleMatch && !summaryMatch && !tagMatch && !sourceMatch) return false;
+      }
+      if (selectedDate && article.curatedDate !== selectedDate) {
+        return false;
+      }
+      return true;
+    });
   }, [articles, activeCategory, activeImpact, searchTerm, selectedDate, showSavedOnly, savedIds]);
 
-  const handleClear = () => {
-    setSearchTerm('');
-    setSelectedDate('');
-    setActiveCategory('All');
-    setActiveImpact('All');
-    setShowSavedOnly(false);
+  // Statistics
+  const stats = useMemo(() => {
+    const categories = new Set(articles.map(a => a.category));
+    const sources = new Set(articles.map(a => a.source));
+    const high = articles.filter(a => a.impactLevel === 'High').length;
+    return {
+      total: articles.length,
+      categories: categories.size,
+      sources: sources.size,
+      high,
+    };
+  }, [articles]);
+
+  const handleSelectArticle = (article) => {
+    setSelectedArticle(article);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedArticle(null);
   };
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen bg-slate-100 text-slate-900 font-sans flex flex-col selection:bg-[#e02020] selection:text-white">
+      {/* Masthead Header */}
       <Header
-        savedCount={savedIds.length}
         showSavedOnly={showSavedOnly}
-        onToggleSaved={() => setShowSavedOnly(prev => !prev)}
+        setShowSavedOnly={setShowSavedOnly}
+        savedCount={savedIds.length}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
         
         {/* Error State */}
         {error && (
@@ -223,6 +200,20 @@ function App() {
           />
         )}
 
+        {/* PHASE 2 MARKET INTELLIGENCE WIDGETS */}
+        {!error && !showSavedOnly && (
+          <>
+            {/* 1. Sector Performance Heatmap */}
+            <SectorHeatmap />
+
+            {/* 2. FII / DII Institutional Flow Widget */}
+            <InstitutionalFlows />
+
+            {/* 3. Upcoming Events & RBI Policy Watch Calendar */}
+            <EventCalendar />
+          </>
+        )}
+
         {/* Section Banner */}
         {!error && (
           <div className="flex items-center gap-4 mb-6">
@@ -241,70 +232,57 @@ function App() {
           </div>
         )}
 
-        {/* Category Filters */}
-        <CategoryFilter
-          activeCategory={activeCategory}
-          onCategoryChange={(cat) => {
-            setActiveCategory(cat);
-            setShowSavedOnly(false);
-          }}
-          categoryCounts={categoryCounts}
-        />
-
-        {/* Impact Filter */}
-        <ImpactFilter
-          activeImpact={activeImpact}
-          onImpactChange={setActiveImpact}
-          impactCounts={impactCounts}
-        />
-
-        {/* Search Bar */}
-        <SearchBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          selectedDate={selectedDate}
-          onDateChange={setSelectedDate}
-          onClear={handleClear}
-        />
-
-        {/* Article Count */}
-        {!isLoading && !error && (
-          <div className="flex items-center justify-between mb-5">
-            <p className="text-xs sm:text-sm text-slate-600 font-medium">
-              Showing <span className="text-slate-900 font-black tabular-nums">{filteredArticles.length}</span> article{filteredArticles.length !== 1 ? 's' : ''}
-              {activeCategory !== 'All' && (
-                <span className="text-slate-500"> in <span className="text-red-600 font-bold">{activeCategory}</span></span>
-              )}
-              {activeImpact !== 'All' && (
-                <span className="text-slate-500"> with <span className="text-red-600 font-bold">{activeImpact} Impact</span></span>
-              )}
-            </p>
-          </div>
-        )}
-
-        {/* News Grid List */}
+        {/* Search Bar & Date Filter */}
         {!error && (
-          <NewsList
-            articles={filteredArticles}
-            isLoading={isLoading}
-            onArticleClick={handleSelectArticle}
-            savedIds={savedIds}
-            onToggleSave={handleToggleSave}
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
           />
         )}
+
+        {/* Impact Level Pills */}
+        {!error && (
+          <ImpactFilter
+            activeImpact={activeImpact}
+            setActiveImpact={setActiveImpact}
+            articles={articles}
+          />
+        )}
+
+        {/* Category Pills */}
+        {!error && (
+          <CategoryFilter
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+            articles={articles}
+          />
+        )}
+
+        {/* News Feed Grid */}
+        <NewsList
+          articles={filteredArticles}
+          isLoading={isLoading}
+          error={error}
+          savedIds={savedIds}
+          onToggleSave={toggleSaveArticle}
+          onArticleClick={handleSelectArticle}
+        />
       </main>
 
-      <Footer />
-
-      {/* Interactive Reader Modal */}
+      {/* Reader Modal */}
       {selectedArticle && (
         <ArticleModal
           article={selectedArticle}
-          onClose={handleCloseArticle}
+          onClose={handleCloseModal}
           isSaved={savedIds.includes(selectedArticle.id)}
-          onToggleSave={handleToggleSave}
+          onToggleSave={() => toggleSaveArticle(selectedArticle.id)}
         />
       )}
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
