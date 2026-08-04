@@ -1,56 +1,56 @@
 [
   {
     "symbol": "NIFTY 50",
-    "val": "24,774.3",
-    "rawPrice": 24774.3,
-    "change": "+390.70",
-    "pct": "+1.60%",
-    "isUp": true,
-    "updatedAt": "2026-08-03T12:14:17.323Z"
+    "val": "24,598.65",
+    "rawPrice": 24598.65,
+    "change": "-175.65",
+    "pct": "-0.71%",
+    "isUp": false,
+    "updatedAt": "2026-08-04T04:02:14.687Z"
   },
   {
     "symbol": "SENSEX",
-    "val": "78,639.03",
-    "rawPrice": 78639.03,
-    "change": "+544.39",
-    "pct": "+0.70%",
+    "val": "78,772.94",
+    "rawPrice": 78772.94,
+    "change": "+133.91",
+    "pct": "+0.17%",
     "isUp": true,
-    "updatedAt": "2026-08-03T12:14:17.432Z"
+    "updatedAt": "2026-08-04T04:02:14.823Z"
   },
   {
     "symbol": "BANK NIFTY",
-    "val": "58,247.95",
-    "rawPrice": 58247.95,
-    "change": "+983.10",
-    "pct": "+1.72%",
-    "isUp": true,
-    "updatedAt": "2026-08-03T12:14:17.547Z"
+    "val": "57,781.3",
+    "rawPrice": 57781.3,
+    "change": "-466.65",
+    "pct": "-0.80%",
+    "isUp": false,
+    "updatedAt": "2026-08-04T04:02:15.099Z"
   },
   {
     "symbol": "GOLD (24K)",
-    "val": "₹3,43,744",
-    "rawPrice": 4116.7,
-    "change": "+9.70",
-    "pct": "+0.24%",
+    "val": "₹3,43,177",
+    "rawPrice": 4109.9,
+    "change": "+19.40",
+    "pct": "+0.47%",
     "isUp": true,
-    "updatedAt": "2026-08-03T12:14:17.668Z"
+    "updatedAt": "2026-08-04T04:02:15.134Z"
   },
   {
     "symbol": "USD / INR",
-    "val": "₹95.39",
-    "rawPrice": 95.39,
-    "change": "+0.01",
-    "pct": "+0.01%",
-    "isUp": true,
-    "updatedAt": "2026-08-03T12:14:17.774Z"
+    "val": "₹95.31",
+    "rawPrice": 95.315,
+    "change": "-0.01",
+    "pct": "-0.01%",
+    "isUp": false,
+    "updatedAt": "2026-08-04T04:02:15.270Z"
   },
   {
     "symbol": "CRUDE BRENT",
-    "val": "$82.99",
-    "rawPrice": 82.99,
-    "change": "-4.94",
-    "pct": "-5.62%",
-    "isUp": false,
-    "updatedAt": "2026-08-03T12:14:17.888Z"
+    "val": "$84.87",
+    "rawPrice": 84.87,
+    "change": "+1.10",
+    "pct": "+1.31%",
+    "isUp": true,
+    "updatedAt": "2026-08-04T04:02:15.369Z"
   }
 ]
