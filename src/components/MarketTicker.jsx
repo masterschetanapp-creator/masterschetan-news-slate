@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Pause, Play, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Pause, Play, Activity, RefreshCw } from 'lucide-react';
 
 const SYMBOL_CONFIG = [
   { id: '^NSEI', symbol: 'NIFTY 50', format: (v) => v.toLocaleString('en-IN', { maximumFractionDigits: 2 }) },
@@ -11,12 +11,12 @@ const SYMBOL_CONFIG = [
 ];
 
 const FALLBACK_MARKET_DATA = [
-  { symbol: 'NIFTY 50', val: '24,598.65', change: '-175.65', pct: '-0.71%', isUp: false },
-  { symbol: 'SENSEX', val: '78,772.94', change: '+133.91', pct: '+0.17%', isUp: true },
-  { symbol: 'BANK NIFTY', val: '57,781.30', change: '-466.65', pct: '-0.80%', isUp: false },
-  { symbol: 'GOLD (24K)', val: '₹3,43,177', change: '+19.40', pct: '+0.47%', isUp: true },
-  { symbol: 'USD / INR', val: '₹95.31', change: '-0.01', pct: '-0.01%', isUp: false },
-  { symbol: 'CRUDE BRENT', val: '$84.87', change: '+1.10', pct: '+1.31%', isUp: true },
+  { symbol: 'NIFTY 50', val: '24,630.95', change: '-143.35', pct: '-0.58%', isUp: false },
+  { symbol: 'SENSEX', val: '78,708.99', change: '+69.96', pct: '+0.09%', isUp: true },
+  { symbol: 'BANK NIFTY', val: '58,247.95', change: '-396.90', pct: '-0.68%', isUp: false },
+  { symbol: 'GOLD (24K)', val: '₹3,43,177', change: '+18.60', pct: '+0.45%', isUp: true },
+  { symbol: 'USD / INR', val: '₹95.30', change: '-0.03', pct: '-0.03%', isUp: false },
+  { symbol: 'CRUDE BRENT', val: '$84.98', change: '+1.21', pct: '+1.44%', isUp: true },
 ];
 
 export default function MarketTicker() {
@@ -24,35 +24,24 @@ export default function MarketTicker() {
   const [marketData, setMarketData] = useState(FALLBACK_MARKET_DATA);
   const [lastUpdated, setLastUpdated] = useState('');
   const [isFetching, setIsFetching] = useState(false);
+  const [justRefreshed, setJustRefreshed] = useState(false);
 
   // Fetch live market data directly from browser (0 Firebase Quota)
-  const fetchLiveQuotes = async () => {
+  const fetchLiveQuotes = useCallback(async () => {
     setIsFetching(true);
     let updatedData = [];
 
-    try {
-      // Try static CDN cache first
-      const staticRes = await fetch(`/market-data.json?t=${Date.now()}`);
-      if (staticRes.ok) {
-        const staticJson = await staticRes.json();
-        if (Array.isArray(staticJson) && staticJson.length > 0) {
-          updatedData = staticJson;
-        }
-      }
-    } catch (e) {
-      console.warn('Static market cache fetch info:', e.message);
-    }
-
-    // Try client-side live fetch for real-time tick updates
+    // 1. Try query2.finance.yahoo.com (CORS friendly)
     try {
       const livePromises = SYMBOL_CONFIG.map(async (cfg) => {
         try {
-          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(cfg.id)}?range=1d&interval=1m`;
+          // query2 endpoint allows browser CORS
+          const url = `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(cfg.id)}?range=1d&interval=1m&t=${Date.now()}`;
           const res = await fetch(url);
           if (res.ok) {
             const json = await res.json();
             const meta = json?.chart?.result?.[0]?.meta;
-            if (meta) {
+            if (meta && typeof meta.regularMarketPrice === 'number') {
               const price = meta.regularMarketPrice;
               const prev = meta.chartPreviousClose || meta.previousClose || price;
               const diff = price - prev;
@@ -83,14 +72,34 @@ export default function MarketTicker() {
       console.warn('Live API tick info:', err.message);
     }
 
+    // 2. Fallback to static CDN JSON if query2 is unavailable
+    if (updatedData.length === 0) {
+      try {
+        const staticRes = await fetch(`/market-data.json?t=${Date.now()}`);
+        if (staticRes.ok) {
+          const staticJson = await staticRes.json();
+          if (Array.isArray(staticJson) && staticJson.length > 0) {
+            updatedData = staticJson;
+          }
+        }
+      } catch (e) {
+        console.warn('Static market cache info:', e.message);
+      }
+    }
+
     if (updatedData.length > 0) {
       setMarketData(updatedData);
     }
 
     const now = new Date();
-    setLastUpdated(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }));
+    const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    setLastUpdated(timeStr);
     setIsFetching(false);
-  };
+
+    // Visual pulse confirmation
+    setJustRefreshed(true);
+    setTimeout(() => setJustRefreshed(false), 2000);
+  }, []);
 
   useEffect(() => {
     fetchLiveQuotes();
@@ -101,26 +110,26 @@ export default function MarketTicker() {
     }, 60000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [fetchLiveQuotes]);
 
   return (
     <div className="bg-slate-900 text-white border-b border-slate-800 text-[11px] font-bold py-1.5 px-3 relative overflow-hidden z-50 select-none">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
         
         {/* Left Live Indicator Badge + Pulsing Dot + Timestamp */}
-        <div className="flex items-center space-x-1.5 shrink-0 bg-red-600 px-2.5 py-1 rounded-md text-[10px] uppercase font-black tracking-wider shadow-2xs">
+        <div className="flex items-center space-x-1.5 shrink-0 bg-red-600 px-2 sm:px-2.5 py-1 rounded-md text-[10px] uppercase font-black tracking-wider shadow-2xs">
           {/* Pulsing Status Dot */}
           <span className="relative flex h-2 w-2 mr-0.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
           </span>
           
-          <span>LIVE MARKETS</span>
+          <span className="whitespace-nowrap">LIVE MARKETS</span>
 
           {/* Timestamp */}
           {lastUpdated && (
-            <span className="inline-block text-[9px] text-red-100 font-mono font-bold border-l border-red-400/50 pl-1.5 ml-1">
-              {lastUpdated} IST
+            <span className={`inline-block text-[9px] font-mono font-bold border-l border-red-400/50 pl-1.5 ml-1 transition-colors ${justRefreshed ? 'text-amber-200 font-extrabold' : 'text-red-100'}`}>
+              {lastUpdated}
             </span>
           )}
         </div>
@@ -158,10 +167,12 @@ export default function MarketTicker() {
           <button
             onClick={fetchLiveQuotes}
             disabled={isFetching}
-            className="flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors border border-slate-700 disabled:opacity-50 text-[10px] font-bold"
+            className={`flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition-colors border text-[10px] font-bold ${
+              justRefreshed ? 'border-emerald-500 text-emerald-400' : 'border-slate-700 text-slate-300 hover:text-white'
+            }`}
             title="Click to Refresh Live Quotes Now"
           >
-            <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin text-red-400' : 'text-slate-400'}`} />
+            <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin text-red-400' : justRefreshed ? 'text-emerald-400' : 'text-slate-400'}`} />
             <span className="hidden sm:inline">Refresh</span>
           </button>
           
