@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Flame, ShieldAlert, Info, Layers, ArrowUpRight, Minus } from 'lucide-react';
+import { Flame, ShieldAlert, Info, Layers } from 'lucide-react';
 
 const IMPACT_LEVELS = [
   { id: 'All', label: 'All Impacts', icon: Layers, color: 'text-slate-600', activeBg: 'bg-slate-900 text-white', border: 'border-slate-300', symbol: null },
@@ -9,9 +9,32 @@ const IMPACT_LEVELS = [
   { id: 'Standard', label: 'Standard Impact', icon: Info, color: 'text-blue-700', activeBg: 'bg-blue-600 text-white', border: 'border-blue-200', dot: 'bg-slate-500', symbol: '●' },
 ];
 
-export default function ImpactFilter({ activeImpact, onImpactChange, impactCounts = {} }) {
+export default function ImpactFilter({
+  activeImpact,
+  onImpactChange,
+  setActiveImpact,
+  articles = [],
+  impactCounts = {}
+}) {
+  // Support both onImpactChange and setActiveImpact handler props
+  const handleImpactClick = (lvlId) => {
+    if (onImpactChange) onImpactChange(lvlId);
+    else if (setActiveImpact) setActiveImpact(lvlId);
+  };
+
+  // Calculate counts dynamically from articles array if not provided explicitly
+  const counts = { ...impactCounts };
+  if (articles && articles.length > 0) {
+    counts['All'] = articles.length;
+    IMPACT_LEVELS.forEach(lvl => {
+      if (lvl.id !== 'All') {
+        counts[lvl.id] = articles.filter(a => a.impactLevel === lvl.id).length;
+      }
+    });
+  }
+
   return (
-    <div className="mb-6">
+    <div className="mb-6 select-none">
       <div className="flex items-center justify-between mb-2">
         <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
           <Flame className="w-3.5 h-3.5 text-red-600" />
@@ -22,14 +45,14 @@ export default function ImpactFilter({ activeImpact, onImpactChange, impactCount
       <div className="flex flex-wrap items-center gap-2">
         {IMPACT_LEVELS.map((level) => {
           const isActive = activeImpact === level.id;
-          const count = impactCounts[level.id] || 0;
+          const count = counts[level.id] !== undefined ? counts[level.id] : 0;
           const Icon = level.icon;
 
           return (
             <motion.button
               key={level.id}
               whileTap={{ scale: 0.96 }}
-              onClick={() => onImpactChange(level.id)}
+              onClick={() => handleImpactClick(level.id)}
               className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border shadow-2xs ${
                 isActive
                   ? `${level.activeBg} border-transparent shadow-sm scale-[1.02]`

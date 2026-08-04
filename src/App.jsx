@@ -246,6 +246,7 @@ function App() {
         {!error && (
           <ImpactFilter
             activeImpact={activeImpact}
+            onImpactChange={setActiveImpact}
             setActiveImpact={setActiveImpact}
             articles={articles}
           />
@@ -255,6 +256,7 @@ function App() {
         {!error && (
           <CategoryFilter
             activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
             setActiveCategory={setActiveCategory}
             articles={articles}
           />

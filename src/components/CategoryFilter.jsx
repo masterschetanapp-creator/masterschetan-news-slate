@@ -25,21 +25,44 @@ const CATEGORY_ICONS = {
 
 const CATEGORIES = Object.keys(CATEGORY_COLORS);
 
-const CategoryFilter = ({ activeCategory, onCategoryChange, categoryCounts = {} }) => {
+const CategoryFilter = ({
+  activeCategory,
+  onCategoryChange,
+  setActiveCategory,
+  articles = [],
+  categoryCounts = {}
+}) => {
+  // Support both onCategoryChange and setActiveCategory handler props
+  const handleCategoryClick = (cat) => {
+    if (onCategoryChange) onCategoryChange(cat);
+    else if (setActiveCategory) setActiveCategory(cat);
+  };
+
+  // Calculate counts dynamically from articles array if not provided explicitly
+  const counts = { ...categoryCounts };
+  if (articles && articles.length > 0) {
+    counts['All'] = articles.length;
+    CATEGORIES.forEach(cat => {
+      if (cat !== 'All') {
+        counts[cat] = articles.filter(a => a.category === cat).length;
+      }
+    });
+  }
+
   return (
-    <div className="w-full pb-3 mb-4 sm:mb-6">
+    <div className="w-full pb-3 mb-4 sm:mb-6 select-none">
       <div className="flex flex-wrap gap-1.5 sm:gap-2 md:gap-2.5">
         {CATEGORIES.map((category) => {
           const isActive = activeCategory === category;
           const color = CATEGORY_COLORS[category];
           const Icon = CATEGORY_ICONS[category];
-          const count = categoryCounts[category];
+          const count = counts[category] !== undefined ? counts[category] : 0;
           
           return (
             <button
               key={category}
-              onClick={() => onCategoryChange(category)}
-              className={`group relative px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold transition-all duration-200 flex items-center space-x-1.5 border shadow-sm ${
+              onClick={() => handleCategoryClick(category)}
+              className={`group relative px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold transition-all duration-200 flex items-center space-x-1.5 border shadow-2xs ${
                 isActive 
                   ? 'text-white shadow-md scale-[1.02]' 
                   : 'text-slate-700 bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-300'
@@ -51,13 +74,11 @@ const CategoryFilter = ({ activeCategory, onCategoryChange, categoryCounts = {} 
             >
               <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: isActive ? '#ffffff' : color }} />
               <span className="whitespace-nowrap">{category}</span>
-              {count !== undefined && count > 0 && (
-                <span className={`text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.2 rounded-md ${
-                  isActive ? 'bg-white/25 text-white' : 'bg-slate-100 text-slate-600'
-                }`}>
-                  {count}
-                </span>
-              )}
+              <span className={`text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.2 rounded-md tabular-nums ${
+                isActive ? 'bg-white/25 text-white' : 'bg-slate-100 text-slate-600 border border-slate-200'
+              }`}>
+                {count}
+              </span>
             </button>
           );
         })}
