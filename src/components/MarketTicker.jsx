@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Pause, Play, Activity, RefreshCw } from 'lucide-react';
 
 const FALLBACK_MARKET_DATA = [
-  { symbol: 'SENSEX', val: '78,428.95', change: '-210.08', pct: '-0.27%', isUp: false },
-  { symbol: 'NIFTY 50', val: '24,614.90', change: '-159.40', pct: '-0.64%', isUp: false },
-  { symbol: 'BANK NIFTY', val: '57,907.20', change: '-340.75', pct: '-0.58%', isUp: false },
-  { symbol: 'GOLD (24K)', val: '₹3,42,701', change: '+1,120', pct: '+0.33%', isUp: true },
-  { symbol: 'USD / INR', val: '₹95.36', change: '+0.03', pct: '+0.03%', isUp: true },
-  { symbol: 'CRUDE BRENT', val: '$85.67', change: '+$1.90', pct: '+2.27%', isUp: true },
+  { symbol: 'SENSEX', val: '78,793.66', change: '+212.66', pct: '+0.27%', isUp: true },
+  { symbol: 'NIFTY 50', val: '24,632.05', change: '+7.40', pct: '+0.03%', isUp: true },
+  { symbol: 'BANK NIFTY', val: '57,942.90', change: '+202.95', pct: '+0.35%', isUp: true },
+  { symbol: 'GOLD (24K)', val: '₹3,60,837', change: '+16.20', pct: '+0.38%', isUp: true },
+  { symbol: 'USD / INR', val: '₹95.20', change: '+0.12', pct: '+0.13%', isUp: true },
+  { symbol: 'CRUDE BRENT', val: '$79.70', change: '+0.25', pct: '+0.31%', isUp: true },
 ];
 
 export default function MarketTicker() {
@@ -28,10 +28,11 @@ export default function MarketTicker() {
       const res = await fetch(`/market-data.json?cache_buster=${Date.now()}_${Math.random()}`);
       if (res.ok) {
         const json = await res.json();
-        if (Array.isArray(json) && json.length > 0) {
-          updatedData = json;
-          if (json[0]?.updatedAt) {
-            const dt = new Date(json[0].updatedAt);
+        const list = Array.isArray(json) ? json : json?.ticker;
+        if (Array.isArray(list) && list.length > 0) {
+          updatedData = list;
+          if (list[0]?.updatedAt) {
+            const dt = new Date(list[0].updatedAt);
             dataTimestamp = dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
           }
         }

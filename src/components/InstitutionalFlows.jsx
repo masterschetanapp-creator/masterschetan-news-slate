@@ -1,22 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Landmark, HelpCircle, ShieldCheck, Clock } from 'lucide-react';
 
+const FALLBACK_FII_DII = {
+  sessionDate: 'Wed 05 Aug, 2026',
+  fiiNet: '-943.42',
+  fiiIsBuy: false,
+  diiNet: '+2,883.17',
+  diiIsBuy: true,
+  combinedNet: '+1,939.75',
+  combinedIsBuy: true
+};
+
 export default function InstitutionalFlows() {
-  // Fact-checked Exchange Provisional FII/DII Data
-  const [fiiFlow] = useState({ net: '922.26', isBuy: true });
-  const [diiFlow] = useState({ net: '1,571.18', isBuy: true });
+  const [fiiDii, setFiiDii] = useState(FALLBACK_FII_DII);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Fact-checked Combined Exchange Total
-  const combinedTotal = '2,493.44';
-
-  // Dynamic Date Stamp
-  const currentDateStr = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  });
+  useEffect(() => {
+    async function loadOfficialData() {
+      try {
+        const res = await fetch(`/market-data.json?cache_buster=${Date.now()}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json?.fiiDii) {
+            setFiiDii(json.fiiDii);
+          }
+        }
+      } catch (e) {
+        console.warn('Institutional flow fetch info:', e.message);
+      }
+    }
+    loadOfficialData();
+  }, []);
 
   return (
     <div className="mb-10 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
@@ -43,10 +58,10 @@ export default function InstitutionalFlows() {
               </button>
             </div>
 
-            {/* Fact-Checked Exchange Timestamp Badge */}
+            {/* Official Exchange Session Timestamp Badge */}
             <span className="inline-flex items-center space-x-1 text-[10px] font-mono font-bold bg-slate-800 text-emerald-400 px-2.5 py-1 rounded-md border border-slate-700">
               <Clock className="w-3 h-3 text-emerald-400" />
-              <span>NSE/BSE OFFICIAL • {currentDateStr}</span>
+              <span>NSE/BSE OFFICIAL • {fiiDii.sessionDate}</span>
             </span>
           </div>
 
@@ -75,11 +90,13 @@ export default function InstitutionalFlows() {
               FII Net Cash (Foreign)
             </span>
             <div className="flex items-center justify-between">
-              <span className="text-lg font-black text-emerald-400 tabular-nums">
-                +₹{fiiFlow.net} Cr
+              <span className={`text-lg font-black tabular-nums ${fiiDii.fiiIsBuy ? 'text-emerald-400' : 'text-red-400'}`}>
+                {fiiDii.fiiIsBuy ? `+₹${fiiDii.fiiNet} Cr` : `-₹${fiiDii.fiiNet.replace('-', '')} Cr`}
               </span>
-              <span className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-bold">
-                BUY
+              <span className={`p-1 rounded-md text-xs font-bold ${
+                fiiDii.fiiIsBuy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+              }`}>
+                {fiiDii.fiiIsBuy ? 'BUY' : 'SELL'}
               </span>
             </div>
           </div>
@@ -90,25 +107,33 @@ export default function InstitutionalFlows() {
               DII Net Cash (Domestic)
             </span>
             <div className="flex items-center justify-between">
-              <span className="text-lg font-black text-emerald-400 tabular-nums">
-                +₹{diiFlow.net} Cr
+              <span className={`text-lg font-black tabular-nums ${fiiDii.diiIsBuy ? 'text-emerald-400' : 'text-red-400'}`}>
+                {fiiDii.diiIsBuy ? `+₹${fiiDii.diiNet} Cr` : `-₹${fiiDii.diiNet.replace('-', '')} Cr`}
               </span>
-              <span className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-bold">
-                BUY
+              <span className={`p-1 rounded-md text-xs font-bold ${
+                fiiDii.diiIsBuy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+              }`}>
+                {fiiDii.diiIsBuy ? 'BUY' : 'SELL'}
               </span>
             </div>
           </div>
 
           {/* Combined Inflow Card */}
-          <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 backdrop-blur-md">
-            <span className="text-[10px] uppercase font-black tracking-wider text-emerald-300 block mb-1">
-              Combined Inflow
+          <div className={`p-4 rounded-2xl backdrop-blur-md ${
+            fiiDii.combinedIsBuy ? 'bg-emerald-500/15 border border-emerald-500/30' : 'bg-red-500/15 border border-red-500/30'
+          }`}>
+            <span className={`text-[10px] uppercase font-black tracking-wider block mb-1 ${
+              fiiDii.combinedIsBuy ? 'text-emerald-300' : 'text-red-300'
+            }`}>
+              Combined {fiiDii.combinedIsBuy ? 'Inflow' : 'Outflow'}
             </span>
             <div className="flex items-center justify-between">
-              <span className="text-lg font-black text-emerald-300 tabular-nums">
-                +₹{combinedTotal} Cr
+              <span className={`text-lg font-black tabular-nums ${
+                fiiDii.combinedIsBuy ? 'text-emerald-300' : 'text-red-300'
+              }`}>
+                {fiiDii.combinedIsBuy ? `+₹${fiiDii.combinedNet} Cr` : `-₹${fiiDii.combinedNet.replace('-', '')} Cr`}
               </span>
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <ShieldCheck className={`w-4 h-4 ${fiiDii.combinedIsBuy ? 'text-emerald-400' : 'text-red-400'}`} />
             </div>
           </div>
         </div>

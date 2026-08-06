@@ -1,56 +1,69 @@
-[
-  {
-    "symbol": "SENSEX",
-    "val": "78,428.95",
-    "rawPrice": 78428.95,
-    "change": "-210.08",
-    "pct": "-0.27%",
-    "isUp": false,
-    "updatedAt": "2026-08-04T12:04:23.533Z"
-  },
-  {
-    "symbol": "NIFTY 50",
-    "val": "24,614.90",
-    "rawPrice": 24614.9,
-    "change": "-159.40",
-    "pct": "-0.64%",
-    "isUp": false,
-    "updatedAt": "2026-08-04T12:04:24.135Z"
-  },
-  {
-    "symbol": "BANK NIFTY",
-    "val": "57,907.20",
-    "rawPrice": 57907.2,
-    "change": "-340.75",
-    "pct": "-0.58%",
-    "isUp": false,
-    "updatedAt": "2026-08-04T12:04:24.762Z"
-  },
-  {
-    "symbol": "GOLD (24K)",
-    "val": "₹3,45,197",
-    "rawPrice": 4134.1,
-    "change": "+43.60",
-    "pct": "+1.07%",
-    "isUp": true,
-    "updatedAt": "2026-08-04T12:04:25.138Z"
-  },
-  {
-    "symbol": "USD / INR",
-    "val": "₹95.20",
-    "rawPrice": 95.203,
-    "change": "-0.1289",
-    "pct": "-0.14%",
-    "isUp": false,
-    "updatedAt": "2026-08-04T12:04:25.611Z"
-  },
-  {
-    "symbol": "CRUDE BRENT",
-    "val": "$81.12",
-    "rawPrice": 81.12,
-    "change": "-2.65",
-    "pct": "-3.16%",
-    "isUp": false,
-    "updatedAt": "2026-08-04T12:04:25.725Z"
+{
+  "ticker": [
+    {
+      "symbol": "SENSEX",
+      "val": "78,793.66",
+      "rawPrice": 78793.66,
+      "change": "+212.66",
+      "pct": "+0.27%",
+      "isUp": true,
+      "updatedAt": "2026-08-06T07:29:34.492Z"
+    },
+    {
+      "symbol": "NIFTY 50",
+      "val": "24,632.05",
+      "rawPrice": 24632.05,
+      "change": "+7.40",
+      "pct": "+0.03%",
+      "isUp": true,
+      "updatedAt": "2026-08-06T07:29:35.018Z"
+    },
+    {
+      "symbol": "BANK NIFTY",
+      "val": "57,942.90",
+      "rawPrice": 57942.9,
+      "change": "+202.95",
+      "pct": "+0.35%",
+      "isUp": true,
+      "updatedAt": "2026-08-06T07:29:35.552Z"
+    },
+    {
+      "symbol": "GOLD (24K)",
+      "val": "₹3,60,837",
+      "rawPrice": 4321.4,
+      "change": "+16.20",
+      "pct": "+0.38%",
+      "isUp": true,
+      "updatedAt": "2026-08-06T07:29:35.771Z"
+    },
+    {
+      "symbol": "USD / INR",
+      "val": "₹95.20",
+      "rawPrice": 95.2012,
+      "change": "+0.1236",
+      "pct": "+0.13%",
+      "isUp": true,
+      "updatedAt": "2026-08-06T07:29:36.248Z"
+    },
+    {
+      "symbol": "CRUDE BRENT",
+      "val": "$79.70",
+      "rawPrice": 79.7,
+      "change": "+0.25",
+      "pct": "+0.31%",
+      "isUp": true,
+      "updatedAt": "2026-08-06T07:29:36.457Z"
+    }
+  ],
+  "fiiDii": {
+    "sessionDate": "Wed 05 Aug, 2026",
+    "rawDate": "2026-08-05",
+    "fiiNet": "-943.42",
+    "fiiIsBuy": false,
+    "diiNet": "+2,883.17",
+    "diiIsBuy": true,
+    "combinedNet": "+1,939.75",
+    "combinedIsBuy": true,
+    "updatedAt": "2026-08-06T07:29:36.995Z"
   }
-]
+}
