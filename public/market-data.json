@@ -2,57 +2,155 @@
   "ticker": [
     {
       "symbol": "SENSEX",
-      "val": "78,869.46",
-      "rawPrice": 78869.46,
-      "change": "+288.46",
+      "val": "78,868.67",
+      "rawPrice": 78868.67,
+      "change": "+287.67",
       "pct": "+0.37%",
       "isUp": true,
-      "updatedAt": "2026-08-06T08:44:21.152Z"
+      "updatedAt": "2026-08-06T08:52:41.802Z"
     },
     {
       "symbol": "NIFTY 50",
-      "val": "24,650.80",
-      "rawPrice": 24650.8,
-      "change": "+26.15",
-      "pct": "+0.11%",
+      "val": "24,656.10",
+      "rawPrice": 24656.1,
+      "change": "+31.45",
+      "pct": "+0.13%",
       "isUp": true,
-      "updatedAt": "2026-08-06T08:44:21.653Z"
+      "updatedAt": "2026-08-06T08:52:42.305Z"
     },
     {
       "symbol": "BANK NIFTY",
-      "val": "58,072.15",
-      "rawPrice": 58072.15,
-      "change": "+332.20",
-      "pct": "+0.58%",
+      "val": "58,043.75",
+      "rawPrice": 58043.75,
+      "change": "+303.80",
+      "pct": "+0.53%",
       "isUp": true,
-      "updatedAt": "2026-08-06T08:44:22.183Z"
+      "updatedAt": "2026-08-06T08:52:42.794Z"
     },
     {
       "symbol": "GOLD (24K)",
-      "val": "₹3,61,747",
-      "rawPrice": 4332.3,
-      "change": "+27.10",
-      "pct": "+0.63%",
+      "val": "₹3,61,555",
+      "rawPrice": 4330,
+      "change": "+24.80",
+      "pct": "+0.58%",
       "isUp": true,
-      "updatedAt": "2026-08-06T08:44:22.499Z"
+      "updatedAt": "2026-08-06T08:52:43.298Z"
     },
     {
       "symbol": "USD / INR",
-      "val": "₹95.18",
-      "rawPrice": 95.1776,
-      "change": "+0.1000",
-      "pct": "+0.11%",
+      "val": "₹95.16",
+      "rawPrice": 95.1631,
+      "change": "+0.0856",
+      "pct": "+0.09%",
       "isUp": true,
-      "updatedAt": "2026-08-06T08:44:23.042Z"
+      "updatedAt": "2026-08-06T08:52:43.780Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$79.67",
-      "rawPrice": 79.67,
-      "change": "+0.22",
-      "pct": "+0.28%",
+      "val": "$79.53",
+      "rawPrice": 79.53,
+      "change": "+0.08",
+      "pct": "+0.10%",
       "isUp": true,
-      "updatedAt": "2026-08-06T08:44:23.150Z"
+      "updatedAt": "2026-08-06T08:52:43.989Z"
+    }
+  ],
+  "sectors": [
+    {
+      "name": "NIFTY IT",
+      "val": "31,236.05",
+      "pct": "-0.53%",
+      "change": "-168.00",
+      "isUp": false,
+      "stocks": [
+        "TCS",
+        "Infosys",
+        "Wipro"
+      ]
+    },
+    {
+      "name": "NIFTY BANK",
+      "val": "58,043.75",
+      "pct": "+0.53%",
+      "change": "+303.80",
+      "isUp": true,
+      "stocks": [
+        "HDFC",
+        "ICICI",
+        "SBI"
+      ]
+    },
+    {
+      "name": "NIFTY AUTO",
+      "val": "29,099.90",
+      "pct": "-1.06%",
+      "change": "-311.65",
+      "isUp": false,
+      "stocks": [
+        "Tata Motors",
+        "M&M",
+        "Maruti"
+      ]
+    },
+    {
+      "name": "NIFTY PHARMA",
+      "val": "26,593.45",
+      "pct": "+0.11%",
+      "change": "+29.90",
+      "isUp": true,
+      "stocks": [
+        "Sun Pharma",
+        "Cipla",
+        "Dr Reddy"
+      ]
+    },
+    {
+      "name": "NIFTY FMCG",
+      "val": "49,367.85",
+      "pct": "-0.03%",
+      "change": "-15.65",
+      "isUp": false,
+      "stocks": [
+        "ITC",
+        "HUL",
+        "Nestle"
+      ]
+    },
+    {
+      "name": "NIFTY METAL",
+      "val": "13,128.50",
+      "pct": "-0.96%",
+      "change": "-127.85",
+      "isUp": false,
+      "stocks": [
+        "Tata Steel",
+        "JSW",
+        "Hindalco"
+      ]
+    },
+    {
+      "name": "NIFTY REALTY",
+      "val": "890.10",
+      "pct": "-0.96%",
+      "change": "-8.60",
+      "isUp": false,
+      "stocks": [
+        "DLF",
+        "Godrej Prop",
+        "Macrotech"
+      ]
+    },
+    {
+      "name": "NIFTY ENERGY",
+      "val": "38,664.50",
+      "pct": "-0.43%",
+      "change": "-165.55",
+      "isUp": false,
+      "stocks": [
+        "Reliance",
+        "NTPC",
+        "ONGC"
+      ]
     }
   ],
   "fiiDii": {
@@ -61,7 +159,7 @@
     "fiiIsBuy": false,
     "diiNet": "+2,883.17",
     "diiIsBuy": true,
-    "updatedAt": "2026-08-06T08:44:23.211Z"
+    "updatedAt": "2026-08-06T08:52:48.629Z"
   },
   "fiiDiiTable": {
     "days": [
