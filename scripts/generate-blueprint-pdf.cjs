@@ -3,8 +3,8 @@ const path = require('path');
 const PDFDocument = require('pdfkit');
 
 function generateMasterBlueprintPDF() {
-  const outputPath = path.join(__dirname, '../AUTOMATED_NEWS_SLATE_MASTER_BLUEPRINT.pdf');
-  const artifactPath = 'C:\\Users\\HP\\.gemini\\antigravity\\brain\\9f134cbd-54d6-4f6b-b870-ed1e8925aa30\\AUTOMATED_NEWS_SLATE_MASTER_BLUEPRINT.pdf';
+  const outputPath = path.join(__dirname, '../PRODUCTION_TECHNICAL_BLUEPRINT.pdf');
+  const artifactPath = 'C:\\Users\\HP\\.gemini\\antigravity\\brain\\9f134cbd-54d6-4f6b-b870-ed1e8925aa30\\PRODUCTION_TECHNICAL_BLUEPRINT.pdf';
 
   const doc = new PDFDocument({
     margin: 40,
@@ -21,152 +21,128 @@ function generateMasterBlueprintPDF() {
   const textDark = '#1e293b';
   const textMuted = '#64748b';
 
-  // --- PAGE 1: TITLE & EXECUTIVE ARCHITECTURE ---
+  // --- PAGE 1: TITLE & EXACT TECHNICAL ARCHITECTURE ---
   doc.rect(0, 0, doc.page.width, 140).fill(darkNavy);
   
-  doc.fillColor('#ffffff').fontSize(22).font('Helvetica-Bold').text('UNIVERSAL AUTOMATED NEWS SLATE', 40, 35);
-  doc.fillColor(primaryRed).fontSize(16).text('MASTER FRAMEWORK BLUEPRINT', 40, 65);
-  doc.fillColor('#94a3b8').fontSize(9.5).font('Helvetica').text('A Replicable, Zero-Backend, Fully Automated White-Label Platform for Niche Intelligence Portals', 40, 92);
-  doc.text('Verticals: Finance | AI & Tech | Fitness & Health | Real Estate | Medical', 40, 108);
+  doc.fillColor('#ffffff').fontSize(20).font('Helvetica-Bold').text('FINANCIAL NEWS SLATE', 40, 35);
+  doc.fillColor(primaryRed).fontSize(15).text('PRODUCTION TECHNICAL BLUEPRINT & DEPLOYMENT SPECIFICATION', 40, 62);
+  doc.fillColor('#94a3b8').fontSize(9).font('Helvetica').text('Complete Technical Architecture, Data Schemas, Scraper Engines, Component Hierarchies, and CI/CD Pipeline', 40, 88);
+  doc.text('Target Project: masterchetan-financial.web.app | React 18 + Vite 8 + TailwindCSS + Firestore', 40, 104);
 
-  doc.y = 160;
+  doc.y = 155;
   
-  doc.fillColor(primaryRed).fontSize(13).font('Helvetica-Bold').text('1. EXECUTIVE ARCHITECTURE & ZERO-QUOTA PATTERN');
-  doc.moveDown(0.4);
+  doc.fillColor(primaryRed).fontSize(12).font('Helvetica-Bold').text('1. CORE ARCHITECTURE & ZERO-QUOTA CDN PATTERN');
+  doc.moveDown(0.3);
 
-  doc.fillColor(textDark).fontSize(9.5).font('Helvetica').text(
-    'The Universal Automated News Slate Framework delivers a real-time, AI-curated intelligence portal with ZERO server infrastructure fees and 0 Firestore database read costs for high-frequency widgets.',
+  doc.fillColor(textDark).fontSize(9).font('Helvetica').text(
+    'This system employs a dual-data pipeline. High-frequency live tickers, 8 Nifty sectoral indices, and the 5-Day FII/DII Institutional Table are fetched from a static CDN JSON file (public/market-data.json). This guarantees ZERO Firestore database read quotas for high-frequency client updates.',
     { align: 'justify' }
   );
-  doc.moveDown(0.8);
+  doc.moveDown(0.6);
 
   // Key Pillars Box
   const boxStartY = doc.y;
-  doc.rect(40, boxStartY, doc.page.width - 80, 100).fillAndStroke('#f8fafc', '#e2e8f0');
-  const boxY = boxStartY + 12;
+  doc.rect(40, boxStartY, doc.page.width - 80, 110).fillAndStroke('#f8fafc', '#cbd5e1');
+  const boxY = boxStartY + 10;
   
-  doc.fillColor(darkNavy).fontSize(10.5).font('Helvetica-Bold').text('Core Architectural Pillars:', 52, boxY);
-  doc.fillColor(textDark).fontSize(9).font('Helvetica');
-  doc.text('• Static CDN First (0 Firestore Read Quota): Live tickers & heatmaps fetch from public/niche-data.json.', 52, boxY + 20);
-  doc.text('• Gemini AI Autonomous Curation: Google Gemini API generates 3 key bullets & impact tags.', 52, boxY + 36);
-  doc.text('• GitHub Actions Automated Pipeline: Headless cron runs twice daily (9 AM & 5 PM IST).', 52, boxY + 52);
-  doc.text('• Multi-Client White-Label Architecture: Independent Firebase Projects & GitHub Repos per customer.', 52, boxY + 68);
+  doc.fillColor(darkNavy).fontSize(10).font('Helvetica-Bold').text('Production Technical Stack:', 52, boxY);
+  doc.fillColor(textDark).fontSize(8.5).font('Helvetica');
+  doc.text('• Frontend: React 18, Vite 8, TailwindCSS (Modern Light Theme, #e02020 Red Accent), Lucide-React, Framer Motion', 52, boxY + 18);
+  doc.text('• Data Engine: Public Static CDN Dataset (public/market-data.json) + Cloud Firestore NoSQL Database (articles)', 52, boxY + 34);
+  doc.text('• AI Processing: Google Gemini 1.5 Flash API (@google/genai) for 3-bullet summarization & category tagging', 52, boxY + 50);
+  doc.text('• Automation Pipeline: GitHub Actions Headless Cron (.github/workflows/curate.yml) twice daily (9:03 AM & 5:33 PM IST)', 52, boxY + 66);
+  doc.text('• Hosting CDN: Firebase Hosting CDN (masterchetan-financial.web.app)', 52, boxY + 82);
 
-  doc.y = boxStartY + 115;
+  doc.y = boxStartY + 125;
 
-  doc.fillColor(primaryRed).fontSize(13).font('Helvetica-Bold').text('2. DOMAIN ADAPTATION MATRIX');
-  doc.moveDown(0.4);
+  doc.fillColor(primaryRed).fontSize(12).font('Helvetica-Bold').text('2. COMPONENT ARCHITECTURE & WIDGET SPECIFICATIONS');
+  doc.moveDown(0.3);
 
-  // Matrix Table Header
-  const tableTop = doc.y;
-  doc.rect(40, tableTop, doc.page.width - 80, 22).fill('#e2e8f0');
-  doc.fillColor(darkNavy).fontSize(9).font('Helvetica-Bold');
-  doc.text('Vertical', 48, tableTop + 6);
-  doc.text('Categories', 140, tableTop + 6);
-  doc.text('Key Widgets', 320, tableTop + 6);
-  doc.text('Data Sources', 450, tableTop + 6);
-
-  const rows = [
-    { v: 'AI & Tech', c: 'LLMs, Robotics, AI Ethics, Dev Tools', w: 'Model Benchmark Heatmap', s: 'ArXiv, TechCrunch' },
-    { v: 'Fitness', c: 'Hypertrophy, Nutrition, Biohacking', w: 'Macro Estimator, Calorie Chart', s: 'PubMed, Men\'s Health' },
-    { v: 'Finance', c: 'Equities, Mutual Funds, PMS/AIF', w: '5-Day FII/DII Chart, Sector Heatmap', s: 'Economic Times, GF' },
-    { v: 'Real Estate', c: 'Commercial, REITs, PropTech', w: 'Rental Yield Tracker, Circle Rates', s: 'Housing.com, PropTiger' }
+  const components = [
+    { n: 'Header.jsx', d: 'Brand Masthead, WhatsApp (93242 73030), Advisory Contact Cards, Saved Bookmarks Filter' },
+    { n: 'MarketTicker.jsx', d: 'Live Marquee Bar for SENSEX, NIFTY 50, BANK NIFTY, GOLD (24K), USD/INR, CRUDE BRENT' },
+    { n: 'SectorHeatmap.jsx', d: '8 Nifty Sectoral Indices Grid with Direct Client Live Fetch to Yahoo Finance on Refresh' },
+    { n: 'FiiDiiTable.jsx', d: 'Official 5-Day FII & DII Institutional Gross Buy, Gross Sell & Net Cash Flow Table + MTD Row' },
+    { n: 'EventCalendar.jsx', d: 'Upcoming Macro Catalysts Strip & RBI MPC Policy Watch' },
+    { n: 'ArticleModal.jsx', d: 'Full-Screen Article Reader Drawer Modal + Deep Link URL Parameter (?article=ID)' }
   ];
 
-  let rY = tableTop + 22;
-  rows.forEach((r, i) => {
-    doc.rect(40, rY, doc.page.width - 80, 22).fill(i % 2 === 0 ? '#ffffff' : '#f8fafc');
-    doc.fillColor(textDark).fontSize(8.5).font('Helvetica');
-    doc.text(r.v, 48, rY + 6);
-    doc.text(r.c, 140, rY + 6);
-    doc.text(r.w, 320, rY + 6);
-    doc.text(r.s, 450, rY + 6);
-    rY += 22;
+  let cY = doc.y;
+  components.forEach((c, i) => {
+    doc.rect(40, cY, doc.page.width - 80, 18).fill(i % 2 === 0 ? '#ffffff' : '#f1f5f9');
+    doc.fillColor(darkNavy).fontSize(8.5).font('Helvetica-Bold').text(c.n, 48, cY + 4);
+    doc.fillColor(textDark).fontSize(8).font('Helvetica').text(c.d, 170, cY + 4);
+    cY += 18;
   });
 
-  // --- PAGE 2: FIREBASE & AI PIPELINE CODE ---
+  // --- PAGE 2: MARKET DATA SCRAPER ENGINE ---
   doc.addPage();
   
-  doc.fillColor(primaryRed).fontSize(13).font('Helvetica-Bold').text('3. STEP-BY-STEP REPLICATION & AI SCRAPER PIPELINE');
-  doc.moveDown(0.4);
-
-  doc.fillColor(textDark).fontSize(9.5).font('Helvetica').text('Below is the complete, copy-paste ready AI Curation Engine script (scripts/curate-news.cjs):');
-  doc.moveDown(0.4);
+  doc.fillColor(primaryRed).fontSize(12).font('Helvetica-Bold').text('3. MARKET & INSTITUTIONAL DATA SCRAPER ENGINE (scripts/fetch-market-data.cjs)');
+  doc.moveDown(0.3);
 
   const code1 = `const fs = require('fs');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const admin = require('firebase-admin');
-
-// Initialize Firebase Admin
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-const db = admin.firestore();
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-async function curateNicheNews() {
-  console.log('🤖 Starting AI Curation Engine...');
-  const rawArticles = await fetchRawArticles(); 
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-  for (const item of rawArticles) {
-    const prompt = \`Summarize in 3 bullet points, assign category & impact (High/Medium/Standard):
-      Title: \${item.title} Content: \${item.content}\`;
-    
-    const result = await model.generateContent(prompt);
-    const parsed = JSON.parse(result.response.text().replace(/\`\`\`json|\`\`\`/g, '').trim());
-
-    const docId = Buffer.from(item.title).toString('hex').slice(0, 20);
-    await db.collection('articles').doc(docId).set({
-      title: item.title,
-      summary: parsed.summary,
-      category: parsed.category,
-      impactLevel: parsed.impactLevel,
-      tags: parsed.tags,
-      source: item.source,
-      sourceUrl: item.link,
-      curatedDate: new Date().toISOString().split('T')[0],
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
-  }
-}
-curateNicheNews();`;
-
-  const codeBox1Y = doc.y;
-  doc.rect(40, codeBox1Y, doc.page.width - 80, 290).fill('#0f172a');
-  doc.fillColor('#38bdf8').fontSize(7.5).font('Courier').text(code1, 50, codeBox1Y + 10);
-
-  doc.y = codeBox1Y + 305;
-
-  doc.fillColor(primaryRed).fontSize(13).font('Helvetica-Bold').text('4. LIVE DATA SCRAPER (STATIC CDN FEED)');
-  doc.moveDown(0.4);
-
-  const code2 = `// scripts/fetch-niche-data.cjs - Generates public/niche-data.json (0 Firestore Reads)
-const fs = require('fs');
 const path = require('path');
 
-async function fetchLiveNicheMetrics() {
-  const tickerData = await fetchLiveTickerFromWeb();
-  const sectorData = await fetchLiveSectorHeatmapFromWeb();
+// Scrapes Google Finance, Yahoo Finance & Economic Times exchange tables
+async function fetchAllLiveMarketData() {
+  const tickerResults = [];
+  const sensex = await fetchGoogleFinanceQuote('SENSEX:INDEXBOM', 'SENSEX');
+  if (sensex) tickerResults.push(sensex);
+  
+  const nifty = await fetchGoogleFinanceQuote('NIFTY_50:INDEXNSE', 'NIFTY 50');
+  if (nifty) tickerResults.push(nifty);
 
-  const payload = { ticker: tickerData, sectors: sectorData, updatedAt: new Date().toISOString() };
-  fs.writeFileSync(path.join(__dirname, '../public/niche-data.json'), JSON.stringify(payload, null, 2));
+  const fiiDiiTableData = await fetch5DayFiiDiiTable();
+
+  const payload = {
+    ticker: tickerResults,
+    fiiDiiTable: fiiDiiTableData,
+    updatedAt: new Date().toISOString()
+  };
+
+  fs.writeFileSync(path.join(__dirname, '../public/market-data.json'), JSON.stringify(payload, null, 2));
 }
-fetchLiveNicheMetrics();`;
+fetchAllLiveMarketData();`;
+
+  const codeBox1Y = doc.y;
+  doc.rect(40, codeBox1Y, doc.page.width - 80, 240).fill('#0f172a');
+  doc.fillColor('#38bdf8').fontSize(7.5).font('Courier').text(code1, 50, codeBox1Y + 10);
+
+  doc.y = codeBox1Y + 255;
+
+  doc.fillColor(primaryRed).fontSize(12).font('Helvetica-Bold').text('4. GEMINI AI CURATION PIPELINE (scripts/curate-news.cjs)');
+  doc.moveDown(0.3);
+
+  const code2 = `const { GoogleGenerativeAI } = require('@google/generative-ai');
+const admin = require('firebase-admin');
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+// Summarizes raw articles into 3 bullets, categorizes & assigns High/Medium/Standard impact
+async function curateArticle(rawItem) {
+  const prompt = \`Summarize in 3 bullet points, categorize & assign impact: \${rawItem.content}\`;
+  const res = await model.generateContent(prompt);
+  const parsed = JSON.parse(res.response.text().replace(/\`\`\`json|\`\`\`/g, '').trim());
+
+  await admin.firestore().collection('articles').doc(rawItem.id).set({
+    title: rawItem.title, summary: parsed.summary, category: parsed.category,
+    impactLevel: parsed.impactLevel, curatedDate: new Date().toISOString().split('T')[0]
+  }, { merge: true });
+}`;
 
   const codeBox2Y = doc.y;
-  doc.rect(40, codeBox2Y, doc.page.width - 80, 120).fill('#0f172a');
+  doc.rect(40, codeBox2Y, doc.page.width - 80, 200).fill('#0f172a');
   doc.fillColor('#38bdf8').fontSize(7.5).font('Courier').text(code2, 50, codeBox2Y + 10);
 
   // --- PAGE 3: GITHUB ACTIONS & REPLICATION CHECKLIST ---
   doc.addPage();
 
-  doc.fillColor(primaryRed).fontSize(13).font('Helvetica-Bold').text('5. GITHUB ACTIONS AUTOMATED DEPLOYMENT WORKFLOW');
-  doc.moveDown(0.4);
+  doc.fillColor(primaryRed).fontSize(12).font('Helvetica-Bold').text('5. GITHUB ACTIONS AUTOMATION WORKFLOW (.github/workflows/curate.yml)');
+  doc.moveDown(0.3);
 
-  doc.fillColor(textDark).fontSize(9.5).font('Helvetica').text('File location: .github/workflows/curate.yml');
-  doc.moveDown(0.4);
-
-  const code3 = `name: 🔄 Daily AI Curation & Deployment Pipeline
+  const code3 = `name: 🔄 Daily Market & Financial Curation Pipeline
 
 on:
   schedule:
@@ -182,7 +158,7 @@ jobs:
       - uses: actions/setup-node@v3
         with: { node-version: 18 }
       - run: npm ci
-      - run: node scripts/fetch-niche-data.cjs
+      - run: node scripts/fetch-market-data.cjs
       - run: node scripts/curate-news.cjs
         env:
           GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }}
@@ -193,7 +169,7 @@ jobs:
           repoToken: '\${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '\${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelId: live
-          projectId: YOUR_NEW_FIREBASE_PROJECT_ID`;
+          projectId: masterchetan-financial`;
 
   const codeBox3Y = doc.y;
   doc.rect(40, codeBox3Y, doc.page.width - 80, 270).fill('#0f172a');
@@ -201,20 +177,20 @@ jobs:
 
   doc.y = codeBox3Y + 285;
 
-  doc.fillColor(primaryRed).fontSize(13).font('Helvetica-Bold').text('6. 30-MINUTE CLIENT ONBOARDING CHECKLIST');
-  doc.moveDown(0.4);
+  doc.fillColor(primaryRed).fontSize(12).font('Helvetica-Bold').text('6. REPLICATION & CUSTOMER ONBOARDING STEPS');
+  doc.moveDown(0.3);
 
   const steps = [
-    '1. Create New Firebase Project: Enable Cloud Firestore & Hosting on Console.',
-    '2. Create GitHub Repo: Push cloned template code to client\'s GitHub repository.',
-    '3. Add Secrets to GitHub: Set GEMINI_API_KEY & FIREBASE_SERVICE_ACCOUNT.',
-    '4. Customize Branding: Update logo.jpeg, Header titles, and advisory contact details.',
-    '5. Trigger Initial Deployment: Run `npm run build` and `firebase deploy --only hosting`.'
+    '1. Clone Working Repository: `git clone https://github.com/masterschetanapp-creator/masterschetan-news-slate.git new-project`',
+    '2. Firebase Target Setup: Change projectId in `.firebaserc` to client\'s Firebase project ID.',
+    '3. GitHub Repo Secrets: Configure `GEMINI_API_KEY`, `FIREBASE_SERVICE_ACCOUNT`, and `FIREBASE_SERVICE_ACCOUNT_KEY`.',
+    '4. Custom Subject Matter: Replace category lists in CategoryFilter.jsx and prompt definitions in curate-news.cjs.',
+    '5. Initial Production Build: Run `npm run build` and `firebase deploy --only hosting`.'
   ];
 
   steps.forEach(s => {
-    doc.fillColor(textDark).fontSize(9).font('Helvetica-Bold').text(s);
-    doc.moveDown(0.3);
+    doc.fillColor(textDark).fontSize(8.5).font('Helvetica-Bold').text(s);
+    doc.moveDown(0.25);
   });
 
   // Footer on all pages
@@ -222,7 +198,7 @@ jobs:
   for (let i = 0; i < totalPages; i++) {
     doc.switchToPage(i);
     doc.fillColor(textMuted).fontSize(8).font('Helvetica').text(
-      `Master Framework Blueprint • Page ${i + 1} of ${totalPages} • Universal Automated News Slate Platform`,
+      `Financial News Slate • Production Technical Blueprint • Page ${i + 1} of ${totalPages}`,
       40,
       doc.page.height - 30,
       { align: 'center', width: doc.page.width - 80 }
@@ -232,7 +208,7 @@ jobs:
   doc.end();
 
   stream.on('finish', () => {
-    console.log('SUCCESS! Created PDF:', outputPath);
+    console.log('SUCCESS! Updated PDF with exact technical specs:', outputPath);
     try {
       fs.copyFileSync(outputPath, artifactPath);
       console.log('Copied PDF to Artifact Directory!');
