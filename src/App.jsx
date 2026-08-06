@@ -145,22 +145,23 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 font-sans flex flex-col selection:bg-[#e02020] selection:text-white">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-slate-100 text-slate-900 font-sans flex flex-col selection:bg-[#e02020] selection:text-white">
       {/* Masthead Header */}
       <Header
         showSavedOnly={showSavedOnly}
         setShowSavedOnly={setShowSavedOnly}
         savedCount={savedIds.length}
+        onToggleSaved={() => setShowSavedOnly(prev => !prev)}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
+      <main className="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1 overflow-hidden">
         
         {/* Error State */}
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl bg-red-50 border border-red-200 p-8 text-center mb-8"
+            className="rounded-2xl bg-red-50 border border-red-200 p-6 text-center mb-6"
           >
             <p className="text-red-700 mb-4 font-bold text-sm">{error}</p>
             <button
@@ -178,7 +179,7 @@ function App() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mb-6 sm:mb-8"
           >
             {[
               { icon: Newspaper, label: 'Total News Slate', value: stats.total, color: '#e02020', bg: 'bg-red-50' },
@@ -186,13 +187,13 @@ function App() {
               { icon: BarChart3, label: 'Asset Categories', value: stats.categories, color: '#16a34a', bg: 'bg-emerald-50' },
               { icon: TrendingUp, label: 'Trusted Sources', value: stats.sources, color: '#2563eb', bg: 'bg-blue-50' },
             ].map((stat, i) => (
-              <div key={i} className="rounded-2xl bg-white border border-slate-200 p-3.5 sm:p-4 flex items-center space-x-3.5 shadow-sm hover:shadow-md transition-shadow">
-                <div className={`p-2.5 rounded-xl ${stat.bg}`}>
+              <div key={i} className="rounded-xl sm:rounded-2xl bg-white border border-slate-200 p-3 sm:p-4 flex items-center space-x-2.5 sm:space-x-3.5 shadow-xs hover:shadow-md transition-shadow">
+                <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0 ${stat.bg}`}>
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: stat.color }} />
                 </div>
-                <div>
-                  <p className="text-xl sm:text-2xl font-black text-slate-900 tabular-nums">{stat.value}</p>
-                  <p className="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">{stat.label}</p>
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-black text-slate-900 tabular-nums leading-tight">{stat.value}</p>
+                  <p className="text-[9px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider truncate">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -223,9 +224,9 @@ function App() {
 
         {/* Section Banner */}
         {!error && (
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div className="flex-1 h-px bg-slate-200"></div>
-            <span className="text-xs text-slate-700 font-black uppercase tracking-widest flex items-center gap-2">
+            <span className="text-[11px] sm:text-xs text-slate-700 font-black uppercase tracking-widest flex items-center gap-2">
               {showSavedOnly ? (
                 <>
                   <Bookmark className="w-4 h-4 text-amber-600 fill-amber-500" />

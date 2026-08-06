@@ -52,40 +52,70 @@ const Header = ({ savedCount = 0, showSavedOnly = false, onToggleSaved }) => {
       {/* Top Live Market Indices Ticker */}
       <MarketTicker />
 
-      <header className="sticky top-0 z-40 bg-white/98 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-40 bg-white/98 backdrop-blur-md border-b border-slate-200 shadow-sm max-w-full overflow-hidden">
         {/* Main Header Container */}
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-24 sm:h-28 md:h-32 gap-3 sm:gap-4 py-2">
+          <div className="flex flex-col sm:flex-row items-center justify-between min-h-[5rem] sm:min-h-[6.5rem] py-2.5 sm:py-3 gap-3">
             
-            {/* Left: Logo & Brand Identity */}
-            <a href="https://masterSchetan.com" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2.5 sm:space-x-3.5 group shrink-0">
-              {/* Real logo.jpeg Image */}
-              <div className="relative p-1 bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm flex-shrink-0 overflow-hidden flex items-center justify-center">
-                <img 
-                  src="/logo.jpeg" 
-                  alt="masterSchetan Logo" 
-                  className="w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 object-contain rounded-lg"
-                />
-              </div>
+            {/* Top Row on Mobile / Left Section: Logo & Brand Identity */}
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <a href="https://masterSchetan.com" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2.5 sm:space-x-3.5 group shrink-0">
+                {/* Real logo.jpeg Image */}
+                <div className="relative p-1 bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm flex-shrink-0 overflow-hidden flex items-center justify-center">
+                  <img 
+                    src="/logo.jpeg" 
+                    alt="masterSchetan Logo" 
+                    className="w-10 h-10 sm:w-13 sm:h-13 md:w-14 md:h-14 object-contain rounded-lg"
+                  />
+                </div>
 
-              {/* Brand Titles */}
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-baseline">
-                  <span className="text-[11px] sm:text-xs md:text-sm font-black tracking-wider uppercase text-slate-800 truncate">CHETAN SHAH</span>
+                {/* Brand Titles */}
+                <div className="flex flex-col min-w-0">
+                  <div className="flex items-baseline">
+                    <span className="text-[10px] sm:text-xs md:text-sm font-black tracking-wider uppercase text-slate-800 truncate">CHETAN SHAH</span>
+                  </div>
+                  <h1 className="text-base sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 leading-none">
+                    master<span className="text-[#e02020] font-black">S</span>chetan
+                  </h1>
+                  <div className="mt-0.5 sm:mt-1 flex items-center space-x-1.5">
+                    <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider text-red-700 bg-red-50 px-1.5 py-0.5 rounded-md border border-red-200 flex-shrink-0 shadow-2xs">
+                      News Slate
+                    </span>
+                    <span className="text-[9px] sm:text-xs text-slate-500 font-bold tracking-wide truncate">
+                      Penny to Pound
+                    </span>
+                  </div>
                 </div>
-                <h1 className="text-lg sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 leading-none">
-                  master<span className="text-[#e02020] font-black">S</span>chetan
-                </h1>
-                <div className="mt-1 flex items-center space-x-1.5">
-                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-red-700 bg-red-50 px-2 py-0.5 rounded-md border border-red-200 flex-shrink-0 shadow-2xs">
-                    News Slate
-                  </span>
-                  <span className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wide hidden xs:block truncate">
-                    Penny to Pound
-                  </span>
-                </div>
+              </a>
+
+              {/* Mobile Right Controls: Compact Call & Bookmarks on top bar for small screens */}
+              <div className="flex sm:hidden items-center space-x-1.5">
+                <button
+                  onClick={onToggleSaved}
+                  className={`flex items-center space-x-1 px-2 py-1 rounded-lg text-xs font-bold transition-all border ${
+                    showSavedOnly
+                      ? 'bg-amber-500 text-white border-amber-600'
+                      : 'bg-slate-100 text-slate-700 border-slate-200'
+                  }`}
+                  title="Saved Articles"
+                >
+                  <Bookmark className={`w-3.5 h-3.5 ${showSavedOnly ? 'fill-white' : ''}`} />
+                  {savedCount > 0 && (
+                    <span className="text-[10px] font-black">{savedCount}</span>
+                  )}
+                </button>
+
+                <a
+                  href="https://wa.me/919324273030?text=Hello%20Chetan%20Shah,%20I%20would%20like%20wealth%20advisory%20consultation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-1 bg-[#16a34a] text-white px-2.5 py-1 rounded-lg text-xs font-black shadow-2xs"
+                >
+                  <Phone className="w-3.5 h-3.5 text-white" />
+                  <span>Call</span>
+                </a>
               </div>
-            </a>
+            </div>
 
             {/* Middle: BIG & PROMINENT Header Marketing Card */}
             <div className="hidden lg:flex flex-col items-center justify-center text-center px-5 py-2 mx-2 bg-gradient-to-r from-red-50 via-white to-emerald-50 rounded-2xl border border-slate-300/80 shadow-xs flex-1 max-w-2xl">
@@ -115,8 +145,8 @@ const Header = ({ savedCount = 0, showSavedOnly = false, onToggleSaved }) => {
               </div>
             </div>
 
-            {/* Right: Controls + Social Media Icons */}
-            <div className="flex flex-col items-end justify-center space-y-1.5 shrink-0 relative">
+            {/* Right: Desktop Controls + Social Media Icons */}
+            <div className="hidden sm:flex flex-col items-end justify-center space-y-1.5 shrink-0 relative">
               {/* Top Row: Bookmarks & WhatsApp Call Button */}
               <div className="flex items-center space-x-2 sm:space-x-3">
                 {/* Bookmarks Button */}
@@ -226,21 +256,40 @@ const Header = ({ savedCount = 0, showSavedOnly = false, onToggleSaved }) => {
         </div>
         
         {/* Mobile-Only Prominent Responsive Banner */}
-        <div className="lg:hidden bg-gradient-to-r from-red-50 via-white to-emerald-50 border-t border-b border-slate-200 py-2.5 px-3 text-center">
+        <div className="lg:hidden bg-gradient-to-r from-red-50 via-white to-emerald-50 border-t border-b border-slate-200 py-2 px-3 text-center">
           <div className="flex flex-col items-center justify-center space-y-1">
-            <div className="inline-flex items-center space-x-1.5 bg-[#e02020] text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-2xs">
+            <div className="inline-flex items-center space-x-1.5 bg-[#e02020] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-2xs">
               <Award className="w-3 h-3 text-white" />
               <span>30+ Years of Trust & Wealth Advisory</span>
             </div>
-            <p className="text-xs sm:text-sm font-black text-slate-900">
+            <p className="text-xs font-black text-slate-900">
               Serving <span className="text-[#e02020]">1,300+ Families</span> & <span className="text-emerald-700">5,000+ Clients</span> Across India & NRIs
             </p>
-            <p className="text-[10px] sm:text-xs font-bold text-slate-700">
+            <p className="text-[10px] font-bold text-slate-700">
               PMS · AIF · Mutual Funds · Equities · Bonds & FDs · Insurance
             </p>
-            <p className="text-[10px] sm:text-xs font-black text-slate-800">
+            <p className="text-[10px] font-black text-slate-800">
               Goal-Based Financial Planning <span className="text-slate-400">|</span> <span className="text-[#e02020] font-black italic">Penny to Pound</span>
             </p>
+
+            {/* Mobile Social Links Row */}
+            <div className="flex items-center space-x-2 pt-1 border-t border-slate-200/80 w-full justify-center">
+              <a href="https://www.facebook.com/p/Chetan-Shah-100063942194665/" target="_blank" rel="noopener noreferrer" className="p-1 rounded bg-white border border-slate-200 text-slate-600">
+                <FacebookIcon />
+              </a>
+              <a href="https://www.linkedin.com/company/masterschetan/?originalSubdomain=in" target="_blank" rel="noopener noreferrer" className="p-1 rounded bg-white border border-slate-200 text-slate-600">
+                <LinkedinIcon />
+              </a>
+              <a href="https://www.instagram.com/masterschetan/" target="_blank" rel="noopener noreferrer" className="p-1 rounded bg-white border border-slate-200 text-slate-600">
+                <InstagramIcon />
+              </a>
+              <a href="https://www.google.com/search?rlz=1C1RXQR_enIN1104IN1104&sca_esv=361416631b2a74db&cs=1&output=search&q=CHETAN+SHAH+INVESTMENT+AND+FINANCIAL+CONSULTANT&ludocid=6242484208392529719&lsig=AB86z5WSNvI3MrQmzQdiJg2tARHf&kgs=8021bdcb76fdbc24&shndl=-1&shem=lsp,ssim&source=sh/x/kp/local/m1/1" target="_blank" rel="noopener noreferrer" className="p-1 rounded bg-white border border-slate-200 text-slate-600">
+                <GoogleIcon />
+              </a>
+              <button onClick={handleEmailClick} className="p-1 rounded bg-white border border-slate-200 text-slate-600">
+                {emailCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Mail className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
         </div>
 
