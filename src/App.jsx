@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Highlights from './components/Highlights';
 import SectorHeatmap from './components/SectorHeatmap';
 import InstitutionalFlows from './components/InstitutionalFlows';
+import FiiDiiTable from './components/FiiDiiTable';
 import EventCalendar from './components/EventCalendar';
 import CategoryFilter from './components/CategoryFilter';
 import ImpactFilter from './components/ImpactFilter';
@@ -213,10 +214,13 @@ function App() {
             {/* 1. Sector Performance Heatmap */}
             <SectorHeatmap />
 
-            {/* 2. FII / DII Institutional Flow Widget */}
+            {/* 2. FII / DII Institutional Flow Summary Card */}
             <InstitutionalFlows />
 
-            {/* 3. Upcoming Events & RBI Policy Watch Calendar */}
+            {/* 3. Official 5-Day FII & DII Activity Table (Matching Image FII AND DII DEATILS.JPG) */}
+            <FiiDiiTable />
+
+            {/* 4. Upcoming Events & RBI Policy Watch Calendar */}
             <EventCalendar />
           </>
         )}

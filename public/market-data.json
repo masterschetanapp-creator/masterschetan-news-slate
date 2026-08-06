@@ -2,68 +2,140 @@
   "ticker": [
     {
       "symbol": "SENSEX",
-      "val": "78,793.66",
-      "rawPrice": 78793.66,
-      "change": "+212.66",
-      "pct": "+0.27%",
+      "val": "78,869.46",
+      "rawPrice": 78869.46,
+      "change": "+288.46",
+      "pct": "+0.37%",
       "isUp": true,
-      "updatedAt": "2026-08-06T07:29:34.492Z"
+      "updatedAt": "2026-08-06T08:44:21.152Z"
     },
     {
       "symbol": "NIFTY 50",
-      "val": "24,632.05",
-      "rawPrice": 24632.05,
-      "change": "+7.40",
-      "pct": "+0.03%",
+      "val": "24,650.80",
+      "rawPrice": 24650.8,
+      "change": "+26.15",
+      "pct": "+0.11%",
       "isUp": true,
-      "updatedAt": "2026-08-06T07:29:35.018Z"
+      "updatedAt": "2026-08-06T08:44:21.653Z"
     },
     {
       "symbol": "BANK NIFTY",
-      "val": "57,942.90",
-      "rawPrice": 57942.9,
-      "change": "+202.95",
-      "pct": "+0.35%",
+      "val": "58,072.15",
+      "rawPrice": 58072.15,
+      "change": "+332.20",
+      "pct": "+0.58%",
       "isUp": true,
-      "updatedAt": "2026-08-06T07:29:35.552Z"
+      "updatedAt": "2026-08-06T08:44:22.183Z"
     },
     {
       "symbol": "GOLD (24K)",
-      "val": "₹3,60,837",
-      "rawPrice": 4321.4,
-      "change": "+16.20",
-      "pct": "+0.38%",
+      "val": "₹3,61,747",
+      "rawPrice": 4332.3,
+      "change": "+27.10",
+      "pct": "+0.63%",
       "isUp": true,
-      "updatedAt": "2026-08-06T07:29:35.771Z"
+      "updatedAt": "2026-08-06T08:44:22.499Z"
     },
     {
       "symbol": "USD / INR",
-      "val": "₹95.20",
-      "rawPrice": 95.2012,
-      "change": "+0.1236",
-      "pct": "+0.13%",
+      "val": "₹95.18",
+      "rawPrice": 95.1776,
+      "change": "+0.1000",
+      "pct": "+0.11%",
       "isUp": true,
-      "updatedAt": "2026-08-06T07:29:36.248Z"
+      "updatedAt": "2026-08-06T08:44:23.042Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$79.70",
-      "rawPrice": 79.7,
-      "change": "+0.25",
-      "pct": "+0.31%",
+      "val": "$79.67",
+      "rawPrice": 79.67,
+      "change": "+0.22",
+      "pct": "+0.28%",
       "isUp": true,
-      "updatedAt": "2026-08-06T07:29:36.457Z"
+      "updatedAt": "2026-08-06T08:44:23.150Z"
     }
   ],
   "fiiDii": {
-    "sessionDate": "Wed 05 Aug, 2026",
-    "rawDate": "2026-08-05",
+    "sessionDate": "05 Aug 2026",
     "fiiNet": "-943.42",
     "fiiIsBuy": false,
     "diiNet": "+2,883.17",
     "diiIsBuy": true,
-    "combinedNet": "+1,939.75",
-    "combinedIsBuy": true,
-    "updatedAt": "2026-08-06T07:29:36.995Z"
+    "updatedAt": "2026-08-06T08:44:23.211Z"
+  },
+  "fiiDiiTable": {
+    "days": [
+      {
+        "dateStr": "05 Aug 2026",
+        "rawDate": "05-Aug-2026",
+        "fiiBuy": "15,940.50",
+        "fiiSell": "16,883.92",
+        "fiiNet": "-943.42",
+        "fiiIsBuy": false,
+        "diiBuy": "19,353.43",
+        "diiSell": "16,470.26",
+        "diiNet": "+2,883.17",
+        "diiIsBuy": true
+      },
+      {
+        "dateStr": "04 Aug 2026",
+        "rawDate": "04-Aug-2026",
+        "fiiBuy": "15,630.45",
+        "fiiSell": "13,183.98",
+        "fiiNet": "+2,446.47",
+        "fiiIsBuy": true,
+        "diiBuy": "15,241.39",
+        "diiSell": "16,177.53",
+        "diiNet": "-936.14",
+        "diiIsBuy": false
+      },
+      {
+        "dateStr": "03 Aug 2026",
+        "rawDate": "03-Aug-2026",
+        "fiiBuy": "12,621.89",
+        "fiiSell": "11,699.63",
+        "fiiNet": "+922.26",
+        "fiiIsBuy": true,
+        "diiBuy": "18,325.97",
+        "diiSell": "16,754.79",
+        "diiNet": "+1,571.18",
+        "diiIsBuy": true
+      },
+      {
+        "dateStr": "31 Jul 2026",
+        "rawDate": "31-Jul-2026",
+        "fiiBuy": "19,045.51",
+        "fiiSell": "18,768.03",
+        "fiiNet": "+277.48",
+        "fiiIsBuy": true,
+        "diiBuy": "19,885.80",
+        "diiSell": "17,625.43",
+        "diiNet": "+2,260.37",
+        "diiIsBuy": true
+      },
+      {
+        "dateStr": "30 Jul 2026",
+        "rawDate": "30-Jul-2026",
+        "fiiBuy": "17,431.96",
+        "fiiSell": "13,808.45",
+        "fiiNet": "+3,623.51",
+        "fiiIsBuy": true,
+        "diiBuy": "17,979.63",
+        "diiSell": "19,843.66",
+        "diiNet": "-1,864.03",
+        "diiIsBuy": false
+      }
+    ],
+    "mtd": {
+      "label": "Month till date",
+      "fiiBuy": "44,192.84",
+      "fiiSell": "41,767.53",
+      "fiiNet": "+2,425.31",
+      "fiiIsBuy": true,
+      "diiBuy": "52,920.79",
+      "diiSell": "49,402.58",
+      "diiNet": "+3,518.21",
+      "diiIsBuy": true
+    }
   }
 }
