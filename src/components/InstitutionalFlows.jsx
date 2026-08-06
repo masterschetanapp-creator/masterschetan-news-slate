@@ -3,13 +3,24 @@ import { motion } from 'framer-motion';
 import { Landmark, HelpCircle, ShieldCheck, Clock } from 'lucide-react';
 
 const FALLBACK_FII_DII = {
-  sessionDate: 'Wed 05 Aug, 2026',
+  sessionDate: '05 Aug 2026',
   fiiNet: '-943.42',
   fiiIsBuy: false,
   diiNet: '+2,883.17',
   diiIsBuy: true,
   combinedNet: '+1,939.75',
   combinedIsBuy: true
+};
+
+const formatCrValue = (valStr, fallbackIsBuy = true) => {
+  if (!valStr) return '₹0.00 Cr';
+  const str = String(valStr).trim();
+  const isNegative = str.startsWith('-');
+  const clean = str.replace(/[+₹\s-]/g, '');
+  if (isNegative) {
+    return `-₹${clean} Cr`;
+  }
+  return fallbackIsBuy ? `+₹${clean} Cr` : `-₹${clean} Cr`;
 };
 
 export default function InstitutionalFlows() {
@@ -32,6 +43,11 @@ export default function InstitutionalFlows() {
     }
     loadOfficialData();
   }, []);
+
+  const sessionDate = fiiDii?.sessionDate || '05 Aug 2026';
+  const fiiIsBuy = Boolean(fiiDii?.fiiIsBuy);
+  const diiIsBuy = fiiDii?.diiIsBuy !== undefined ? Boolean(fiiDii.diiIsBuy) : true;
+  const combinedIsBuy = fiiDii?.combinedIsBuy !== undefined ? Boolean(fiiDii.combinedIsBuy) : true;
 
   return (
     <div className="mb-10 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
@@ -61,7 +77,7 @@ export default function InstitutionalFlows() {
             {/* Official Exchange Session Timestamp Badge */}
             <span className="inline-flex items-center space-x-1 text-[10px] font-mono font-bold bg-slate-800 text-emerald-400 px-2.5 py-1 rounded-md border border-slate-700">
               <Clock className="w-3 h-3 text-emerald-400" />
-              <span>NSE/BSE OFFICIAL • {fiiDii.sessionDate}</span>
+              <span>NSE/BSE OFFICIAL • {sessionDate}</span>
             </span>
           </div>
 
@@ -90,13 +106,13 @@ export default function InstitutionalFlows() {
               FII Net Cash (Foreign)
             </span>
             <div className="flex items-center justify-between">
-              <span className={`text-lg font-black tabular-nums ${fiiDii.fiiIsBuy ? 'text-emerald-400' : 'text-red-400'}`}>
-                {fiiDii.fiiIsBuy ? `+₹${fiiDii.fiiNet} Cr` : `-₹${fiiDii.fiiNet.replace('-', '')} Cr`}
+              <span className={`text-lg font-black tabular-nums ${fiiIsBuy ? 'text-emerald-400' : 'text-red-400'}`}>
+                {formatCrValue(fiiDii?.fiiNet, fiiIsBuy)}
               </span>
               <span className={`p-1 rounded-md text-xs font-bold ${
-                fiiDii.fiiIsBuy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                fiiIsBuy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
               }`}>
-                {fiiDii.fiiIsBuy ? 'BUY' : 'SELL'}
+                {fiiIsBuy ? 'BUY' : 'SELL'}
               </span>
             </div>
           </div>
@@ -107,33 +123,33 @@ export default function InstitutionalFlows() {
               DII Net Cash (Domestic)
             </span>
             <div className="flex items-center justify-between">
-              <span className={`text-lg font-black tabular-nums ${fiiDii.diiIsBuy ? 'text-emerald-400' : 'text-red-400'}`}>
-                {fiiDii.diiIsBuy ? `+₹${fiiDii.diiNet} Cr` : `-₹${fiiDii.diiNet.replace('-', '')} Cr`}
+              <span className={`text-lg font-black tabular-nums ${diiIsBuy ? 'text-emerald-400' : 'text-red-400'}`}>
+                {formatCrValue(fiiDii?.diiNet, diiIsBuy)}
               </span>
               <span className={`p-1 rounded-md text-xs font-bold ${
-                fiiDii.diiIsBuy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                diiIsBuy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
               }`}>
-                {fiiDii.diiIsBuy ? 'BUY' : 'SELL'}
+                {diiIsBuy ? 'BUY' : 'SELL'}
               </span>
             </div>
           </div>
 
           {/* Combined Inflow Card */}
           <div className={`p-4 rounded-2xl backdrop-blur-md ${
-            fiiDii.combinedIsBuy ? 'bg-emerald-500/15 border border-emerald-500/30' : 'bg-red-500/15 border border-red-500/30'
+            combinedIsBuy ? 'bg-emerald-500/15 border border-emerald-500/30' : 'bg-red-500/15 border border-red-500/30'
           }`}>
             <span className={`text-[10px] uppercase font-black tracking-wider block mb-1 ${
-              fiiDii.combinedIsBuy ? 'text-emerald-300' : 'text-red-300'
+              combinedIsBuy ? 'text-emerald-300' : 'text-red-300'
             }`}>
-              Combined {fiiDii.combinedIsBuy ? 'Inflow' : 'Outflow'}
+              Combined {combinedIsBuy ? 'Inflow' : 'Outflow'}
             </span>
             <div className="flex items-center justify-between">
               <span className={`text-lg font-black tabular-nums ${
-                fiiDii.combinedIsBuy ? 'text-emerald-300' : 'text-red-300'
+                combinedIsBuy ? 'text-emerald-300' : 'text-red-300'
               }`}>
-                {fiiDii.combinedIsBuy ? `+₹${fiiDii.combinedNet} Cr` : `-₹${fiiDii.combinedNet.replace('-', '')} Cr`}
+                {formatCrValue(fiiDii?.combinedNet, combinedIsBuy)}
               </span>
-              <ShieldCheck className={`w-4 h-4 ${fiiDii.combinedIsBuy ? 'text-emerald-400' : 'text-red-400'}`} />
+              <ShieldCheck className={`w-4 h-4 ${combinedIsBuy ? 'text-emerald-400' : 'text-red-400'}`} />
             </div>
           </div>
         </div>
