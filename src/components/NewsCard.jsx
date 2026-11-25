@@ -33,7 +33,9 @@ const IMPACT_STYLES = {
 
 const NewsCard = ({ article, index, onClick, isSaved, onToggleSave }) => {
   const catColor = CATEGORY_COLORS[article.category] || CATEGORY_COLORS['All'];
-  const impact = IMPACT_STYLES[article.impact] || IMPACT_STYLES['Standard'];
+  const normalizedImpact = article.impact || article.impactLevel || article.impact_level || 'Standard';
+  const impact = IMPACT_STYLES[normalizedImpact] || IMPACT_STYLES['Standard'];
+  const sourceLabel = article.source_name || article.source || 'Financial Desk';
 
   return (
     <motion.article
@@ -63,7 +65,7 @@ const NewsCard = ({ article, index, onClick, isSaved, onToggleSave }) => {
                 {impact.pulse && <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${impact.dot} opacity-75`}></span>}
                 <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${impact.dot}`}></span>
               </span>
-              <span>{article.impact}</span>
+              <span>{normalizedImpact}</span>
             </span>
           </div>
 
@@ -112,7 +114,7 @@ const NewsCard = ({ article, index, onClick, isSaved, onToggleSave }) => {
         {/* Row 5: Footer */}
         <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
           <div className="flex items-center space-x-2.5 text-xs text-slate-500 font-medium">
-            <span className="font-extrabold text-slate-800">{article.source_name}</span>
+            <span className="font-extrabold text-slate-800">{sourceLabel}</span>
             <span className="w-1 h-1 rounded-full bg-slate-300"></span>
             <span className="flex items-center text-slate-500 tabular-nums">
               <Clock className="w-3 h-3 mr-1" />

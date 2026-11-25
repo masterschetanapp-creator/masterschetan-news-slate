@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Inbox, Bookmark } from 'lucide-react';
+import { Inbox } from 'lucide-react';
 import NewsCard from './NewsCard';
 
 const NewsList = ({ articles, isLoading, onArticleClick, savedIds = [], onToggleSave }) => {
@@ -8,24 +8,24 @@ const NewsList = ({ articles, isLoading, onArticleClick, savedIds = [], onToggle
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="rounded-2xl bg-white/[0.03] border border-white/[0.06] overflow-hidden">
-            <div className="h-[3px] w-full bg-gradient-to-r from-slate-800 to-transparent animate-pulse"></div>
+          <div key={i} className="rounded-2xl bg-white border border-slate-200 overflow-hidden shadow-xs">
+            <div className="h-[4px] w-full bg-slate-200 animate-pulse"></div>
             <div className="p-6 space-y-4">
               <div className="flex justify-between">
-                <div className="h-5 w-20 bg-white/[0.05] rounded-md animate-pulse"></div>
-                <div className="h-5 w-16 bg-white/[0.05] rounded-md animate-pulse"></div>
+                <div className="h-5 w-24 bg-slate-200 rounded-md animate-pulse"></div>
+                <div className="h-5 w-16 bg-slate-100 rounded-md animate-pulse"></div>
               </div>
               <div className="space-y-2">
-                <div className="h-5 bg-white/[0.06] rounded-lg animate-pulse w-full"></div>
-                <div className="h-5 bg-white/[0.04] rounded-lg animate-pulse w-3/4"></div>
+                <div className="h-5 bg-slate-200 rounded-lg animate-pulse w-full"></div>
+                <div className="h-5 bg-slate-100 rounded-lg animate-pulse w-3/4"></div>
               </div>
               <div className="space-y-2 pt-2">
-                <div className="h-4 bg-white/[0.04] rounded w-full animate-pulse"></div>
-                <div className="h-4 bg-white/[0.04] rounded w-5/6 animate-pulse"></div>
+                <div className="h-4 bg-slate-100 rounded w-full animate-pulse"></div>
+                <div className="h-4 bg-slate-100 rounded w-5/6 animate-pulse"></div>
               </div>
-              <div className="pt-4 border-t border-white/[0.04] flex justify-between">
-                <div className="h-4 w-28 bg-white/[0.05] rounded animate-pulse"></div>
-                <div className="h-6 w-16 bg-white/[0.05] rounded-lg animate-pulse"></div>
+              <div className="pt-4 border-t border-slate-100 flex justify-between">
+                <div className="h-4 w-28 bg-slate-200 rounded animate-pulse"></div>
+                <div className="h-5 w-20 bg-slate-100 rounded-lg animate-pulse"></div>
               </div>
             </div>
           </div>
@@ -36,18 +36,18 @@ const NewsList = ({ articles, isLoading, onArticleClick, savedIds = [], onToggle
 
   if (!articles || articles.length === 0) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="rounded-2xl bg-gradient-to-b from-white/[0.04] to-white/[0.01] border border-dashed border-white/[0.08] py-20 px-6 text-center"
+        transition={{ duration: 0.4 }}
+        className="rounded-2xl bg-white border border-dashed border-slate-300 py-16 px-6 text-center shadow-xs"
       >
-        <div className="bg-white/[0.04] w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 rotate-3">
-          <Inbox className="w-10 h-10 text-slate-600" />
+        <div className="bg-slate-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 rotate-3 border border-slate-200">
+          <Inbox className="w-10 h-10 text-slate-500" />
         </div>
-        <h3 className="text-xl font-bold text-white/80 mb-2">No articles found</h3>
-        <p className="text-slate-500 max-w-sm mx-auto text-sm leading-relaxed">
-          No news matches your current filters or bookmarks. Try adjusting your search or selecting another category.
+        <h3 className="text-xl font-black text-slate-900 mb-2">No articles found</h3>
+        <p className="text-slate-600 max-w-sm mx-auto text-sm leading-relaxed font-medium">
+          No news matches your current filters or bookmarks. Try clearing your search or selecting another category.
         </p>
       </motion.div>
     );

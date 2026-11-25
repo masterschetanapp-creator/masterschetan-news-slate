@@ -17,9 +17,9 @@ loadLocalEnv();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 const GEMINI_MODELS = [
   'gemini-3.6-flash',
-  'gemini-3.8-flash',
-  'gemini-3.5-flash',
   'gemini-3.5-flash-lite',
+  'gemini-3.5-flash',
+  'gemini-3.8-flash',
 ];
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/articles`;
 
@@ -402,7 +402,7 @@ async function callGeminiWithFallback(prompt) {
   for (const model of GEMINI_MODELS) {
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(), 22000);
 
     try {
       const response = await fetch(geminiUrl, {
@@ -440,7 +440,7 @@ async function summarizeAndCategorizeInBatches(rawArticles) {
     return { articles: [], aiCount: 0, fallbackCount: 0 };
   }
 
-  const batchSize = 8;
+  const batchSize = 5;
   let allCurated = [];
   let aiCount = 0;
   let fallbackCount = 0;

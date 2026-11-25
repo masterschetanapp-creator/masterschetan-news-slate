@@ -3,20 +3,9 @@ import { motion } from 'framer-motion';
 import { Layers, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import { getMarketSnapshot } from '../services/marketData';
 
-const FALLBACK_SECTORS = [
-  { name: 'NIFTY IT', pct: '-0.54%', val: '31,230.30', isUp: false, stocks: ['TCS', 'Infosys', 'Wipro'] },
-  { name: 'NIFTY BANK', pct: '+0.53%', val: '58,048.20', isUp: true, stocks: ['HDFC', 'ICICI', 'SBI'] },
-  { name: 'NIFTY AUTO', pct: '-1.03%', val: '29,108.75', isUp: false, stocks: ['Tata Motors', 'M&M', 'Maruti'] },
-  { name: 'NIFTY PHARMA', pct: '+0.12%', val: '26,596.10', isUp: true, stocks: ['Sun Pharma', 'Cipla', 'Dr Reddy'] },
-  { name: 'NIFTY FMCG', pct: '+0.02%', val: '49,383.80', isUp: true, stocks: ['ITC', 'HUL', 'Nestle'] },
-  { name: 'NIFTY METAL', pct: '-0.96%', val: '13,129.00', isUp: false, stocks: ['Tata Steel', 'JSW', 'Hindalco'] },
-  { name: 'NIFTY REALTY', pct: '-0.96%', val: '890.05', isUp: false, stocks: ['DLF', 'Godrej Prop', 'Macrotech'] },
-  { name: 'NIFTY ENERGY', pct: '-0.39%', val: '38,678.90', isUp: false, stocks: ['Reliance', 'NTPC', 'ONGC'] }
-];
-
 export default function SectorHeatmap() {
-  const [sectors, setSectors] = useState(FALLBACK_SECTORS);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [sectors, setSectors] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(true);
   const [lastUpdatedTime, setLastUpdatedTime] = useState('');
 
   // Fetch sector snapshot from Firestore (updated by backend without CORS blocks)
@@ -92,7 +81,18 @@ export default function SectorHeatmap() {
 
       {/* Grid Heatmap Tiles */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        {sectors.map((sector, index) => {
+        {sectors.length === 0
+          ? Array.from({ length: 8 }).map((_, idx) => (
+              <div key={idx} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 animate-pulse space-y-3">
+                <div className="flex justify-between">
+                  <div className="h-3.5 w-20 bg-slate-200 rounded" />
+                  <div className="h-4 w-12 bg-slate-200 rounded" />
+                </div>
+                <div className="h-6 w-24 bg-slate-200 rounded" />
+                <div className="h-3 w-28 bg-slate-100 rounded" />
+              </div>
+            ))
+          : sectors.map((sector, index) => {
           const isUp = sector.isUp !== false && !sector.pct?.includes('-');
 
           return (

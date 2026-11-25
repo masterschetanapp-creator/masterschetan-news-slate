@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Newspaper, TrendingUp, Flame, BarChart3, Bookmark } from 'lucide-react';
+import { Newspaper, TrendingUp, Flame, BarChart3, Bookmark, Clock } from 'lucide-react';
 import Header from './components/Header';
 import Highlights from './components/Highlights';
 import SectorHeatmap from './components/SectorHeatmap';
@@ -12,7 +12,7 @@ import SearchBar from './components/SearchBar';
 import NewsList from './components/NewsList';
 import ArticleModal from './components/ArticleModal';
 import Footer from './components/Footer';
-import { getAllArticles, searchArticles } from './services/firestore';
+import { getAllArticles, getArticleIstDate } from './services/firestore';
 
 function App() {
   const [articles, setArticles] = useState([]);
@@ -110,10 +110,10 @@ function App() {
         const titleMatch = article.title?.toLowerCase().includes(term);
         const summaryMatch = article.summary?.some(s => s.toLowerCase().includes(term));
         const tagMatch = article.tags?.some(t => t.toLowerCase().includes(term));
-        const sourceMatch = article.source?.toLowerCase().includes(term);
+        const sourceMatch = (article.source_name || article.source || '').toLowerCase().includes(term);
         if (!titleMatch && !summaryMatch && !tagMatch && !sourceMatch) return false;
       }
-      if (selectedDate && article.curatedDate !== selectedDate) {
+      if (selectedDate && getArticleIstDate(article) !== selectedDate) {
         return false;
       }
       return true;
@@ -122,8 +122,8 @@ function App() {
 
   // Statistics
   const stats = useMemo(() => {
-    const categories = new Set(articles.map(a => a.category));
-    const sources = new Set(articles.map(a => a.source));
+    const categories = new Set(articles.map(a => a.category).filter(Boolean));
+    const sources = new Set(articles.map(a => a.source_name || a.source).filter(Boolean));
     const high = articles.filter(a => {
       const imp = a.impactLevel || a.impact || a.impact_level || 'Standard';
       return imp.toLowerCase() === 'high';
@@ -134,6 +134,23 @@ function App() {
       sources: sources.size,
       high,
     };
+  }, [articles]);
+
+  // Flag archived state if newest article is >48 hours old
+  const staleFeedDate = useMemo(() => {
+    if (articles.length === 0) return null;
+    const newestIso = articles[0]?.published_at || articles[0]?.created_at;
+    if (!newestIso) return null;
+    const ageMs = Date.now() - new Date(newestIso).getTime();
+    if (ageMs > 48 * 60 * 60 * 1000) {
+      return new Date(newestIso).toLocaleDateString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+    }
+    return null;
   }, [articles]);
 
   const handleSelectArticle = (article) => {
@@ -222,6 +239,14 @@ function App() {
           </>
         )}
 
+        {/* Stale Archive Warning Banner */}
+        {!isLoading && !error && staleFeedDate && (
+          <div className="mb-6 rounded-2xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-center gap-2.5 text-xs sm:text-sm font-bold text-amber-900">
+            <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>Showing archived financial briefings last updated on {staleFeedDate}. Live curation will refresh on the next scheduled cycle.</span>
+          </div>
+        )}
+
         {/* Section Banner */}
         {!error && (
           <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -244,9 +269,13 @@ function App() {
         {!error && (
           <SearchBar
             searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
+            onSearchChange={setSearchTerm}
             selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
+            onDateChange={setSelectedDate}
+            onClear={() => {
+              setSearchTerm('');
+              setSelectedDate('');
+            }}
           />
         )}
 

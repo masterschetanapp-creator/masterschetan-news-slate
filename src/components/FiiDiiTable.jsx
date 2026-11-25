@@ -1,81 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Landmark, Calendar, ShieldCheck, Clock, TrendingUp, TrendingDown } from 'lucide-react';
+import { Landmark, Clock } from 'lucide-react';
 import { getMarketSnapshot } from '../services/marketData';
 
-const FALLBACK_5DAY_DATA = [
-  {
-    dateStr: '05 Aug 2026',
-    fiiBuy: '15,940.50',
-    fiiSell: '16,883.92',
-    fiiNet: '-943.42',
-    fiiIsBuy: false,
-    diiBuy: '19,353.43',
-    diiSell: '16,470.26',
-    diiNet: '+2,883.17',
-    diiIsBuy: true
-  },
-  {
-    dateStr: '04 Aug 2026',
-    fiiBuy: '15,630.45',
-    fiiSell: '13,183.98',
-    fiiNet: '+2,446.47',
-    fiiIsBuy: true,
-    diiBuy: '15,241.39',
-    diiSell: '16,177.53',
-    diiNet: '-936.14',
-    diiIsBuy: false
-  },
-  {
-    dateStr: '03 Aug 2026',
-    fiiBuy: '12,621.89',
-    fiiSell: '11,699.63',
-    fiiNet: '+922.26',
-    fiiIsBuy: true,
-    diiBuy: '18,325.97',
-    diiSell: '16,754.79',
-    diiNet: '+1,571.18',
-    diiIsBuy: true
-  },
-  {
-    dateStr: '31 Jul 2026',
-    fiiBuy: '19,045.51',
-    fiiSell: '18,768.03',
-    fiiNet: '+277.48',
-    fiiIsBuy: true,
-    diiBuy: '19,885.80',
-    diiSell: '17,625.43',
-    diiNet: '+2,260.37',
-    diiIsBuy: true
-  },
-  {
-    dateStr: '30 Jul 2026',
-    fiiBuy: '17,431.96',
-    fiiSell: '13,808.45',
-    fiiNet: '+3,623.51',
-    fiiIsBuy: true,
-    diiBuy: '17,979.63',
-    diiSell: '19,843.66',
-    diiNet: '-1,864.03',
-    diiIsBuy: false
-  }
-];
-
-const FALLBACK_MTD = {
-  label: 'Month till date',
-  fiiBuy: '44,192.84',
-  fiiSell: '41,767.53',
-  fiiNet: '+2,425.31',
-  fiiIsBuy: true,
-  diiBuy: '52,920.79',
-  diiSell: '49,402.58',
-  diiNet: '+3,518.21',
-  diiIsBuy: true
-};
-
 export default function FiiDiiTable() {
-  const [tableData, setTableData] = useState(FALLBACK_5DAY_DATA);
-  const [mtdData, setMtdData] = useState(FALLBACK_MTD);
-  const [lastUpdatedDate, setLastUpdatedDate] = useState('05 Aug 2026');
+  const [tableData, setTableData] = useState([]);
+  const [mtdData, setMtdData] = useState(null);
+  const [lastUpdatedDate, setLastUpdatedDate] = useState('Syncing...');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadFiiDiiTable() {
@@ -92,6 +23,8 @@ export default function FiiDiiTable() {
         }
       } catch (e) {
         console.warn('5-day FII/DII table fetch info:', e.message);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadFiiDiiTable();
@@ -178,7 +111,16 @@ export default function FiiDiiTable() {
             )}
 
             {/* Daily Rows */}
-            {tableData.map((row, idx) => (
+            {isLoading && tableData.length === 0 ? (
+              Array.from({ length: 5 }).map((_, idx) => (
+                <tr key={idx} className="animate-pulse">
+                  <td colSpan={7} className="py-3 px-4">
+                    <div className="h-4 bg-slate-100 rounded w-full" />
+                  </td>
+                </tr>
+              ))
+            ) : (
+              tableData.map((row, idx) => (
               <tr
                 key={idx}
                 className="hover:bg-slate-50/80 transition-colors"
@@ -205,7 +147,8 @@ export default function FiiDiiTable() {
                   {row.diiNet}
                 </td>
               </tr>
-            ))}
+              ))
+            )}
           </tbody>
         </table>
       </div>

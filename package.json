@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
     "firebase": "^12.16.0",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.25.0",
-    "date-fns": "^4.1.0",
+    "pdfkit": "^0.19.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

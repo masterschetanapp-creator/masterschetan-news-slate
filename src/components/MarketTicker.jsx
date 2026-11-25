@@ -1,21 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Pause, Play, Activity, RefreshCw } from 'lucide-react';
+import { Pause, Play, RefreshCw } from 'lucide-react';
 import { getMarketSnapshot } from '../services/marketData';
-
-const FALLBACK_MARKET_DATA = [
-  { symbol: 'SENSEX', val: '78,793.66', change: '+212.66', pct: '+0.27%', isUp: true },
-  { symbol: 'NIFTY 50', val: '24,632.05', change: '+7.40', pct: '+0.03%', isUp: true },
-  { symbol: 'BANK NIFTY', val: '57,942.90', change: '+202.95', pct: '+0.35%', isUp: true },
-  { symbol: 'GOLD (24K)', val: '₹3,60,837', change: '+16.20', pct: '+0.38%', isUp: true },
-  { symbol: 'USD / INR', val: '₹95.20', change: '+0.12', pct: '+0.13%', isUp: true },
-  { symbol: 'CRUDE BRENT', val: '$79.70', change: '+0.25', pct: '+0.31%', isUp: true },
-];
 
 export default function MarketTicker() {
   const [isPaused, setIsPaused] = useState(false);
-  const [marketData, setMarketData] = useState(FALLBACK_MARKET_DATA);
+  const [marketData, setMarketData] = useState([]);
   const [lastUpdated, setLastUpdated] = useState('');
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const [justRefreshed, setJustRefreshed] = useState(false);
 
   // Fetch live market data from Firestore snapshot (with CDN fallback)
@@ -100,25 +91,31 @@ export default function MarketTicker() {
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <div className={`flex items-center space-x-6 sm:space-x-8 whitespace-nowrap ${isPaused ? '' : 'ticker-scroll'}`}>
-            {[...marketData, ...marketData].map((item, idx) => (
-              <div key={idx} className="inline-flex items-center space-x-1.5">
-                <span className="text-slate-400 font-extrabold">{item.symbol}</span>
-                <span className="font-black text-white tabular-nums">{item.val}</span>
-                <span className={`inline-flex items-center font-bold text-[10px] px-1.5 py-0.2 rounded tabular-nums ${
-                  item.isUp === true
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    : item.isUp === false
-                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                    : 'bg-slate-800 text-slate-300 border border-slate-700'
-                }`}>
-                  {item.isUp === true && <span className="mr-0.5 font-black">▲</span>}
-                  {item.isUp === false && <span className="mr-0.5 font-black">▼</span>}
-                  <span>{item.pct}</span>
-                </span>
-              </div>
-            ))}
-          </div>
+          {marketData.length === 0 ? (
+            <div className="text-[11px] text-slate-400 font-semibold animate-pulse">
+              Syncing live Indian & global market indices...
+            </div>
+          ) : (
+            <div className={`flex items-center space-x-6 sm:space-x-8 whitespace-nowrap ${isPaused ? '' : 'ticker-scroll'}`}>
+              {[...marketData, ...marketData].map((item, idx) => (
+                <div key={idx} className="inline-flex items-center space-x-1.5">
+                  <span className="text-slate-400 font-extrabold">{item.symbol}</span>
+                  <span className="font-black text-white tabular-nums">{item.val}</span>
+                  <span className={`inline-flex items-center font-bold text-[10px] px-1.5 py-0.2 rounded tabular-nums ${
+                    item.isUp === true
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      : item.isUp === false
+                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      : 'bg-slate-800 text-slate-300 border border-slate-700'
+                  }`}>
+                    {item.isUp === true && <span className="mr-0.5 font-black">▲</span>}
+                    {item.isUp === false && <span className="mr-0.5 font-black">▼</span>}
+                    <span>{item.pct}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Manual Refresh & Pause/Play Controls */}
