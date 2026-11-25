@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-25T10:09:09.279Z",
+  "updatedAt": "2026-11-25T10:27:19.778Z",
   "ticker": [
     {
       "symbol": "SENSEX",
@@ -8,7 +8,7 @@
       "change": "+1,502.29",
       "pct": "+1.82%",
       "isUp": true,
-      "updatedAt": "2026-11-25T10:09:03.679Z"
+      "updatedAt": "2026-11-25T10:27:15.252Z"
     },
     {
       "symbol": "NIFTY 50",
@@ -17,7 +17,7 @@
       "change": "+469.60",
       "pct": "+1.85%",
       "isUp": true,
-      "updatedAt": "2026-11-25T10:09:04.100Z"
+      "updatedAt": "2026-11-25T10:27:15.627Z"
     },
     {
       "symbol": "BANK NIFTY",
@@ -26,34 +26,34 @@
       "change": "+1,117.90",
       "pct": "+1.79%",
       "isUp": true,
-      "updatedAt": "2026-11-25T10:09:04.608Z"
+      "updatedAt": "2026-11-25T10:27:16.057Z"
     },
     {
       "symbol": "GOLD (24K)",
-      "val": "₹2,96,926",
-      "rawPrice": 3556,
-      "change": "-35.10",
-      "pct": "-0.98%",
+      "val": "₹2,97,452",
+      "rawPrice": 3562.3,
+      "change": "-28.80",
+      "pct": "-0.80%",
       "isUp": false,
-      "updatedAt": "2026-11-25T10:09:05.015Z"
+      "updatedAt": "2026-11-25T10:27:16.141Z"
     },
     {
       "symbol": "USD / INR",
-      "val": "₹92.18",
-      "rawPrice": 92.176,
-      "change": "-0.7025",
-      "pct": "-0.76%",
+      "val": "₹92.16",
+      "rawPrice": 92.156,
+      "change": "-0.7226",
+      "pct": "-0.78%",
       "isUp": false,
-      "updatedAt": "2026-11-25T10:09:05.432Z"
+      "updatedAt": "2026-11-25T10:27:16.400Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$88.49",
-      "rawPrice": 88.49,
-      "change": "-0.29",
-      "pct": "-0.33%",
+      "val": "$88.55",
+      "rawPrice": 88.55,
+      "change": "-0.23",
+      "pct": "-0.26%",
       "isUp": false,
-      "updatedAt": "2026-11-25T10:09:05.511Z"
+      "updatedAt": "2026-11-25T10:27:16.447Z"
     }
   ],
   "sectors": [
@@ -160,7 +160,7 @@
     "fiiIsBuy": false,
     "diiNet": "+2,883.17",
     "diiIsBuy": true,
-    "updatedAt": "2026-11-25T10:09:09.279Z"
+    "updatedAt": "2026-11-25T10:27:19.778Z"
   },
   "fiiDiiTable": {
     "days": [
