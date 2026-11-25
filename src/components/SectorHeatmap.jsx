@@ -1,17 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Layers, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
-
-const SECTOR_CONFIG = [
-  { id: '^CNXIT', name: 'NIFTY IT', stocks: ['TCS', 'Infosys', 'Wipro'] },
-  { id: '^NSEBANK', name: 'NIFTY BANK', stocks: ['HDFC', 'ICICI', 'SBI'] },
-  { id: '^CNXAUTO', name: 'NIFTY AUTO', stocks: ['Tata Motors', 'M&M', 'Maruti'] },
-  { id: '^CNXPHARMA', name: 'NIFTY PHARMA', stocks: ['Sun Pharma', 'Cipla', 'Dr Reddy'] },
-  { id: '^CNXFMCG', name: 'NIFTY FMCG', stocks: ['ITC', 'HUL', 'Nestle'] },
-  { id: '^CNXMETAL', name: 'NIFTY METAL', stocks: ['Tata Steel', 'JSW', 'Hindalco'] },
-  { id: '^CNXREALTY', name: 'NIFTY REALTY', stocks: ['DLF', 'Godrej Prop', 'Macrotech'] },
-  { id: '^CNXENERGY', name: 'NIFTY ENERGY', stocks: ['Reliance', 'NTPC', 'ONGC'] }
-];
+import { getMarketSnapshot } from '../services/marketData';
 
 const FALLBACK_SECTORS = [
   { name: 'NIFTY IT', pct: '-0.54%', val: '31,230.30', isUp: false, stocks: ['TCS', 'Infosys', 'Wipro'] },
@@ -29,77 +19,41 @@ export default function SectorHeatmap() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdatedTime, setLastUpdatedTime] = useState('');
 
-  // Client-side real-time sector fetcher
-  const loadLiveSectors = async () => {
+  // Fetch sector snapshot from Firestore (updated by backend without CORS blocks)
+  const loadLiveSectors = useCallback(async (forceRefresh = false) => {
     setIsRefreshing(true);
-    let updatedList = [];
 
     try {
-      // 1. Try direct live Yahoo Finance API fetch for real-time sector quotes
-      const promises = SECTOR_CONFIG.map(async (s) => {
-        try {
-          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(s.id)}?range=1d&interval=1m&t=${Date.now()}`;
-          const res = await fetch(url);
-          if (res.ok) {
-            const json = await res.json();
-            const meta = json?.chart?.result?.[0]?.meta;
-            if (meta && typeof meta.regularMarketPrice === 'number') {
-              const price = meta.regularMarketPrice;
-              const prev = meta.chartPreviousClose || meta.previousClose || price;
-              const diff = price - prev;
-              const pct = prev > 0 ? (diff / prev) * 100 : 0;
-
-              return {
-                name: s.name,
-                val: price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-                pct: (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%',
-                isUp: diff >= 0,
-                stocks: s.stocks
-              };
-            }
-          }
-        } catch (e) {
-          // continue fallback
-        }
-        return null;
-      });
-
-      const results = await Promise.all(promises);
-      const validResults = results.filter(Boolean);
-
-      if (validResults.length >= 4) {
-        updatedList = validResults;
-      } else {
-        // 2. Fallback to /market-data.json
-        const res = await fetch(`/market-data.json?cb=${Date.now()}`);
-        if (res.ok) {
-          const json = await res.json();
-          if (Array.isArray(json?.sectors) && json.sectors.length > 0) {
-            updatedList = json.sectors;
-          }
+      const snapshot = await getMarketSnapshot({ forceRefresh });
+      if (Array.isArray(snapshot?.sectors) && snapshot.sectors.length > 0) {
+        setSectors(snapshot.sectors);
+        if (snapshot.updatedAt) {
+          const dt = new Date(snapshot.updatedAt);
+          setLastUpdatedTime(
+            dt.toLocaleString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              day: '2-digit',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true
+            })
+          );
         }
       }
     } catch (e) {
       console.warn('Sector fetch warning:', e.message);
     }
 
-    // Apply live list or fallback
-    if (updatedList.length > 0) {
-      setSectors(updatedList);
-    } else {
-      setSectors(FALLBACK_SECTORS);
-    }
-
-    setLastUpdatedTime(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
     setTimeout(() => setIsRefreshing(false), 300);
-  };
+  }, []);
 
   useEffect(() => {
-    loadLiveSectors();
-    // Auto-refresh client every 30 seconds
-    const interval = setInterval(loadLiveSectors, 30000);
+    loadLiveSectors(false);
+    // Re-sync from Firestore snapshot every 60 seconds
+    const interval = setInterval(() => loadLiveSectors(true), 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [loadLiveSectors]);
 
   return (
     <div className="mb-10 bg-white rounded-3xl border border-slate-200 p-5 sm:p-7 shadow-sm">
@@ -121,7 +75,7 @@ export default function SectorHeatmap() {
 
         <div className="flex items-center space-x-2 self-start sm:self-auto">
           <button
-            onClick={loadLiveSectors}
+            onClick={() => loadLiveSectors(true)}
             disabled={isRefreshing}
             className="inline-flex items-center space-x-1.5 text-[10px] font-black uppercase tracking-wider text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full border border-slate-200 transition-all active:scale-95 cursor-pointer"
           >

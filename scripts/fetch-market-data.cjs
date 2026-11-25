@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { getAccessToken, upsertDocument } = require('./firebase-auth.cjs');
 
 // Google Finance 100% Real-Time Fetcher
 async function fetchGoogleFinanceQuote(tickerId, name, isCommodityInr = false) {
@@ -238,7 +239,9 @@ async function fetchAllLiveMarketData() {
   const sectors = await fetchAllSectorIndices();
   const fiiDiiTableData = await fetch5DayFiiDiiTable();
 
+  const nowIso = new Date().toISOString();
   const payload = {
+    updatedAt: nowIso,
     ticker: tickerResults,
     sectors: sectors,
     fiiDii: {
@@ -247,14 +250,26 @@ async function fetchAllLiveMarketData() {
       fiiIsBuy: fiiDiiTableData.days[0].fiiIsBuy,
       diiNet: fiiDiiTableData.days[0].diiNet,
       diiIsBuy: fiiDiiTableData.days[0].diiIsBuy,
-      updatedAt: new Date().toISOString()
+      updatedAt: nowIso
     },
     fiiDiiTable: fiiDiiTableData
   };
 
   const outputPath = path.join(__dirname, '../public/market-data.json');
   fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2));
-  console.log(`SUCCESS! Saved ticker, 8 sectors & 5-day FII/DII table dataset to public/market-data.json`);
+  console.log('SUCCESS! Saved ticker, 8 sectors & 5-day FII/DII table dataset to public/market-data.json');
+
+  // Persist live market snapshot directly to Firestore so frontend updates without Hosting rebuilds
+  try {
+    const token = await getAccessToken();
+    await upsertDocument('market_snapshot', 'latest', payload, token);
+    console.log('SUCCESS! Synced live snapshot to Firestore document market_snapshot/latest');
+  } catch (err) {
+    console.error('ERROR syncing market_snapshot/latest to Firestore:', err.message);
+    if (process.env.CI || process.env.FIREBASE_TOKEN) {
+      process.exitCode = 1;
+    }
+  }
 }
 
 fetchAllLiveMarketData();

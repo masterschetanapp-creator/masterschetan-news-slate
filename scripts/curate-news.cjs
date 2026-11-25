@@ -10,9 +10,8 @@
  *   OR GitHub Actions (24h Cloud Automation)
  */
 
-const { execSync } = require('child_process');
+const { PROJECT_ID, getAccessToken } = require('./firebase-auth.cjs');
 
-const PROJECT_ID = 'masterchetan-financial';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/articles`;
 
@@ -27,46 +26,6 @@ const RSS_FEEDS = [
   { source: 'Business Standard Markets', url: 'https://www.business-standard.com/rss/markets-106.rss' },
   { source: 'Moneycontrol Top News', url: 'https://www.moneycontrol.com/rss/MCtopnews.xml' },
 ];
-
-function getAccessToken() {
-  const envToken = process.env.FIREBASE_TOKEN;
-  if (envToken) {
-    try {
-      const response = execSync(
-        `curl -s -X POST "https://oauth2.googleapis.com/token" -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=refresh_token&refresh_token=${envToken}&client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&client_secret=j9iVZfS8kkCEFUPaAeJV0sAi"`,
-        { encoding: 'utf8' }
-      );
-      const data = JSON.parse(response);
-      if (data.access_token) return data.access_token;
-    } catch (e) {
-      console.warn('FIREBASE_TOKEN exchange warning:', e.message);
-    }
-  }
-
-  try {
-    const os = require('os');
-    const path = require('path');
-    const fs = require('fs');
-    
-    const configPath = path.join(os.homedir(), '.config', 'configstore', 'firebase-tools.json');
-    if (fs.existsSync(configPath)) {
-      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      const refreshToken = config.tokens?.refresh_token;
-      
-      if (refreshToken) {
-        const response = execSync(
-          `curl -s -X POST "https://oauth2.googleapis.com/token" -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=refresh_token&refresh_token=${refreshToken}&client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&client_secret=j9iVZfS8kkCEFUPaAeJV0sAi"`,
-          { encoding: 'utf8' }
-        );
-        return JSON.parse(response).access_token;
-      }
-    }
-  } catch (e) {
-    console.error('Local auth failed:', e.message);
-  }
-
-  throw new Error('No valid authentication token found.');
-}
 
 function stripHtmlAndUnescape(str) {
   if (!str) return '';
@@ -506,7 +465,7 @@ async function curate() {
   console.log('═'.repeat(60) + '\n');
 
   console.log('🔑 Authenticating with Firebase...');
-  const token = getAccessToken();
+  const token = await getAccessToken();
   console.log('✅ Authenticated.\n');
 
   console.log('📋 Checking existing articles for strict deduplication...');

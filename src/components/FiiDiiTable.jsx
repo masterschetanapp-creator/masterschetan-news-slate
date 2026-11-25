@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Landmark, Calendar, ShieldCheck, Clock, TrendingUp, TrendingDown } from 'lucide-react';
+import { getMarketSnapshot } from '../services/marketData';
 
 const FALLBACK_5DAY_DATA = [
   {
@@ -79,17 +80,14 @@ export default function FiiDiiTable() {
   useEffect(() => {
     async function loadFiiDiiTable() {
       try {
-        const res = await fetch(`/market-data.json?cb=${Date.now()}`);
-        if (res.ok) {
-          const json = await res.json();
-          if (json?.fiiDiiTable && Array.isArray(json.fiiDiiTable.days)) {
-            setTableData(json.fiiDiiTable.days);
-            if (json.fiiDiiTable.mtd) {
-              setMtdData(json.fiiDiiTable.mtd);
-            }
-            if (json.fiiDiiTable.days[0]?.dateStr) {
-              setLastUpdatedDate(json.fiiDiiTable.days[0].dateStr);
-            }
+        const snapshot = await getMarketSnapshot();
+        if (snapshot?.fiiDiiTable && Array.isArray(snapshot.fiiDiiTable.days)) {
+          setTableData(snapshot.fiiDiiTable.days);
+          if (snapshot.fiiDiiTable.mtd) {
+            setMtdData(snapshot.fiiDiiTable.mtd);
+          }
+          if (snapshot.fiiDiiTable.days[0]?.dateStr) {
+            setLastUpdatedDate(snapshot.fiiDiiTable.days[0].dateStr);
           }
         }
       } catch (e) {

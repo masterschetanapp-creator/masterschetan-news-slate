@@ -4,9 +4,14 @@ on:
   schedule:
     # Run 1: 9:03 AM IST (03:33 UTC) - Morning market open briefing
     - cron: '33 3 * * *'
-    # Run 2: 5:33 PM IST (12:03 UTC) - Evening post-market & regulatory circulars
+    # Run 2: 5:33 PM IST (12:03 UTC) - Post-market close & evening regulatory circulars
     - cron: '3 12 * * *'
+    # Run 3: 7:33 PM IST (14:03 UTC) - Post-NSE provisional FII/DII release
+    - cron: '3 14 * * *'
   workflow_dispatch: # Allows manual trigger from GitHub UI anytime
+
+permissions:
+  contents: write
 
 jobs:
   curate-news:
@@ -18,12 +23,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Fetch Live Market Ticker Data
+      - name: Fetch Live Market Data & Sync Firestore Snapshot
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: node scripts/fetch-market-data.cjs
 
       - name: Run Gemini AI Curation Pipeline
@@ -31,3 +38,14 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/curate-news.cjs
+
+      - name: Sync Static Fallback & Keep Scheduled Cron Active
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/market-data.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(data): auto-update market snapshot [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi

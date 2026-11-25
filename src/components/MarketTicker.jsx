@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Pause, Play, Activity, RefreshCw } from 'lucide-react';
+import { getMarketSnapshot } from '../services/marketData';
 
 const FALLBACK_MARKET_DATA = [
   { symbol: 'SENSEX', val: '78,793.66', change: '+212.66', pct: '+0.27%', isUp: true },
@@ -17,24 +18,28 @@ export default function MarketTicker() {
   const [isFetching, setIsFetching] = useState(false);
   const [justRefreshed, setJustRefreshed] = useState(false);
 
-  // Fetch live market data (0 Firestore Quota, 100% Free CDN Fetch)
-  const fetchLiveQuotes = useCallback(async () => {
+  // Fetch live market data from Firestore snapshot (with CDN fallback)
+  const fetchLiveQuotes = useCallback(async (forceRefresh = false) => {
     setIsFetching(true);
     let updatedData = [];
     let dataTimestamp = '';
 
     try {
-      // Cache-busted fetch to bypass browser and CDN disk cache
-      const res = await fetch(`/market-data.json?cache_buster=${Date.now()}_${Math.random()}`);
-      if (res.ok) {
-        const json = await res.json();
-        const list = Array.isArray(json) ? json : json?.ticker;
-        if (Array.isArray(list) && list.length > 0) {
-          updatedData = list;
-          if (list[0]?.updatedAt) {
-            const dt = new Date(list[0].updatedAt);
-            dataTimestamp = dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-          }
+      const snapshot = await getMarketSnapshot({ forceRefresh });
+      const list = Array.isArray(snapshot) ? snapshot : snapshot?.ticker;
+      if (Array.isArray(list) && list.length > 0) {
+        updatedData = list;
+        const tsSource = snapshot?.updatedAt || list[0]?.updatedAt;
+        if (tsSource) {
+          const dt = new Date(tsSource);
+          dataTimestamp = dt.toLocaleString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+          });
         }
       }
     } catch (err) {
@@ -45,21 +50,23 @@ export default function MarketTicker() {
       setMarketData(updatedData);
     }
 
-    const nowStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-    setLastUpdated(dataTimestamp || nowStr);
+    if (dataTimestamp) {
+      setLastUpdated(dataTimestamp);
+    }
     setIsFetching(false);
 
-    // Visual pulse confirmation on refresh click
-    setJustRefreshed(true);
-    setTimeout(() => setJustRefreshed(false), 2500);
+    if (forceRefresh) {
+      setJustRefreshed(true);
+      setTimeout(() => setJustRefreshed(false), 2500);
+    }
   }, []);
 
   useEffect(() => {
-    fetchLiveQuotes();
+    fetchLiveQuotes(false);
 
-    // Auto-refresh every 60 seconds (1 minute interval) - 0 Firebase Quota!
+    // Auto-refresh every 60 seconds (1 minute interval)
     const intervalId = setInterval(() => {
-      fetchLiveQuotes();
+      fetchLiveQuotes(true);
     }, 60000);
 
     return () => clearInterval(intervalId);
@@ -118,7 +125,7 @@ export default function MarketTicker() {
         <div className="flex items-center space-x-1.5 shrink-0">
           {/* Refresh Button */}
           <button
-            onClick={fetchLiveQuotes}
+            onClick={() => fetchLiveQuotes(true)}
             disabled={isFetching}
             className={`flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition-colors border text-[10px] font-bold ${
               justRefreshed ? 'border-emerald-500 text-emerald-400 scale-105' : 'border-slate-700 text-slate-300 hover:text-white'
