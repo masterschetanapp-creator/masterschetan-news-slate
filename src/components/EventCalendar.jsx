@@ -1,47 +1,74 @@
-import React, { useState } from 'react';
-import { Calendar, Clock, BellRing, Sparkles, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, Sparkles, ChevronRight } from 'lucide-react';
+import { getMarketSnapshot } from '../services/marketData';
 
-const UPCOMING_EVENTS = [
-  {
-    id: 1,
-    title: 'RBI Monetary Policy Committee (MPC) Review',
-    date: 'Aug 6 – Aug 8, 2026',
-    category: 'Central Bank',
-    impact: 'High Impact',
-    desc: 'Repo rate decision and liquidity outlook announcement by RBI Governor.',
-    tagColor: 'bg-red-500/10 text-red-600 border-red-200'
-  },
-  {
-    id: 2,
-    title: 'India Retail CPI Inflation & IIP Data Release',
-    date: 'Aug 12, 2026',
-    category: 'Macro Economic',
-    impact: 'High Impact',
-    desc: 'Consumer price index metrics shaping rate cut expectations.',
-    tagColor: 'bg-red-500/10 text-red-600 border-red-200'
-  },
-  {
-    id: 3,
-    title: 'Q1 Corporate Earnings Season Peaks',
-    date: 'Ongoing (Till Aug 15)',
-    category: 'Earnings',
-    impact: 'Medium Impact',
-    desc: 'Key Nifty 50 earnings reports across Banking, IT, and Auto sectors.',
-    tagColor: 'bg-amber-500/10 text-amber-600 border-amber-200'
-  },
-  {
-    id: 4,
-    title: 'US Federal Open Market Committee (FOMC) Meeting',
-    date: 'Sept 17 – Sept 18, 2026',
-    category: 'Global Central Bank',
-    impact: 'High Impact',
-    desc: 'US Fed interest rate decision influencing global equity capital flows.',
-    tagColor: 'bg-blue-500/10 text-blue-600 border-blue-200'
-  }
-];
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function buildClientFallbackCalendar() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const nextM = (m + 1) % 12;
+  const nextY = nextM === 0 ? y + 1 : y;
+  const mpcMonth = [1, 3, 5, 7, 9, 11].find(idx => idx > m || (idx === m && now.getDate() <= 6)) ?? 1;
+  const mpcYear = mpcMonth < m ? y + 1 : y;
+
+  return [
+    {
+      id: 1,
+      title: 'RBI Monetary Policy Committee (MPC) Review',
+      date: `${MONTH_NAMES[mpcMonth]} 4 – ${MONTH_NAMES[mpcMonth]} 6, ${mpcYear}`,
+      category: 'Central Bank',
+      impact: 'High Impact',
+      desc: 'Repo rate decision, stance, and liquidity commentary from the RBI Governor.',
+      tagColor: 'bg-red-500/10 text-red-600 border-red-200',
+    },
+    {
+      id: 2,
+      title: `India Retail CPI Inflation & IIP Release (${MONTH_NAMES[nextM]})`,
+      date: `${MONTH_NAMES[nextM]} 12, ${nextY}`,
+      category: 'Macro Economic',
+      impact: 'High Impact',
+      desc: 'Consumer price index and industrial output metrics shaping rate expectations.',
+      tagColor: 'bg-red-500/10 text-red-600 border-red-200',
+    },
+    {
+      id: 3,
+      title: 'US Federal Open Market Committee (FOMC) Policy',
+      date: `Upcoming Cycle (${y}/${y + 1})`,
+      category: 'Global Central Bank',
+      impact: 'High Impact',
+      desc: 'US Fed interest rate guidance influencing global equity & FII capital flows.',
+      tagColor: 'bg-blue-500/10 text-blue-600 border-blue-200',
+    },
+    {
+      id: 4,
+      title: 'Advance Tax & Quarterly Corporate Earnings Watch',
+      date: 'Upcoming Quarterly Window',
+      category: 'Earnings & Tax',
+      impact: 'Medium Impact',
+      desc: 'Key Nifty 50 sector earnings reports and statutory tax deadlines.',
+      tagColor: 'bg-amber-500/10 text-amber-600 border-amber-200',
+    },
+  ];
+}
 
 export default function EventCalendar() {
-  const [events] = useState(UPCOMING_EVENTS);
+  const [events, setEvents] = useState(() => buildClientFallbackCalendar());
+
+  useEffect(() => {
+    async function loadCalendar() {
+      try {
+        const snapshot = await getMarketSnapshot();
+        if (Array.isArray(snapshot?.calendar) && snapshot.calendar.length > 0) {
+          setEvents(snapshot.calendar);
+        }
+      } catch (e) {
+        console.warn('Calendar snapshot load warning:', e.message);
+      }
+    }
+    loadCalendar();
+  }, []);
 
   return (
     <div className="mb-10 bg-white rounded-3xl border border-slate-200 p-5 sm:p-7 shadow-sm">
@@ -56,7 +83,7 @@ export default function EventCalendar() {
               Market Catalyst Calendar & RBI Watch
             </h3>
             <p className="text-xs text-slate-500 font-medium">
-              Key macroeconomic events shaping market volatility
+              Key upcoming macroeconomic events shaping market volatility
             </p>
           </div>
         </div>

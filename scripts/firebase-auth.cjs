@@ -6,6 +6,27 @@ const PROJECT_ID = 'masterchetan-financial';
 const OAUTH_CLIENT_ID = '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com';
 const OAUTH_CLIENT_SECRET = 'j9iVZfS8kkCEFUPaAeJV0sAi';
 
+/**
+ * Load key=value pairs from project .env when running locally outside CI.
+ */
+function loadLocalEnv() {
+  const envPath = path.join(__dirname, '../.env');
+  if (!fs.existsSync(envPath)) return;
+
+  const lines = fs.readFileSync(envPath, 'utf8').split(/\r?\n/);
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx === -1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const val = trimmed.slice(eqIdx + 1).trim().replace(/^["']|["']$/g, '');
+    if (key && !(key in process.env)) {
+      process.env[key] = val;
+    }
+  }
+}
+
 async function exchangeRefreshToken(refreshToken) {
   const params = new URLSearchParams({
     grant_type: 'refresh_token',
@@ -76,6 +97,52 @@ function toFirestoreValue(val) {
 }
 
 /**
+ * Convert a Firestore REST Value object back into a plain JS value.
+ */
+function fromFirestoreValue(val) {
+  if (!val || typeof val !== 'object') return null;
+  if ('nullValue' in val) return null;
+  if ('booleanValue' in val) return val.booleanValue;
+  if ('integerValue' in val) return Number(val.integerValue);
+  if ('doubleValue' in val) return val.doubleValue;
+  if ('stringValue' in val) return val.stringValue;
+  if ('timestampValue' in val) return val.timestampValue;
+  if ('arrayValue' in val) {
+    return (val.arrayValue.values || []).map(fromFirestoreValue);
+  }
+  if ('mapValue' in val) {
+    const obj = {};
+    for (const [k, v] of Object.entries(val.mapValue.fields || {})) {
+      obj[k] = fromFirestoreValue(v);
+    }
+    return obj;
+  }
+  return null;
+}
+
+/**
+ * Read a Firestore document via REST API and decode its fields into plain JS.
+ */
+async function getDocument(collectionName, docId, token = null) {
+  const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${collectionName}/${docId}`;
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(url, { headers });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`Firestore read ${collectionName}/${docId} failed (${res.status})`);
+  }
+
+  const doc = await res.json();
+  const decoded = {};
+  for (const [k, v] of Object.entries(doc.fields || {})) {
+    decoded[k] = fromFirestoreValue(v);
+  }
+  return decoded;
+}
+
+/**
  * Upsert a Firestore document via REST API PATCH.
  */
 async function upsertDocument(collectionName, docId, payload, token) {
@@ -104,7 +171,10 @@ async function upsertDocument(collectionName, docId, payload, token) {
 
 module.exports = {
   PROJECT_ID,
+  loadLocalEnv,
   getAccessToken,
   toFirestoreValue,
+  fromFirestoreValue,
+  getDocument,
   upsertDocument,
 };
