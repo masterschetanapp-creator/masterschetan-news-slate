@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-25T10:54:42.905Z",
+  "updatedAt": "2026-11-25T10:58:18.260Z",
   "ticker": [
     {
       "symbol": "SENSEX",
@@ -8,7 +8,7 @@
       "change": "+1,502.29",
       "pct": "+1.82%",
       "isUp": true,
-      "updatedAt": "2026-11-25T10:54:36.736Z"
+      "updatedAt": "2026-11-25T10:58:11.199Z"
     },
     {
       "symbol": "NIFTY 50",
@@ -17,7 +17,7 @@
       "change": "+469.60",
       "pct": "+1.85%",
       "isUp": true,
-      "updatedAt": "2026-11-25T10:54:37.263Z"
+      "updatedAt": "2026-11-25T10:58:11.603Z"
     },
     {
       "symbol": "BANK NIFTY",
@@ -26,34 +26,34 @@
       "change": "+1,117.90",
       "pct": "+1.79%",
       "isUp": true,
-      "updatedAt": "2026-11-25T10:54:37.682Z"
+      "updatedAt": "2026-11-25T10:58:11.877Z"
     },
     {
       "symbol": "GOLD (24K / 10g)",
       "val": "₹1,21,310",
       "rawPrice": 121310,
-      "change": "-33.70",
-      "pct": "-0.94%",
+      "change": "-32.70",
+      "pct": "-0.91%",
       "isUp": false,
-      "updatedAt": "2026-11-25T10:54:38.563Z"
+      "updatedAt": "2026-11-25T10:58:13.817Z"
     },
     {
       "symbol": "USD / INR",
       "val": "₹92.17",
-      "rawPrice": 92.1685,
-      "change": "-0.7100",
+      "rawPrice": 92.1688,
+      "change": "-0.7098",
       "pct": "-0.76%",
       "isUp": false,
-      "updatedAt": "2026-11-25T10:54:38.179Z"
+      "updatedAt": "2026-11-25T10:58:12.224Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$87.99",
-      "rawPrice": 87.99,
-      "change": "-0.79",
-      "pct": "-0.89%",
+      "val": "$87.85",
+      "rawPrice": 87.85,
+      "change": "-0.93",
+      "pct": "-1.05%",
       "isUp": false,
-      "updatedAt": "2026-11-25T10:54:38.644Z"
+      "updatedAt": "2026-11-25T10:58:13.863Z"
     }
   ],
   "sectors": [
@@ -160,7 +160,7 @@
     "fiiIsBuy": true,
     "diiNet": "-2,760.12",
     "diiIsBuy": false,
-    "updatedAt": "2026-11-25T10:54:42.905Z"
+    "updatedAt": "2026-11-25T10:58:18.260Z"
   },
   "fiiDiiTable": {
     "days": [
