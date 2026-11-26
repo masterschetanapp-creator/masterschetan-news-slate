@@ -1,67 +1,67 @@
 {
-  "updatedAt": "2026-11-25T23:02:37.128Z",
+  "updatedAt": "2026-11-26T13:04:22.817Z",
   "ticker": [
     {
       "symbol": "SENSEX",
-      "val": "83,938.28",
-      "rawPrice": 83938.28,
-      "change": "+1,502.29",
-      "pct": "+1.82%",
+      "val": "84,328.59",
+      "rawPrice": 84328.59,
+      "change": "+390.31",
+      "pct": "+0.46%",
       "isUp": true,
-      "updatedAt": "2026-11-25T23:02:29.427Z"
+      "updatedAt": "2026-11-26T13:04:16.045Z"
     },
     {
       "symbol": "NIFTY 50",
-      "val": "25,819.25",
-      "rawPrice": 25819.25,
-      "change": "+469.60",
-      "pct": "+1.85%",
+      "val": "25,884.50",
+      "rawPrice": 25884.5,
+      "change": "+65.25",
+      "pct": "+0.25%",
       "isUp": true,
-      "updatedAt": "2026-11-25T23:02:29.906Z"
+      "updatedAt": "2026-11-26T13:04:16.344Z"
     },
     {
       "symbol": "BANK NIFTY",
-      "val": "63,703.25",
-      "rawPrice": 63703.25,
-      "change": "+1,117.90",
-      "pct": "+1.79%",
-      "isUp": true,
-      "updatedAt": "2026-11-25T23:02:30.353Z"
+      "val": "63,535.30",
+      "rawPrice": 63535.3,
+      "change": "-167.95",
+      "pct": "-0.26%",
+      "isUp": false,
+      "updatedAt": "2026-11-26T13:04:16.744Z"
     },
     {
       "symbol": "GOLD (24K / 10g)",
-      "val": "₹1,21,040",
-      "rawPrice": 121040,
-      "change": "+53.20",
-      "pct": "+1.49%",
+      "val": "₹1,22,641",
+      "rawPrice": 122641,
+      "change": "+27.60",
+      "pct": "+0.77%",
       "isUp": true,
-      "updatedAt": "2026-11-25T23:02:32.271Z"
+      "updatedAt": "2026-11-26T13:04:18.735Z"
     },
     {
       "symbol": "USD / INR",
-      "val": "₹92.24",
-      "rawPrice": 92.2406,
-      "change": "-0.6379",
-      "pct": "-0.69%",
-      "isUp": false,
-      "updatedAt": "2026-11-25T23:02:30.755Z"
+      "val": "₹92.54",
+      "rawPrice": 92.5392,
+      "change": "+0.3014",
+      "pct": "+0.33%",
+      "isUp": true,
+      "updatedAt": "2026-11-26T13:04:17.062Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$90.82",
-      "rawPrice": 90.82,
-      "change": "+0.18",
-      "pct": "+0.20%",
+      "val": "$91.37",
+      "rawPrice": 91.37,
+      "change": "+0.73",
+      "pct": "+0.81%",
       "isUp": true,
-      "updatedAt": "2026-11-25T23:02:32.375Z"
+      "updatedAt": "2026-11-26T13:04:18.837Z"
     }
   ],
   "sectors": [
     {
       "name": "NIFTY IT",
-      "val": "32,207.55",
-      "pct": "+1.12%",
-      "change": "+356.75",
+      "val": "33,386.95",
+      "pct": "+3.66%",
+      "change": "+1,179.40",
       "isUp": true,
       "stocks": [
         "TCS",
@@ -71,10 +71,10 @@
     },
     {
       "name": "NIFTY BANK",
-      "val": "63,703.25",
-      "pct": "+1.79%",
-      "change": "+1,117.90",
-      "isUp": true,
+      "val": "63,535.30",
+      "pct": "-0.26%",
+      "change": "-167.95",
+      "isUp": false,
       "stocks": [
         "HDFC",
         "ICICI",
@@ -83,10 +83,10 @@
     },
     {
       "name": "NIFTY AUTO",
-      "val": "28,821.50",
-      "pct": "+1.16%",
-      "change": "+330.80",
-      "isUp": true,
+      "val": "28,623.45",
+      "pct": "-0.69%",
+      "change": "-198.05",
+      "isUp": false,
       "stocks": [
         "Tata Motors",
         "M&M",
@@ -95,9 +95,9 @@
     },
     {
       "name": "NIFTY PHARMA",
-      "val": "28,961.90",
-      "pct": "+2.38%",
-      "change": "+673.05",
+      "val": "29,090.85",
+      "pct": "+0.45%",
+      "change": "+128.95",
       "isUp": true,
       "stocks": [
         "Sun Pharma",
@@ -107,10 +107,10 @@
     },
     {
       "name": "NIFTY FMCG",
-      "val": "50,143.50",
-      "pct": "+3.79%",
-      "change": "+1,830.95",
-      "isUp": true,
+      "val": "49,673.55",
+      "pct": "-0.94%",
+      "change": "-469.95",
+      "isUp": false,
       "stocks": [
         "ITC",
         "HUL",
@@ -119,10 +119,10 @@
     },
     {
       "name": "NIFTY METAL",
-      "val": "11,578.50",
-      "pct": "-2.04%",
-      "change": "-240.75",
-      "isUp": false,
+      "val": "11,713.50",
+      "pct": "+1.17%",
+      "change": "+135.00",
+      "isUp": true,
       "stocks": [
         "Tata Steel",
         "JSW",
@@ -131,9 +131,9 @@
     },
     {
       "name": "NIFTY REALTY",
-      "val": "942.00",
-      "pct": "+0.02%",
-      "change": "+0.15",
+      "val": "972.85",
+      "pct": "+3.27%",
+      "change": "+30.85",
       "isUp": true,
       "stocks": [
         "DLF",
@@ -143,9 +143,9 @@
     },
     {
       "name": "NIFTY ENERGY",
-      "val": "36,669.20",
-      "pct": "+0.04%",
-      "change": "+14.10",
+      "val": "36,880.30",
+      "pct": "+0.58%",
+      "change": "+211.10",
       "isUp": true,
       "stocks": [
         "Reliance",
@@ -160,7 +160,7 @@
     "fiiIsBuy": true,
     "diiNet": "+4,018.72",
     "diiIsBuy": true,
-    "updatedAt": "2026-11-25T23:02:37.128Z"
+    "updatedAt": "2026-11-26T13:04:22.817Z"
   },
   "fiiDiiTable": {
     "days": [
