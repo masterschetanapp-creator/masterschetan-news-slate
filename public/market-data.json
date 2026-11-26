@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-26T13:04:22.817Z",
+  "updatedAt": "2026-11-26T21:25:01.439Z",
   "ticker": [
     {
       "symbol": "SENSEX",
@@ -8,7 +8,7 @@
       "change": "+390.31",
       "pct": "+0.46%",
       "isUp": true,
-      "updatedAt": "2026-11-26T13:04:16.045Z"
+      "updatedAt": "2026-11-26T21:24:54.493Z"
     },
     {
       "symbol": "NIFTY 50",
@@ -17,7 +17,7 @@
       "change": "+65.25",
       "pct": "+0.25%",
       "isUp": true,
-      "updatedAt": "2026-11-26T13:04:16.344Z"
+      "updatedAt": "2026-11-26T21:24:54.752Z"
     },
     {
       "symbol": "BANK NIFTY",
@@ -26,34 +26,34 @@
       "change": "-167.95",
       "pct": "-0.26%",
       "isUp": false,
-      "updatedAt": "2026-11-26T13:04:16.744Z"
+      "updatedAt": "2026-11-26T21:24:55.480Z"
     },
     {
       "symbol": "GOLD (24K / 10g)",
       "val": "₹1,22,641",
       "rawPrice": 122641,
-      "change": "+27.60",
-      "pct": "+0.77%",
+      "change": "+28.80",
+      "pct": "+0.81%",
       "isUp": true,
-      "updatedAt": "2026-11-26T13:04:18.735Z"
+      "updatedAt": "2026-11-26T21:24:57.189Z"
     },
     {
       "symbol": "USD / INR",
-      "val": "₹92.54",
-      "rawPrice": 92.5392,
-      "change": "+0.3014",
-      "pct": "+0.33%",
+      "val": "₹92.45",
+      "rawPrice": 92.4518,
+      "change": "+0.2139",
+      "pct": "+0.23%",
       "isUp": true,
-      "updatedAt": "2026-11-26T13:04:17.062Z"
+      "updatedAt": "2026-11-26T21:24:55.707Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$91.37",
-      "rawPrice": 91.37,
-      "change": "+0.73",
-      "pct": "+0.81%",
+      "val": "$91.73",
+      "rawPrice": 91.73,
+      "change": "+1.09",
+      "pct": "+1.20%",
       "isUp": true,
-      "updatedAt": "2026-11-26T13:04:18.837Z"
+      "updatedAt": "2026-11-26T21:24:57.278Z"
     }
   ],
   "sectors": [
@@ -155,15 +155,30 @@
     }
   ],
   "fiiDii": {
-    "sessionDate": "25 Nov 2026",
-    "fiiNet": "+4,479.08",
+    "sessionDate": "26 Nov 2026",
+    "fiiNet": "+5,843.33",
     "fiiIsBuy": true,
-    "diiNet": "+4,018.72",
+    "diiNet": "+5,630.72",
     "diiIsBuy": true,
-    "updatedAt": "2026-11-26T13:04:22.817Z"
+    "updatedAt": "2026-11-26T21:25:01.439Z"
   },
   "fiiDiiTable": {
     "days": [
+      {
+        "isoDate": "2026-11-26",
+        "monthKey": "2026-11",
+        "dateStr": "26 Nov 2026",
+        "rawDate": "26-Nov-2026",
+        "hasGross": true,
+        "fiiBuy": "17,879.74",
+        "fiiSell": "12,036.41",
+        "fiiNet": "+5,843.33",
+        "fiiIsBuy": true,
+        "diiBuy": "24,352.87",
+        "diiSell": "18,722.15",
+        "diiNet": "+5,630.72",
+        "diiIsBuy": true
+      },
       {
         "isoDate": "2026-11-25",
         "monthKey": "2026-11",
@@ -223,35 +238,35 @@
         "diiSell": "—",
         "diiNet": "-1,356.57",
         "diiIsBuy": false
-      },
-      {
-        "isoDate": "2026-11-18",
-        "monthKey": "2026-11",
-        "dateStr": "18 Nov 2026",
-        "rawDate": "18-Nov-2026",
-        "hasGross": false,
-        "fiiBuy": "—",
-        "fiiSell": "—",
-        "fiiNet": "+5,866.78",
-        "fiiIsBuy": true,
-        "diiBuy": "—",
-        "diiSell": "—",
-        "diiNet": "-3,159.90",
-        "diiIsBuy": false
       }
     ],
     "mtd": {
       "label": "Month till date (Nov 2026)",
       "fiiBuy": "—",
       "fiiSell": "—",
-      "fiiNet": "+1,22,101.21",
+      "fiiNet": "+1,27,944.54",
       "fiiIsBuy": true,
       "diiBuy": "—",
       "diiSell": "—",
-      "diiNet": "-60,528.43",
+      "diiNet": "-54,897.71",
       "diiIsBuy": false
     },
     "history": [
+      {
+        "isoDate": "2026-11-26",
+        "monthKey": "2026-11",
+        "dateStr": "26 Nov 2026",
+        "rawDate": "26-Nov-2026",
+        "hasGross": true,
+        "fiiBuy": "17,879.74",
+        "fiiSell": "12,036.41",
+        "fiiNet": "+5,843.33",
+        "fiiIsBuy": true,
+        "diiBuy": "24,352.87",
+        "diiSell": "18,722.15",
+        "diiNet": "+5,630.72",
+        "diiIsBuy": true
+      },
       {
         "isoDate": "2026-11-25",
         "monthKey": "2026-11",
