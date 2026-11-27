@@ -1,68 +1,68 @@
 {
-  "updatedAt": "2026-11-26T22:56:15.491Z",
+  "updatedAt": "2026-11-27T13:01:09.740Z",
   "ticker": [
     {
       "symbol": "SENSEX",
-      "val": "84,328.59",
-      "rawPrice": 84328.59,
-      "change": "+390.31",
-      "pct": "+0.46%",
-      "isUp": true,
-      "updatedAt": "2026-11-26T22:56:08.829Z"
+      "val": "83,339.26",
+      "rawPrice": 83339.26,
+      "change": "-989.34",
+      "pct": "-1.17%",
+      "isUp": false,
+      "updatedAt": "2026-11-27T13:01:03.278Z"
     },
     {
       "symbol": "NIFTY 50",
-      "val": "25,884.50",
-      "rawPrice": 25884.5,
-      "change": "+65.25",
-      "pct": "+0.25%",
-      "isUp": true,
-      "updatedAt": "2026-11-26T22:56:09.222Z"
+      "val": "25,607.20",
+      "rawPrice": 25607.2,
+      "change": "-277.30",
+      "pct": "-1.07%",
+      "isUp": false,
+      "updatedAt": "2026-11-27T13:01:03.580Z"
     },
     {
       "symbol": "BANK NIFTY",
-      "val": "63,535.30",
-      "rawPrice": 63535.3,
-      "change": "-167.95",
-      "pct": "-0.26%",
+      "val": "63,040.90",
+      "rawPrice": 63040.9,
+      "change": "-494.40",
+      "pct": "-0.78%",
       "isUp": false,
-      "updatedAt": "2026-11-26T22:56:09.544Z"
+      "updatedAt": "2026-11-27T13:01:03.872Z"
     },
     {
       "symbol": "GOLD (24K / 10g)",
-      "val": "₹1,22,641",
-      "rawPrice": 122641,
-      "change": "+28.80",
-      "pct": "+0.81%",
+      "val": "₹1,26,299",
+      "rawPrice": 126299,
+      "change": "+128.80",
+      "pct": "+3.61%",
       "isUp": true,
-      "updatedAt": "2026-11-26T22:56:11.655Z"
+      "updatedAt": "2026-11-27T13:01:05.956Z"
     },
     {
       "symbol": "USD / INR",
-      "val": "₹92.43",
-      "rawPrice": 92.433,
-      "change": "+0.1951",
-      "pct": "+0.21%",
+      "val": "₹92.95",
+      "rawPrice": 92.9507,
+      "change": "+0.5006",
+      "pct": "+0.54%",
       "isUp": true,
-      "updatedAt": "2026-11-26T22:56:09.880Z"
+      "updatedAt": "2026-11-27T13:01:04.172Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$91.73",
-      "rawPrice": 91.73,
-      "change": "+1.09",
-      "pct": "+1.20%",
+      "val": "$91.77",
+      "rawPrice": 91.77,
+      "change": "+1.13",
+      "pct": "+1.25%",
       "isUp": true,
-      "updatedAt": "2026-11-26T22:56:11.766Z"
+      "updatedAt": "2026-11-27T13:01:06.066Z"
     }
   ],
   "sectors": [
     {
       "name": "NIFTY IT",
-      "val": "33,386.95",
-      "pct": "+3.66%",
-      "change": "+1,179.40",
-      "isUp": true,
+      "val": "32,758.10",
+      "pct": "-1.88%",
+      "change": "-628.85",
+      "isUp": false,
       "stocks": [
         "TCS",
         "Infosys",
@@ -71,9 +71,9 @@
     },
     {
       "name": "NIFTY BANK",
-      "val": "63,535.30",
-      "pct": "-0.26%",
-      "change": "-167.95",
+      "val": "63,040.90",
+      "pct": "-0.78%",
+      "change": "-494.40",
       "isUp": false,
       "stocks": [
         "HDFC",
@@ -83,9 +83,9 @@
     },
     {
       "name": "NIFTY AUTO",
-      "val": "28,623.45",
-      "pct": "-0.69%",
-      "change": "-198.05",
+      "val": "28,199.90",
+      "pct": "-1.48%",
+      "change": "-423.55",
       "isUp": false,
       "stocks": [
         "Tata Motors",
@@ -95,10 +95,10 @@
     },
     {
       "name": "NIFTY PHARMA",
-      "val": "29,090.85",
-      "pct": "+0.45%",
-      "change": "+128.95",
-      "isUp": true,
+      "val": "28,973.55",
+      "pct": "-0.40%",
+      "change": "-117.30",
+      "isUp": false,
       "stocks": [
         "Sun Pharma",
         "Cipla",
@@ -107,9 +107,9 @@
     },
     {
       "name": "NIFTY FMCG",
-      "val": "49,673.55",
-      "pct": "-0.94%",
-      "change": "-469.95",
+      "val": "49,212.45",
+      "pct": "-0.93%",
+      "change": "-461.10",
       "isUp": false,
       "stocks": [
         "ITC",
@@ -119,9 +119,9 @@
     },
     {
       "name": "NIFTY METAL",
-      "val": "11,713.50",
-      "pct": "+1.17%",
-      "change": "+135.00",
+      "val": "11,878.00",
+      "pct": "+1.40%",
+      "change": "+164.50",
       "isUp": true,
       "stocks": [
         "Tata Steel",
@@ -131,10 +131,10 @@
     },
     {
       "name": "NIFTY REALTY",
-      "val": "972.85",
-      "pct": "+3.27%",
-      "change": "+30.85",
-      "isUp": true,
+      "val": "958.95",
+      "pct": "-1.43%",
+      "change": "-13.90",
+      "isUp": false,
       "stocks": [
         "DLF",
         "Godrej Prop",
@@ -143,9 +143,9 @@
     },
     {
       "name": "NIFTY ENERGY",
-      "val": "36,880.30",
-      "pct": "+0.58%",
-      "change": "+211.10",
+      "val": "36,935.00",
+      "pct": "+0.15%",
+      "change": "+54.70",
       "isUp": true,
       "stocks": [
         "Reliance",
@@ -155,15 +155,30 @@
     }
   ],
   "fiiDii": {
-    "sessionDate": "26 Nov 2026",
-    "fiiNet": "+5,843.33",
+    "sessionDate": "27 Nov 2026",
+    "fiiNet": "+1,634.33",
     "fiiIsBuy": true,
-    "diiNet": "+5,630.72",
-    "diiIsBuy": true,
-    "updatedAt": "2026-11-26T22:56:15.491Z"
+    "diiNet": "-556.42",
+    "diiIsBuy": false,
+    "updatedAt": "2026-11-27T13:01:09.740Z"
   },
   "fiiDiiTable": {
     "days": [
+      {
+        "isoDate": "2026-11-27",
+        "monthKey": "2026-11",
+        "dateStr": "27 Nov 2026",
+        "rawDate": "27-Nov-2026",
+        "hasGross": true,
+        "fiiBuy": "14,259.45",
+        "fiiSell": "12,625.12",
+        "fiiNet": "+1,634.33",
+        "fiiIsBuy": true,
+        "diiBuy": "17,263.65",
+        "diiSell": "17,820.07",
+        "diiNet": "-556.42",
+        "diiIsBuy": false
+      },
       {
         "isoDate": "2026-11-26",
         "monthKey": "2026-11",
@@ -223,35 +238,35 @@
         "diiSell": "—",
         "diiNet": "-4,859.80",
         "diiIsBuy": false
-      },
-      {
-        "isoDate": "2026-11-19",
-        "monthKey": "2026-11",
-        "dateStr": "19 Nov 2026",
-        "rawDate": "19-Nov-2026",
-        "hasGross": false,
-        "fiiBuy": "—",
-        "fiiSell": "—",
-        "fiiNet": "+7,411.41",
-        "fiiIsBuy": true,
-        "diiBuy": "—",
-        "diiSell": "—",
-        "diiNet": "-1,356.57",
-        "diiIsBuy": false
       }
     ],
     "mtd": {
       "label": "Month till date (Nov 2026)",
       "fiiBuy": "—",
       "fiiSell": "—",
-      "fiiNet": "+1,27,944.54",
+      "fiiNet": "+1,29,578.87",
       "fiiIsBuy": true,
       "diiBuy": "—",
       "diiSell": "—",
-      "diiNet": "-54,897.71",
+      "diiNet": "-55,454.13",
       "diiIsBuy": false
     },
     "history": [
+      {
+        "isoDate": "2026-11-27",
+        "monthKey": "2026-11",
+        "dateStr": "27 Nov 2026",
+        "rawDate": "27-Nov-2026",
+        "hasGross": true,
+        "fiiBuy": "14,259.45",
+        "fiiSell": "12,625.12",
+        "fiiNet": "+1,634.33",
+        "fiiIsBuy": true,
+        "diiBuy": "17,263.65",
+        "diiSell": "17,820.07",
+        "diiNet": "-556.42",
+        "diiIsBuy": false
+      },
       {
         "isoDate": "2026-11-26",
         "monthKey": "2026-11",
