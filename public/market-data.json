@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-27T13:01:09.740Z",
+  "updatedAt": "2026-11-27T21:05:25.587Z",
   "ticker": [
     {
       "symbol": "SENSEX",
@@ -8,7 +8,7 @@
       "change": "-989.34",
       "pct": "-1.17%",
       "isUp": false,
-      "updatedAt": "2026-11-27T13:01:03.278Z"
+      "updatedAt": "2026-11-27T21:05:17.987Z"
     },
     {
       "symbol": "NIFTY 50",
@@ -17,7 +17,7 @@
       "change": "-277.30",
       "pct": "-1.07%",
       "isUp": false,
-      "updatedAt": "2026-11-27T13:01:03.580Z"
+      "updatedAt": "2026-11-27T21:05:18.319Z"
     },
     {
       "symbol": "BANK NIFTY",
@@ -26,34 +26,34 @@
       "change": "-494.40",
       "pct": "-0.78%",
       "isUp": false,
-      "updatedAt": "2026-11-27T13:01:03.872Z"
+      "updatedAt": "2026-11-27T21:05:18.681Z"
     },
     {
       "symbol": "GOLD (24K / 10g)",
       "val": "₹1,26,299",
       "rawPrice": 126299,
-      "change": "+128.80",
-      "pct": "+3.61%",
+      "change": "+103.90",
+      "pct": "+2.91%",
       "isUp": true,
-      "updatedAt": "2026-11-27T13:01:05.956Z"
+      "updatedAt": "2026-11-27T21:05:20.425Z"
     },
     {
       "symbol": "USD / INR",
       "val": "₹92.95",
-      "rawPrice": 92.9507,
-      "change": "+0.5006",
+      "rawPrice": 92.9525,
+      "change": "+0.5024",
       "pct": "+0.54%",
       "isUp": true,
-      "updatedAt": "2026-11-27T13:01:04.172Z"
+      "updatedAt": "2026-11-27T21:05:18.946Z"
     },
     {
       "symbol": "CRUDE BRENT",
-      "val": "$91.77",
-      "rawPrice": 91.77,
-      "change": "+1.13",
-      "pct": "+1.25%",
+      "val": "$90.84",
+      "rawPrice": 90.84,
+      "change": "+0.20",
+      "pct": "+0.22%",
       "isUp": true,
-      "updatedAt": "2026-11-27T13:01:06.066Z"
+      "updatedAt": "2026-11-27T21:05:20.480Z"
     }
   ],
   "sectors": [
@@ -160,7 +160,7 @@
     "fiiIsBuy": true,
     "diiNet": "-556.42",
     "diiIsBuy": false,
-    "updatedAt": "2026-11-27T13:01:09.740Z"
+    "updatedAt": "2026-11-27T21:05:25.587Z"
   },
   "fiiDiiTable": {
     "days": [
