@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-27T21:05:25.587Z",
+  "updatedAt": "2026-11-27T22:39:00.910Z",
   "ticker": [
     {
       "symbol": "SENSEX",
@@ -8,7 +8,7 @@
       "change": "-989.34",
       "pct": "-1.17%",
       "isUp": false,
-      "updatedAt": "2026-11-27T21:05:17.987Z"
+      "updatedAt": "2026-11-27T22:38:50.362Z"
     },
     {
       "symbol": "NIFTY 50",
@@ -17,7 +17,7 @@
       "change": "-277.30",
       "pct": "-1.07%",
       "isUp": false,
-      "updatedAt": "2026-11-27T21:05:18.319Z"
+      "updatedAt": "2026-11-27T22:38:50.883Z"
     },
     {
       "symbol": "BANK NIFTY",
@@ -26,7 +26,7 @@
       "change": "-494.40",
       "pct": "-0.78%",
       "isUp": false,
-      "updatedAt": "2026-11-27T21:05:18.681Z"
+      "updatedAt": "2026-11-27T22:38:54.563Z"
     },
     {
       "symbol": "GOLD (24K / 10g)",
@@ -35,16 +35,16 @@
       "change": "+103.90",
       "pct": "+2.91%",
       "isUp": true,
-      "updatedAt": "2026-11-27T21:05:20.425Z"
+      "updatedAt": "2026-11-27T22:38:56.453Z"
     },
     {
       "symbol": "USD / INR",
-      "val": "₹92.95",
-      "rawPrice": 92.9525,
-      "change": "+0.5024",
-      "pct": "+0.54%",
+      "val": "₹93.00",
+      "rawPrice": 92.9955,
+      "change": "+0.5453",
+      "pct": "+0.59%",
       "isUp": true,
-      "updatedAt": "2026-11-27T21:05:18.946Z"
+      "updatedAt": "2026-11-27T22:38:54.799Z"
     },
     {
       "symbol": "CRUDE BRENT",
@@ -53,7 +53,7 @@
       "change": "+0.20",
       "pct": "+0.22%",
       "isUp": true,
-      "updatedAt": "2026-11-27T21:05:20.480Z"
+      "updatedAt": "2026-11-27T22:38:56.541Z"
     }
   ],
   "sectors": [
@@ -160,7 +160,7 @@
     "fiiIsBuy": true,
     "diiNet": "-556.42",
     "diiIsBuy": false,
-    "updatedAt": "2026-11-27T21:05:25.587Z"
+    "updatedAt": "2026-11-27T22:39:00.910Z"
   },
   "fiiDiiTable": {
     "days": [
